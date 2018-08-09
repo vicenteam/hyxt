@@ -152,7 +152,7 @@ function SmoothlyMenu() {
 
 //主题设置
 $(function () {
-
+    localStorage.setItem("fixednavbar", 'on');
     // 顶部菜单固定
     $('#fixednavbar').click(function () {
         if ($('#fixednavbar').is(':checked')) {
