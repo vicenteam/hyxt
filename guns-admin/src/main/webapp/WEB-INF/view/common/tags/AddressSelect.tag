@@ -8,6 +8,7 @@
     function province(domId) {
         // $("#"+domId).empty();
         var ajax = new $ax(Feng.ctxPath + "/provCityDist/province", function (data) {
+            $("#"+domId).append("<option value=''>全部</option>")
             $.each(data, function (i, n) {
                 // i表示objects的索引， n表示该索引对应的对象，即objects[i]
                 $("#"+domId).append("<option value='"+n.id+"'>"+n.province+"</option>")
@@ -20,6 +21,7 @@
     function city(domId) {
         $("#"+domId).empty();
         var ajax = new $ax(Feng.ctxPath + "/provCityDist/city", function (data) {
+            $("#"+domId).append("<option value=''>全部</option>")
             $.each(data, function (i, n) {
                 // i表示objects的索引， n表示该索引对应的对象，即objects[i]
                 $("#"+domId).append("<option value='"+n.id+"'>"+n.city+"</option>")
@@ -32,6 +34,7 @@
     function district(domId) {
         $("#"+domId).empty();
         var ajax = new $ax(Feng.ctxPath + "/provCityDist/district", function (data) {
+            $("#"+domId).append("<option value=''>全部</option>")
             $.each(data, function (i, n) {
                 // i表示objects的索引， n表示该索引对应的对象，即objects[i]
                 $("#"+domId).append("<option value='"+n.id+"'>"+n.district+"</option>")
