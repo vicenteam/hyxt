@@ -21,6 +21,11 @@ public class ControllerConfig {
         ArrayList<String> imports = new ArrayList<>();
         imports.add(contextConfig.getCoreBasePackage() + ".base.controller.BaseController");
         imports.add("org.springframework.stereotype.Controller");
+        //
+        imports.add("com.baomidou.mybatisplus.plugins.Page");
+        imports.add("com.stylefeng.guns.core.common.constant.factory.PageFactory");
+        imports.add("com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper");
+        //
         imports.add("org.springframework.web.bind.annotation.RequestMapping");
         imports.add("org.springframework.web.bind.annotation.ResponseBody");
         imports.add("org.springframework.ui.Model");

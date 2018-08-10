@@ -1,0 +1,58 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="" underline="true"/>
+                            <#input id="cadID" name="编号id" underline="true"/>
+                            <#input id="name" name="姓名" underline="true"/>
+                            <#input id="telphone" name="电话" underline="true"/>
+                            <#input id="sex" name="性别(1男 2女)" underline="true"/>
+                            <#input id="email" name="邮箱地址" underline="true"/>
+                            <#input id="phone" name="联系方式" underline="true"/>
+                            <#input id="state" name="状态(0可用 1不可用)" underline="true"/>
+                            <#input id="integral" name="" underline="true"/>
+                            <#input id="levelID" name="会员等级id" underline="true"/>
+                            <#input id="cardID" name="会员卡信息" underline="true"/>
+                            <#input id="createTime" name="创建时间" underline="true"/>
+                            <#input id="isoldsociety" name="是否老年协会会员 (1是2否)" underline="true"/>
+                            <#input id="birthday" name="生日" underline="true"/>
+                            <#input id="deptName" name="" underline="true"/>
+                            <#input id="introducerId" name="介绍人id" underline="true"/>
+                            <#input id="province" name=""/>
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="city" name="" underline="true"/>
+                            <#input id="district" name="地址" underline="true"/>
+                            <#input id="medicalHistory" name="病史" underline="true"/>
+                            <#input id="familyStatusID" name="家庭状态id" underline="true"/>
+                            <#input id="staffID" name="服务员工id" underline="true"/>
+                            <#input id="countyID" name="" underline="true"/>
+                            <#input id="townshipid" name="" underline="true"/>
+                            <#input id="healthStatus" name="健康状态" underline="true"/>
+                            <#input id="CheckINTime1" name="最新签到时间1" underline="true"/>
+                            <#input id="CheckINTime2" name="最新签到时间2" underline="true"/>
+                            <#input id="recommendMember" name="" underline="true"/>
+                            <#input id="address" name="" underline="true"/>
+                            <#input id="countPrice" name="总消费金额" underline="true"/>
+                            <#input id="imgName" name="用户图片名称" underline="true"/>
+                            <#input id="deptId" name="所属门店id" underline="true"/>
+                            <#input id="token" name="" underline="true"/>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="MembermanagementInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="MembermanagementInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/main/membermanagement/membermanagement_info.js"></script>
+@}

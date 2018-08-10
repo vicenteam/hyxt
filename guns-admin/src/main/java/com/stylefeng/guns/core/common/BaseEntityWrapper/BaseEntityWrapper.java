@@ -8,7 +8,7 @@ public class BaseEntityWrapper<T> extends EntityWrapper {
     Integer userOrgId = ShiroKit.getUser().getDeptId();
 
     public BaseEntityWrapper() {
-        eq("orgId", userOrgId);
+        eq("deptId", userOrgId);
     }
 
     @Override
