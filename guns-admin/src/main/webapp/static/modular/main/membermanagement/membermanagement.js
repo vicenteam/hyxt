@@ -16,7 +16,6 @@ Membermanagement.initColumn = function () {
         {field: 'selectItem', radio: true},
             {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '姓名', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '电话', field: 'telphone', visible: true, align: 'center', valign: 'middle'},
             {title: '性别', field: 'sex', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
                 if(value==1){
                     return '男';
@@ -29,7 +28,7 @@ Membermanagement.initColumn = function () {
             {title: '会员等级', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
             {title: '老年协会会员', field: 'isoldsociety', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                if(value){
+                if(value==1){
                     return '是';
                 }else {
                     return '否';
@@ -39,10 +38,10 @@ Membermanagement.initColumn = function () {
             {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
             {title: '操作', field: 'id', visible: true, align: 'center', width:'440px', valign: 'middle',formatter: function (value, row, index) {
 
-                    return '<button type="button" class="btn btn-primary button-margin" onclick="Expense.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
-                        '<button type="button" class="btn btn-danger button-margin" onclick="Expense.deleteRecord(' + row.id + ')" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>'+
-                    '<button type="button" class="btn btn-primary button-margin" onclick="Expense.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
-                    '<button type="button" class="btn btn-primary button-margin" onclick="Expense.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
+                    return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
+                        '<button type="button" class="btn btn-danger button-margin" onclick="Membermanagement.delete()" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>'+
+                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
+                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
                 }},
     ];
 };
@@ -79,18 +78,16 @@ Membermanagement.openAddMembermanagement = function () {
 /**
  * 打开查看会员基础信息详情
  */
-Membermanagement.openMembermanagementDetail = function () {
-    if (this.check()) {
+Membermanagement.openMembermanagementDetail = function (id) {
         var index = layer.open({
             type: 2,
             title: '会员基础信息详情',
             area: ['800px', '420px'], //宽高
             fix: false, //不固定
             maxmin: true,
-            content: Feng.ctxPath + '/membermanagement/membermanagement_update/' + Membermanagement.seItem.id
+            content: Feng.ctxPath + '/membermanagement/membermanagement_update/' + id
         });
         this.layerIndex = index;
-    }
 };
 
 /**
@@ -126,6 +123,33 @@ Membermanagement.search = function () {
     queryData['city'] = $("#city").val();
     queryData['district'] = $("#district").val();
     Membermanagement.table.refresh({query: queryData});
+};
+Membermanagement.search1 = function () {
+    var queryData = {};
+    readDeviceCard();
+//校验密码
+    RfAuthenticationKey();
+    var ret = CZx_32Ctrl.RfRead(DeviceHandle.value,BlockM1.value);
+    if(CZx_32Ctrl.lErrorCode == 0){
+        DevBeep();
+        $.ajax({
+            url: '/membermanagement/getUserInfo',
+            data: {value:ret},
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+            async: false,
+            success: function (data) {
+                if(data.id!=undefined){
+                    queryData['memberid'] = data.memberid;
+                }else {
+                    queryData['memberid'] = -1;
+                }
+
+                Membermanagement.table.refresh({query: queryData});
+            }})
+    }
+
+
 };
 
 $(function () {

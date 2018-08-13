@@ -25,7 +25,7 @@ public class MemberCard extends Model<MemberCard> {
     /**
      * 会员ID
      */
-    private String memberid;
+    private Integer memberid;
     private String name;
     /**
      * 卡片标识码
@@ -34,12 +34,20 @@ public class MemberCard extends Model<MemberCard> {
     /**
      * 开卡日期
      */
-    private Date createtime;
+    private String createtime;
     /**
      * 状态(0可用 1不可用)
      */
     private Integer state;
+    private Integer deptid;
 
+    public Integer getDeptid() {
+        return deptid;
+    }
+
+    public void setDeptid(Integer deptid) {
+        this.deptid = deptid;
+    }
 
     public Integer getId() {
         return id;
@@ -49,11 +57,11 @@ public class MemberCard extends Model<MemberCard> {
         this.id = id;
     }
 
-    public String getMemberid() {
+    public Integer getMemberid() {
         return memberid;
     }
 
-    public void setMemberid(String memberid) {
+    public void setMemberid(Integer memberid) {
         this.memberid = memberid;
     }
 
@@ -73,11 +81,11 @@ public class MemberCard extends Model<MemberCard> {
         this.code = code;
     }
 
-    public Date getCreatetime() {
+    public String getCreatetime() {
         return createtime;
     }
 
-    public void setCreatetime(Date createtime) {
+    public void setCreatetime(String createtime) {
         this.createtime = createtime;
     }
 

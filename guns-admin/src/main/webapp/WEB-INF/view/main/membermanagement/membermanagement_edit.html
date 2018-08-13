@@ -2,46 +2,50 @@
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal">
-
+                <input type="hidden" id="id"  name="id" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
-                            <#input id="id" name="" value="${item.id}" underline="true"/>
-                            <#input id="cadID" name="编号id" value="${item.cadID}" underline="true"/>
-                            <#input id="name" name="姓名" value="${item.name}" underline="true"/>
-                            <#input id="telphone" name="电话" value="${item.telphone}" underline="true"/>
-                            <#input id="sex" name="性别(1男 2女)" value="${item.sex}" underline="true"/>
-                            <#input id="email" name="邮箱地址" value="${item.email}" underline="true"/>
-                            <#input id="phone" name="联系方式" value="${item.phone}" underline="true"/>
-                            <#input id="state" name="状态(0可用 1不可用)" value="${item.state}" underline="true"/>
-                            <#input id="integral" name="" value="${item.integral}" underline="true"/>
-                            <#input id="levelID" name="会员等级id" value="${item.levelID}" underline="true"/>
-                            <#input id="cardID" name="会员卡信息" value="${item.cardID}" underline="true"/>
-                            <#input id="createTime" name="创建时间" value="${item.createTime}" underline="true"/>
-                            <#input id="isoldsociety" name="是否老年协会会员 (1是2否)" value="${item.isoldsociety}" underline="true"/>
-                            <#input id="birthday" name="生日" value="${item.birthday}" underline="true"/>
-                            <#input id="deptName" name="" value="${item.deptName}" underline="true"/>
-                            <#input id="introducerId" name="介绍人id" value="${item.introducerId}" underline="true"/>
-                            <#input id="province" name="" value="${item.province}" />
-                </div>
+                    <#select id="staffID" name="服务员工" underline="true">
+                    <option value="">请选择</option>
+                    @for(item in staffs){
+                    <option value="${item.id}">${item.name}</option>
+                    @}
+                </#select>
+                <#input id="name" name="姓名" underline="true" value="${item.name}"/>
+                <#select id="sex" name="性别" underline="true">
+                <option value="">请选择</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+            </#select>
+            <#input id="email" name="邮箱地址" underline="true" value="${item.email}"/>
+            <#input id="phone" name="联系方式" underline="true" value="${item.phone}"/>
+            <#select id="isoldsociety" name="是否老年协会会员" underline="true">
+            <option value="">请选择</option>
+            <option value="1">是</option>
+            <option value="2">否</option>
+        </#select>
 
-                <div class="col-sm-6">
-                            <#input id="city" name="" value="${item.city}" underline="true"/>
-                            <#input id="district" name="地址" value="${item.district}" underline="true"/>
-                            <#input id="medicalHistory" name="病史" value="${item.medicalHistory}" underline="true"/>
-                            <#input id="familyStatusID" name="家庭状态id" value="${item.familyStatusID}" underline="true"/>
-                            <#input id="staffID" name="服务员工id" value="${item.staffID}" underline="true"/>
-                            <#input id="countyID" name="" value="${item.countyID}" underline="true"/>
-                            <#input id="townshipid" name="" value="${item.townshipid}" underline="true"/>
-                            <#input id="healthStatus" name="健康状态" value="${item.healthStatus}" underline="true"/>
-                            <#input id="CheckINTime1" name="最新签到时间1" value="${item.CheckINTime1}" underline="true"/>
-                            <#input id="CheckINTime2" name="最新签到时间2" value="${item.CheckINTime2}" underline="true"/>
-                            <#input id="recommendMember" name="" value="${item.recommendMember}" underline="true"/>
-                            <#input id="address" name="" value="${item.address}" underline="true"/>
-                            <#input id="countPrice" name="总消费金额" value="${item.countPrice}" underline="true"/>
-                            <#input id="imgName" name="用户图片名称" value="${item.imgName}" underline="true"/>
-                            <#input id="deptId" name="所属门店id" value="${item.deptId}" underline="true"/>
-                            <#input id="token" name="" value="${item.token}" />
+
                 </div>
+    <div class="col-sm-6 b-r">
+        <#input id="birthday" name="生日" underline="true" value="${item.birthday}"/>
+        <#AddressSelect id="province" province="province" name="所属地区"/>
+        <#AddressSelect id="city" city="city" name="所属区域"/>
+        <#AddressSelect id="district" district="district" name="所属区县"/>
+        <#input id="address" name="详细地址" underline="true" value="${item.address}"/>
+        <#select id="familyStatusID" name="家庭状态" underline="true">
+        <option value="1">有子女</option>
+        <option value="2">无子女</option>
+    </#select>
+    <#input id="medicalHistory" name="病史" underline="true" value="${item.medicalHistory}"/>
+    <input type="hidden" id="hide_staffID" value="${item.staffID}">
+    <input type="hidden" id="hide_sex" value="${item.sex}">
+    <input type="hidden" id="hide_isoldsociety" value="${item.isoldsociety}">
+    <input type="hidden" id="hide_familyStatusID" value="${item.familyStatusID}">
+    <input type="hidden" id="hide_province" value="${item.province}">
+    <input type="hidden" id="hide_city" value="${item.city}">
+    <input type="hidden" id="hide_district" value="${item.district}">
+    </div>
             </div>
 
             <div class="row btn-group-m-t">
@@ -55,4 +59,21 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/main/membermanagement/membermanagement_info.js"></script>
+<script>
+    //绑定下拉菜单值
+   $(function () {
+       $("#staffID").val($("#hide_staffID").val())
+       $("#sex").val($("#hide_sex").val())
+       $("#isoldsociety").val($("#hide_isoldsociety").val())
+       $("#familyStatusID").val($("#hide_familyStatusID").val())
+
+       $("#province").val($("#hide_province").val())
+       city('city');
+       $("#city").val($("#hide_city").val())
+       district('district');
+       $("#district").val($("#hide_district").val())
+
+   })
+
+</script>
 @}

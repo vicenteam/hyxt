@@ -64,7 +64,7 @@ public class Membermanagement extends Model<Membermanagement> {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private String createTime;
     /**
      * 是否老年协会会员 (1是2否)
      */
@@ -215,11 +215,11 @@ public class Membermanagement extends Model<Membermanagement> {
         this.cardID = cardID;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

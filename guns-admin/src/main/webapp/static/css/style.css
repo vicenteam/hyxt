@@ -2102,8 +2102,9 @@ table.dataTable thead .sorting:after {
     padding: 6px 12px;
     -webkit-transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
     transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 100%;
+    width: 70%;
     font-size: 14px;
+    display: inline-block;
 }
 
 .form-control:focus,

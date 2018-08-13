@@ -2,7 +2,23 @@
  * 初始化会员基础信息详情对话框
  */
 var MembermanagementInfoDlg = {
-    membermanagementInfoData : {}
+    membermanagementInfoData : {},
+    validateFields: {
+        name: {
+            validators: {
+                notEmpty: {
+                    message: '姓名不能为空'
+                }
+            }
+        },
+        phone: {
+            validators: {
+                notEmpty: {
+                    message: '联系方式不能为空'
+                }
+            }
+        }
+    }
 };
 
 /**
@@ -39,7 +55,14 @@ MembermanagementInfoDlg.get = function(key) {
 MembermanagementInfoDlg.close = function() {
     parent.layer.close(window.parent.Membermanagement.layerIndex);
 }
-
+/**
+ * 验证数据是否为空
+ */
+MembermanagementInfoDlg.validate = function () {
+    // $('#membermanagementInfoTable').data("bootstrapValidator").resetForm();
+    $('#membermanagementInfoTable').bootstrapValidator('validate');
+    return $("#membermanagementInfoTable").data('bootstrapValidator').isValid();
+};
 /**
  * 收集数据
  */
@@ -77,6 +100,7 @@ MembermanagementInfoDlg.collectData = function() {
     .set('countPrice')
     .set('imgName')
     .set('deptId')
+    .set('cardCode')
     .set('token');
 }
 
@@ -87,12 +111,27 @@ MembermanagementInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    if (!this.validate()) {
+        return;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/membermanagement/add", function(data){
         Feng.success("添加成功!");
-        window.parent.Membermanagement.table.refresh();
-        MembermanagementInfoDlg.close();
+        //清除页面值
+        $("#cadID").val("")
+        $("#introducerName").val("")
+        $("#staffID").val("")
+        $("#name").val("")
+        $("#sex").val("")
+        $("#email").val("")
+        $("#phone").val("")
+        $("#isoldsociety").val("")
+        $("#province").val("")
+        $("#city").val("")
+        $("#district").val("")
+        $("#address").val("")
+        $("#medicalHistory").val("")
+        $("#birthday").val("")
     },function(data){
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
@@ -121,5 +160,5 @@ MembermanagementInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-
+    Feng.initValidator("membermanagementInfoTable", MembermanagementInfoDlg.validateFields);
 });
