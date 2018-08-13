@@ -79,7 +79,6 @@ public class MembermanagementController extends BaseController {
         if(!StringUtils.isEmpty(province))baseEntityWrapper.eq("province",province);
         if(!StringUtils.isEmpty(city))baseEntityWrapper.eq("city",city);
         if(!StringUtils.isEmpty(district))baseEntityWrapper.eq("district",district);
-        System.out.println(JSON.toJSONString(page));
         Page<Membermanagement> result = membermanagementService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
     }
