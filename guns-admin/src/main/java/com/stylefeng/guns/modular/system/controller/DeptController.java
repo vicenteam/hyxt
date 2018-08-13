@@ -9,6 +9,7 @@ import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.node.ZTreeNode;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.modular.main.service.IProvCityDistService;
 import com.stylefeng.guns.modular.system.model.Dept;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +99,7 @@ public class DeptController extends BaseController {
         dept.setProvinceid(province);
         dept.setCityid(city);
         dept.setDistrictid(district);
+        dept.setCreatedt(DateUtil.getTime());
         //完善pids,根据pid拿到pid的pids
         deptSetPids(dept);
         return this.deptService.insert(dept);
@@ -138,6 +141,7 @@ public class DeptController extends BaseController {
         dept.setProvinceid(province);
         dept.setCityid(city);
         dept.setDistrictid(district);
+        dept.setCreatedt(DateUtil.getTime());
         deptSetPids(dept);
         deptService.updateById(dept);
         return SUCCESS_TIP;

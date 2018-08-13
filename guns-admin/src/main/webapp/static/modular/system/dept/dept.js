@@ -18,6 +18,8 @@ Dept.initColumn = function () {
         {title: '门店简称', field: 'simplename', align: 'center', valign: 'middle', sortable: true},
         {title: '门店全称', field: 'fullname', align: 'center', valign: 'middle', sortable: true},
         {title: '排序', field: 'num', align: 'center', valign: 'middle', sortable: true},
+        {title: '联系人', field: 'linkman', align: 'center', valign: 'middle', sortable: true},
+        {title: '联系电话', field: 'tel', align: 'center', valign: 'middle', sortable: true},
         {title: '联系地址', field: 'address', align: 'center', valign: 'middle', sortable: true},
         {title: '备注', field: 'tips', align: 'center', valign: 'middle', sortable: true}];
 };
@@ -94,7 +96,9 @@ Dept.delete = function () {
  */
 Dept.search = function () {
     var queryData = {};
-    queryData['condition'] = $("#condition").val();
+    queryData['deptName'] = $("#deptName").val();
+    queryData['linkman'] = $("#linkman").val();
+    queryData['deptName'] = $("#deptName").val();
     Dept.table.refresh({query: queryData});
 };
 
