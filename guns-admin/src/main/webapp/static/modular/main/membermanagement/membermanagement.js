@@ -14,39 +14,36 @@ var Membermanagement = {
 Membermanagement.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '编号id', field: 'cadID', visible: true, align: 'center', valign: 'middle'},
+            {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '姓名', field: 'name', visible: true, align: 'center', valign: 'middle'},
             {title: '电话', field: 'telphone', visible: true, align: 'center', valign: 'middle'},
-            {title: '性别(1男 2女)', field: 'sex', visible: true, align: 'center', valign: 'middle'},
-            {title: '邮箱地址', field: 'email', visible: true, align: 'center', valign: 'middle'},
+            {title: '性别', field: 'sex', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                if(value==1){
+                    return '男';
+                }else {
+                    return '女';
+                }
+                }},
             {title: '联系方式', field: 'phone', visible: true, align: 'center', valign: 'middle'},
-            {title: '状态(0可用 1不可用)', field: 'state', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'integral', visible: true, align: 'center', valign: 'middle'},
-            {title: '会员等级id', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
-            {title: '会员卡信息', field: 'cardID', visible: true, align: 'center', valign: 'middle'},
+            {title: '当前积分', field: 'integral', visible: true, align: 'center', valign: 'middle'},
+            {title: '会员等级', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
-            {title: '是否老年协会会员 (1是2否)', field: 'isoldsociety', visible: true, align: 'center', valign: 'middle'},
-            {title: '生日', field: 'birthday', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'deptName', visible: true, align: 'center', valign: 'middle'},
-            {title: '介绍人id', field: 'introducerId', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'province', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'city', visible: true, align: 'center', valign: 'middle'},
-            {title: '地址', field: 'district', visible: true, align: 'center', valign: 'middle'},
-            {title: '病史', field: 'medicalHistory', visible: true, align: 'center', valign: 'middle'},
-            {title: '家庭状态id', field: 'familyStatusID', visible: true, align: 'center', valign: 'middle'},
-            {title: '服务员工id', field: 'staffID', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'countyID', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'townshipid', visible: true, align: 'center', valign: 'middle'},
-            {title: '健康状态', field: 'healthStatus', visible: true, align: 'center', valign: 'middle'},
-            {title: '最新签到时间1', field: 'CheckINTime1', visible: true, align: 'center', valign: 'middle'},
-            {title: '最新签到时间2', field: 'CheckINTime2', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'recommendMember', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'address', visible: true, align: 'center', valign: 'middle'},
-            {title: '总消费金额', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
-            {title: '用户图片名称', field: 'imgName', visible: true, align: 'center', valign: 'middle'},
-            {title: '所属门店id', field: 'deptId', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'token', visible: true, align: 'center', valign: 'middle'}
+            {title: '老年协会会员', field: 'isoldsociety', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                if(value){
+                    return '是';
+                }else {
+                    return '否';
+                }
+                }},
+            {title: '家庭地址', field: 'address', visible: true, align: 'center', valign: 'middle'},
+            {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
+            {title: '操作', field: 'id', visible: true, align: 'center', width:'440px', valign: 'middle',formatter: function (value, row, index) {
+
+                    return '<button type="button" class="btn btn-primary button-margin" onclick="Expense.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
+                        '<button type="button" class="btn btn-danger button-margin" onclick="Expense.deleteRecord(' + row.id + ')" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>'+
+                    '<button type="button" class="btn btn-primary button-margin" onclick="Expense.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
+                    '<button type="button" class="btn btn-primary button-margin" onclick="Expense.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
+                }},
     ];
 };
 
@@ -117,7 +114,17 @@ Membermanagement.delete = function () {
  */
 Membermanagement.search = function () {
     var queryData = {};
-    queryData['condition'] = $("#condition").val();
+    queryData['name'] = $("#name").val();
+    queryData['address'] = $("#address").val();
+    queryData['fstatus'] = $("#fstatus").val();
+    queryData['sex'] = $("#sex").val();
+    queryData['idcard'] = $("#idcard").val();
+    queryData['phone'] = $("#phone").val();
+    queryData['stafff'] = $("#stafff").val();
+    queryData['deptid'] = $("#deptid").val();
+    queryData['province'] = $("#province").val();
+    queryData['city'] = $("#city").val();
+    queryData['district'] = $("#district").val();
     Membermanagement.table.refresh({query: queryData});
 };
 

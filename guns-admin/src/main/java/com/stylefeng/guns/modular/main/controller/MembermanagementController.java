@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -64,9 +65,20 @@ public class MembermanagementController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
+    public Object list(String name,String address,String fstatus,String sex,String idcard ,String phone ,String stafff,String deptid,String province,String city,String district) {
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
         BaseEntityWrapper<Membermanagement> baseEntityWrapper = new BaseEntityWrapper<>();
+        if(!StringUtils.isEmpty(name))baseEntityWrapper.eq("name",name);
+        if(!StringUtils.isEmpty(address))baseEntityWrapper.like("address",address);
+        if(!StringUtils.isEmpty(fstatus))baseEntityWrapper.eq("familyStatusID",fstatus);
+        if(!StringUtils.isEmpty(sex))baseEntityWrapper.eq("sex",sex);
+        if(!StringUtils.isEmpty(idcard))baseEntityWrapper.eq("idcard",idcard);
+        if(!StringUtils.isEmpty(phone))baseEntityWrapper.like("phone",phone);
+        if(!StringUtils.isEmpty(stafff))baseEntityWrapper.like("staffid",stafff);
+        if(!StringUtils.isEmpty(deptid))baseEntityWrapper.eq("deptid",deptid);
+        if(!StringUtils.isEmpty(province))baseEntityWrapper.eq("province",province);
+        if(!StringUtils.isEmpty(city))baseEntityWrapper.eq("city",city);
+        if(!StringUtils.isEmpty(district))baseEntityWrapper.eq("district",district);
         System.out.println(JSON.toJSONString(page));
         Page<Membermanagement> result = membermanagementService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
