@@ -105,7 +105,9 @@ DeptInfoDlg.hideDeptSelectTree = function() {
  * 收集数据
  */
 DeptInfoDlg.collectData = function() {
-    this.set('id').set('simplename').set('fullname').set('tips').set('num').set('pid');
+    this.set('id').set('simplename').set('fullname').set('tips').set('num').set('pid').set("linkman")
+        .set("tel").set("email").set("address").set("province").set("city").set("district").set("createdt")
+        .set("updatedt").set("status");
 }
 
 /**

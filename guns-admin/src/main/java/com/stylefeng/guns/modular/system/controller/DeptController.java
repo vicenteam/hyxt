@@ -10,7 +10,9 @@ import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.node.ZTreeNode;
 import com.stylefeng.guns.core.util.ToolUtil;
+import com.stylefeng.guns.modular.main.service.IProvCityDistService;
 import com.stylefeng.guns.modular.system.model.Dept;
+import com.stylefeng.guns.modular.system.model.ProvCityDist;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.warpper.DeptWarpper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,8 @@ public class DeptController extends BaseController {
 
     @Autowired
     private IDeptService deptService;
+    @Autowired
+    private IProvCityDistService provCityDistService;
 
     /**
      * 跳转到部门管理首页
@@ -86,10 +90,13 @@ public class DeptController extends BaseController {
     @RequestMapping(value = "/add")
     @Permission
     @ResponseBody
-    public Object add(Dept dept) {
+    public Object add(Dept dept,String province, String city, String district) {
         if (ToolUtil.isOneEmpty(dept, dept.getSimplename())) {
             throw new GunsException(BizExceptionEnum.REQUEST_NULL);
         }
+        dept.setProvinceid(province);
+        dept.setCityid(city);
+        dept.setDistrictid(district);
         //完善pids,根据pid拿到pid的pids
         deptSetPids(dept);
         return this.deptService.insert(dept);
@@ -113,7 +120,8 @@ public class DeptController extends BaseController {
     @Permission
     @ResponseBody
     public Object detail(@PathVariable("deptId") Integer deptId) {
-        return deptService.selectById(deptId);
+        Dept dept = deptService.selectById(deptId);
+        return dept;
     }
 
     /**
@@ -123,10 +131,13 @@ public class DeptController extends BaseController {
     @RequestMapping(value = "/update")
     @Permission
     @ResponseBody
-    public Object update(Dept dept) {
+    public Object update(Dept dept,String province, String city, String district) {
         if (ToolUtil.isEmpty(dept) || dept.getId() == null) {
             throw new GunsException(BizExceptionEnum.REQUEST_NULL);
         }
+        dept.setProvinceid(province);
+        dept.setCityid(city);
+        dept.setDistrictid(district);
         deptSetPids(dept);
         deptService.updateById(dept);
         return SUCCESS_TIP;

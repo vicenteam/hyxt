@@ -11,7 +11,10 @@
 
                     <#input id="fullname" name="门店全称" underline="true" value="${dept.fullname}"/>
 
-                    <#input id="tips" name="备注" underline="true" value="${dept.tips}"/>
+                    <#input id="linkman" name="联系人" underline="true" value="${dept.linkman}"/>
+                    <#input id="tel" name="联系方式" underline="true" value="${dept.tel}"/>
+                    <#input id="address" name="联系地址" underline="true" value="${dept.address}"/>
+                    <#input id="email" name="电子邮箱" underline="true" value="${dept.email}"/>
                 </div>
                 <div class="col-sm-6">
                     <#input id="num" name="排序" underline="true" value="${dept.num}"/>
@@ -20,6 +23,10 @@
                             hiddenValue="${dept.pid}" value="${pName}"
                             clickFun="DeptInfoDlg.showDeptSelectTree(); return false;"
                             style="background-color: #ffffff !important;"/>
+                    <#input id="tips" name="备注" underline="true" value="${dept.tips}"/>
+                    <#AddressSelect id="province" province="province" name="所属地区"/>
+                    <#AddressSelect id="city" city="city" name="所属区域"/>
+                    <#AddressSelect id="district" district="district" name="所属区县"/>
                 </div>
             </div>
 
@@ -40,4 +47,13 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/system/dept/dept_info.js"></script>
+<script>
+    $(function () {
+        $("#province").val(${dept.provinceid});
+        city("city");
+        $("#city").val(${dept.cityid});
+        district("district");
+        $("#district").val(${dept.districtid});
+    });
+</script>
 @}

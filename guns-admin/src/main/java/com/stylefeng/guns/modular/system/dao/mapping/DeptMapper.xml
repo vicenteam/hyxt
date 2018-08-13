@@ -10,8 +10,18 @@
         <result column="pids" property="pids"/>
         <result column="simplename" property="simplename"/>
         <result column="fullname" property="fullname"/>
+        <result column="linkman" property="linkman"/>
+        <result column="tel" property="tel"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="provinceid" property="provinceid"/>
+        <result column="cityid" property="cityid"/>
+        <result column="districtid" property="districtid"/>
         <result column="tips" property="tips"/>
         <result column="version" property="version"/>
+        <result column="createdt" property="createdt"/>
+        <result column="updatedt" property="updatedt"/>
+        <result column="status" property="status"/>
     </resultMap>
 
     <select id="tree" resultType="com.stylefeng.guns.core.node.ZTreeNode">
