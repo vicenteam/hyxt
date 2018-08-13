@@ -45,6 +45,33 @@ public class Dept extends Model<Dept> {
      * 全称
      */
 	private String fullname;
+
+    /**
+     * 联系人
+     */
+	private String linkman;
+	private String tel;
+	private String email;
+	private String address;
+    /**
+     * 省
+     */
+	private String provinceid;
+    /**
+     * 市
+     */
+	private String cityid;
+    /**
+     * 县
+     */
+	private String districtid;
+	private String createdt;
+	private String updatedt;
+    /**
+     * 状态(0.启用,1.冻结)
+     */
+	private Integer status;
+
     /**
      * 提示
      */
@@ -103,7 +130,89 @@ public class Dept extends Model<Dept> {
 		this.fullname = fullname;
 	}
 
-	public String getTips() {
+
+    public String getLinkman() {
+        return linkman;
+    }
+
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getProvinceid() {
+        return provinceid;
+    }
+
+    public void setProvinceid(String provinceid) {
+        this.provinceid = provinceid;
+    }
+
+    public String getCityid() {
+        return cityid;
+    }
+
+    public void setCityid(String cityid) {
+        this.cityid = cityid;
+    }
+
+    public String getDistrictid() {
+        return districtid;
+    }
+
+    public void setDistrictid(String districtid) {
+        this.districtid = districtid;
+    }
+
+    public String getCreatedt() {
+        return createdt;
+    }
+
+    public void setCreatedt(String createdt) {
+        this.createdt = createdt;
+    }
+
+    public String getUpdatedt() {
+        return updatedt;
+    }
+
+    public void setUpdatedt(String updatedt) {
+        this.updatedt = updatedt;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+
+    public String getTips() {
 		return tips;
 	}
 
@@ -133,8 +242,18 @@ public class Dept extends Model<Dept> {
 			", pids=" + pids +
 			", simplename=" + simplename +
 			", fullname=" + fullname +
+            ", linkman=" + linkman +
+            ", tel=" + tel +
+            ", email=" + email +
+            ", address=" + address +
+            ", provinceid=" + provinceid +
+            ", cityid=" + cityid +
+            ", countyid=" + districtid +
 			", tips=" + tips +
 			", version=" + version +
+            ", createdt=" + createdt +
+            ", updatedt=" + updatedt +
+            ", status=" + status +
 			"}";
 	}
 }

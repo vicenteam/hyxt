@@ -18,6 +18,7 @@ Dept.initColumn = function () {
         {title: '门店简称', field: 'simplename', align: 'center', valign: 'middle', sortable: true},
         {title: '门店全称', field: 'fullname', align: 'center', valign: 'middle', sortable: true},
         {title: '排序', field: 'num', align: 'center', valign: 'middle', sortable: true},
+        {title: '联系地址', field: 'address', align: 'center', valign: 'middle', sortable: true},
         {title: '备注', field: 'tips', align: 'center', valign: 'middle', sortable: true}];
 };
 
