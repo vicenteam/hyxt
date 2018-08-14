@@ -1,20 +1,20 @@
 @layout("/common/_container.html"){
 <div class="ibox float-e-margins">
     <div class="ibox-content">
-        <div class="form-horizontal">
-
+        <div class="form-horizontal" id="membershipcardtypeInfoTable">
+            <input type="hidden" id="id"  name="id" value="${item.id}">
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <#input id="cardname" name="会员等级名称" value="${item.cardname}" underline="true"/>
-                            <#input id="signin" name="签到积分" value="${item.signin}" underline="true"/>
-                            <#input id="shopping" name="购物积分" value="${item.shopping}" underline="true"/>
+                            <!--<#input id="signin" name="签到积分" value="${item.signin}" underline="true"/>-->
+                            <!--<#input id="shopping" name="购物积分" value="${item.shopping}" underline="true"/>-->
                             <#input id="newpoints" name="带新人奖励积分" value="${item.newpoints}" underline="true"/>
                 </div>
 
                 <div class="col-sm-6">
-                            <#input id="signinnew" name="新人签到积分" value="${item.signinnew}" underline="true"/>
-                            <#input id="shoppingnew" name="新人购物积分" value="${item.shoppingnew}" />
-                            <#input id="upamount" name="升级金额" value="${item.upamount}" underline="true"/>
+                            <!--<#input id="signinnew" name="新人签到积分" value="${item.signinnew}" underline="true"/>-->
+                            <!--<#input id="shoppingnew" name="新人购物积分" value="${item.shoppingnew}" />-->
+                            <#input id="upamount" name="积分等级" value="${item.upamount}" underline="true"/>
                             <#select name="部门名称" id="deptid" underline="true">
                                 <option value="${dept.id}">${dept.fullname}</option>
                             </#select>

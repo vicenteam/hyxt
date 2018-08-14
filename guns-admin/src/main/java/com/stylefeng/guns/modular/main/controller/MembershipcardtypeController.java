@@ -7,6 +7,7 @@ import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Membershipcardtype;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员配置控制器
@@ -74,6 +77,23 @@ public class MembershipcardtypeController extends BaseController {
     }
 
     /**
+     * 验证会员等级名称
+     */
+//    @RequestMapping("/validateCardName")
+//    @ResponseBody
+//    public Map<String, Boolean> validateCardName(String cardname) {
+//        EntityWrapper<Membershipcardtype> wrapper = new EntityWrapper<>();
+//        wrapper.like("cardname",cardname);
+//        wrapper.eq("deptid",ShiroKit.getUser().getDeptId());
+//        Integer num = membershipcardtypeService.selectCount(wrapper);
+//        boolean result = true;
+//        if(num >= 1) result = false;
+//        Map<String, Boolean> map = new HashMap<>();
+//        map.put("valid", result);
+//        return map;
+//    }
+
+    /**
      * 获取会员配置列表
      */
     @RequestMapping(value = "/list")
@@ -82,6 +102,7 @@ public class MembershipcardtypeController extends BaseController {
         EntityWrapper<Membershipcardtype> wrapper = new EntityWrapper<>();
         wrapper.like("cardname",cardname);
         wrapper.eq("deptid",deptid);
+        wrapper.eq("status",0);
         Page<Membershipcardtype> page = new PageFactory<Membershipcardtype>().defaultPage();
         page = membershipcardtypeService.selectPage(page, wrapper);
         System.out.println(" +++++++ "+page.getRecords());
@@ -115,7 +136,7 @@ public class MembershipcardtypeController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Membershipcardtype membershipcardtype) {
-        membershipcardtype.setCreatedt(DateUtil.getTime());
+        membershipcardtype.setUpdatedt(DateUtil.getTime());
         membershipcardtypeService.updateById(membershipcardtype);
         return SUCCESS_TIP;
     }
