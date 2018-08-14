@@ -2,7 +2,17 @@
  * 初始化新增积分详情对话框
  */
 var IntegralrecordInfoDlg = {
-    integralrecordInfoData : {}
+    integralrecordInfoData : {},
+    validateFields: {
+        integral: {
+            validators: {
+                notEmpty: {
+                    message: '新增积分不能为空'
+                },
+                numeric: {message: '新增积分只能输入数字'}
+            }
+        }
+    }
 };
 
 /**
