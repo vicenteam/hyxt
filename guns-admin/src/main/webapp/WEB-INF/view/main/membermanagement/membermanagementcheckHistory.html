@@ -1,0 +1,49 @@
+@layout("/common/_container.html"){
+<html >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>jQuery多功能日历插件 带事件记录功能DEMO演示</title>
+    <link rel="stylesheet" href="${ctxPath}/static/date/style/documentation.css" type="text/css" />
+    <link rel="stylesheet" href="${ctxPath}/static/date/style/jalendar.css" type="text/css" />
+    <script type="text/javascript" src="${ctxPath}/static/date/js/jquery-1.10.2.min.js"></script><!--jQuery-->
+    <script type="text/javascript" src="${ctxPath}/static/date/js/jalendar.js"></script>
+    <style>
+        .add-new{
+            display: none;
+        }
+        .erase{
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('#myId3').jalendar();
+        });
+    </script>
+
+</head>
+
+<body>
+
+<article>
+
+
+
+    <div id="myId3" class="jalendar mid" style="margin-left: 10px;">
+       <div id="textVal">
+           <!--<div class="added-event" data-date="13/8/2018" data-time="21:00:22" data-title="333"></div>-->
+           <!--<div class="added-event" data-date="13/8/2018" data-time="22:00" data-title="222"></div>-->
+       </div>
+    </div>
+    <input type="hidden" id="memberId" value="${memberId}">
+</article>
+
+</body>
+</html>
+<script>
+    $(function () {
+        var date= new Date();
+        findUserCheckInfoByMonyh({valMonth:(date.getMonth()+1),valYear:date.getFullYear()});
+    })
+</script>
+@}

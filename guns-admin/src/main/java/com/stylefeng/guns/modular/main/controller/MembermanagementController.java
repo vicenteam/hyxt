@@ -93,6 +93,18 @@ public class MembermanagementController extends BaseController {
     }
 
     /**
+     * 签到记录页面
+     * @param membermanagementId
+     * @param model
+     * @return
+     */
+    @RequestMapping("/membermanagementcheckHistory/{membermanagementId}")
+    public String membermanagementcheckHistory(@PathVariable Integer membermanagementId, Model model) {
+        Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
+        model.addAttribute("memberId",membermanagementId);
+        return PREFIX + "membermanagementcheckHistory.html";
+    }
+    /**
      * 获取会员管理列表
      */
     @RequestMapping(value = "/list")
@@ -199,4 +211,5 @@ public class MembermanagementController extends BaseController {
         memberCardService.insert(memberCard);
         return sb.toString();
     }
+
 }

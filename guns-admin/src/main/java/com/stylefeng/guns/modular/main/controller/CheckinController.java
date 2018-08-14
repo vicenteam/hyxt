@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 签到场次控制器
@@ -207,5 +205,57 @@ public class CheckinController extends BaseController {
             return map;
         }
         return null;
+    }
+    @RequestMapping(value = "/findUserCheckInfoByMonth")
+    @ResponseBody
+    public Object findUserCheckInfoByMonth(String memberId,String valMonth,String valYear) {
+        Map<String,Object> result=new HashMap<>();
+        BaseEntityWrapper<QiandaoCheckin> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
+        memberCardBaseEntityWrapper.eq("memberid",memberId);
+        String starTime=valYear+"-";
+        if(valMonth.length()==1){
+            starTime+="0"+valMonth+"-01 00:00:01";
+        }else {
+            starTime+=valMonth+"-01 00:00:01";
+        }
+        String endTime=valYear+"-";
+        if(valMonth.length()==1){
+            endTime+="0"+valMonth+"-31 23:59:59";
+        }else {
+            endTime+=valMonth+"-31 23:59:59";
+        }
+        memberCardBaseEntityWrapper.between("createtime",starTime,endTime);
+        List<QiandaoCheckin> list = qiandaoCheckinService.selectList(memberCardBaseEntityWrapper);
+        StringBuilder sb=new StringBuilder();
+        List<Map<String,Object>> list1=new ArrayList<>();
+        for(QiandaoCheckin qi:list){
+            String createtime = qi.getCreatetime();
+            //日期转化
+            Date parse = DateUtil.parse(createtime, "yyyy-MM-dd HH:mm:ss");
+            String s = DateUtil.formatDate(parse, "dd/M/yyyy");
+            String[] split = createtime.split(" ");
+            String time1=split[1];
+            String backgroundcolor="#29b451";
+            if(StringUtils.isEmpty(qi.getUpdatetime())){
+                backgroundcolor="#dbbf22";
+            }
+            sb.append("<div class='added-event' data-date='"+s+"' data-time='"+time1+"' data-title='首签时间' style='background-color:"+backgroundcolor+";'></div>");
+            Map<String,Object> map=new HashMap<>();
+            map.put("time",s);
+            map.put("color",backgroundcolor);
+            list1.add(map);
+            if(!StringUtils.isEmpty(qi.getUpdatetime())){
+                //日期转化
+                String updatetime = qi.getUpdatetime();
+                Date parse2 = DateUtil.parse(updatetime, "yyyy-MM-dd HH:mm:ss");
+                String s2 = DateUtil.formatDate(parse2, "dd/M/yyyy");
+                String[] split2 = createtime.split(" ");
+                String time12=split2[1];
+                sb.append("<div class='added-event' data-date='"+s2+"' data-time='"+time12+"' data-title='复签时间' style='background-color:"+backgroundcolor+";'></div>");
+            }
+        }
+        result.put("dom",sb.toString());
+        result.put("timeObj",list1);
+        return result;
     }
 }

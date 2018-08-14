@@ -40,8 +40,8 @@ Membermanagement.initColumn = function () {
 
                     return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
                         '<button type="button" class="btn btn-danger button-margin" onclick="Membermanagement.delete()" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>'+
-                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
-                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.findRecord(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
+                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
+                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
                 }},
     ];
 };
@@ -86,6 +86,21 @@ Membermanagement.openMembermanagementDetail = function (id) {
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/membermanagement/membermanagement_update/' + id
+        });
+        this.layerIndex = index;
+};
+/**
+ * 打开签到记录页面
+ * @param id
+ */
+Membermanagement.opencheckHistory = function (id) {
+        var index = layer.open({
+            type: 2,
+            title: '签到记录',
+            area: ['800px', '500px'], //宽高
+            fix: false, //不固定
+            maxmin: true,
+            content: Feng.ctxPath + '/membermanagement/membermanagementcheckHistory/' + id
         });
         this.layerIndex = index;
 };
