@@ -212,4 +212,17 @@ public class MembermanagementController extends BaseController {
         return sb.toString();
     }
 
+
+    /**
+     * 通过id获取用户信息
+     */
+    @RequestMapping("getMemberInfo")
+    @ResponseBody
+    public Object selectMemberInfo(Integer memberId){
+        System.out.println(memberId);
+        Membermanagement m = membermanagementService.selectById(memberId);
+        System.out.println(m);
+        return m;
+    }
+
 }

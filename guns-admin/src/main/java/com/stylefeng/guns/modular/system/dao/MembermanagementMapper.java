@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.system.dao;
 
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface MembermanagementMapper extends BaseMapper<Membermanagement> {
 
+    public Integer updateByIntegral(@Param("memberId") Integer memberId,@Param("integral") double integral);
 }
