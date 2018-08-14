@@ -2,7 +2,33 @@
  * 初始化会员配置详情对话框
  */
 var MembershipcardtypeInfoDlg = {
-    membershipcardtypeInfoData : {}
+    membershipcardtypeInfoData : {},
+    zTreeInstance : null,
+    validateFields: {
+        cardname: {
+            validators: {
+                notEmpty: {
+                    message: '会员等级名称不能为空'
+                }
+            }
+        },
+        newpoints: {
+            validators: {
+                notEmpty: {
+                    message: '带新人奖励积分不能为空'
+                },
+                numeric: {message: '带新人奖励积分只能输入数字'}
+            }
+        },
+        upamount: {
+            validators: {
+                notEmpty: {
+                    message: '积分等级不能为空'
+                },
+                numeric: {message: '积分等级只能输入数字'}
+            }
+        }
+    }
 };
 
 /**
@@ -61,12 +87,24 @@ MembershipcardtypeInfoDlg.collectData = function() {
 }
 
 /**
+ * 验证数据是否为空
+ */
+MembershipcardtypeInfoDlg.validate = function () {
+    $('#membershipcardtypeInfoTable').bootstrapValidator('validate');
+    return $("#membershipcardtypeInfoTable").data('bootstrapValidator').isValid();
+};
+
+/**
  * 提交添加
  */
 MembershipcardtypeInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
+
+    if (!this.validate()) {
+        return;
+    }
 
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/membershipcardtype/add", function(data){
@@ -88,6 +126,10 @@ MembershipcardtypeInfoDlg.editSubmit = function() {
     this.clearData();
     this.collectData();
 
+    if (!this.validate()) {
+        return;
+    }
+
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/membershipcardtype/update", function(data){
         Feng.success("修改成功!");
@@ -101,5 +143,5 @@ MembershipcardtypeInfoDlg.editSubmit = function() {
 }
 
 $(function() {
-
+    Feng.initValidator("membershipcardtypeInfoTable", MembershipcardtypeInfoDlg.validateFields);
 });

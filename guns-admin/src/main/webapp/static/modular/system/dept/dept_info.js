@@ -25,7 +25,30 @@ var DeptInfoDlg = {
                     message: '上级名称不能为空'
                 }
             }
+        },
+        num: {
+            validators: {
+                notEmpty: {
+                    message: '排序不能为空'
+                },
+                numeric: { message:'排序只能为数字'}
+            }
+        },
+        linkman: {
+            validators: {
+                notEmpty: {
+                    message: '联系人不能为空'
+                }
+            }
+        },
+        province: {
+            validators: {
+                notEmpty: {
+                    message: '所属地区不能为空'
+                }
+            }
         }
+
     }
 };
 
