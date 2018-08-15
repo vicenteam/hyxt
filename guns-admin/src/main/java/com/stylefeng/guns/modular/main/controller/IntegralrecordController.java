@@ -90,6 +90,7 @@ public class IntegralrecordController extends BaseController {
         double actual = (integralrecord.getIntegral()+membermanagement.getCountPrice());
         membermanagement.setIntegral(integral);
         membermanagement.setCountPrice(actual);
+        //更新会员总积分和实际积分
         membermanagementService.updateById(membermanagement);
         return SUCCESS_TIP;
     }

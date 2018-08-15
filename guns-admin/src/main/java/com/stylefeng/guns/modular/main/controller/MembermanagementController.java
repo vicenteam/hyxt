@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -246,11 +247,19 @@ public class MembermanagementController extends BaseController {
      */
     @RequestMapping("getMemberInfo")
     @ResponseBody
-    public Object selectMemberInfo(Integer memberId) {
-        System.out.println(memberId);
+    public Object selectMemberInfo(Integer memberId){
         Membermanagement m = membermanagementService.selectById(memberId);
-        System.out.println(m);
-        return m;
+        Membershipcardtype ms = membershipcardtypeService.selectById(m.getLevelID());
+        Map<String, Object> memberinfo = new HashMap<>();
+        memberinfo.put("cadID",m.getCadID());
+        memberinfo.put("name",m.getName());
+        memberinfo.put("id",m.getId());
+        memberinfo.put("phone",m.getPhone());
+        memberinfo.put("address",m.getAddress());
+        memberinfo.put("integral",m.getIntegral());
+        memberinfo.put("countPrice",m.getCountPrice());
+        memberinfo.put("levelID",ms.getCardname());
+        return memberinfo;
     }
 
     @RequestMapping("/openintroducer/{membermanagementId}")
