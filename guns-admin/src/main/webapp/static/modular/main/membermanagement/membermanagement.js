@@ -40,7 +40,7 @@ Membermanagement.initColumn = function () {
 
                     return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
                         '<button type="button" class="btn btn-danger button-margin" onclick="Membermanagement.delete()" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>'+
-                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
+                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
                     '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
                 }},
     ];
@@ -101,6 +101,21 @@ Membermanagement.opencheckHistory = function (id) {
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/membermanagement/membermanagementcheckHistory/' + id
+        });
+        this.layerIndex = index;
+};
+/**
+ * 介绍人查询
+ * @param id
+ */
+Membermanagement.openintroducer = function (id) {
+        var index = layer.open({
+            type: 2,
+            title: '我推荐的人',
+            area: ['850px', '500px'], //宽高
+            fix: false, //不固定
+            maxmin: true,
+            content: Feng.ctxPath + '/membermanagement/openintroducer/' + id
         });
         this.layerIndex = index;
 };

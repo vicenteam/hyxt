@@ -2,7 +2,7 @@
 <html >
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>jQuery多功能日历插件 带事件记录功能DEMO演示</title>
+    <title></title>
     <link rel="stylesheet" href="${ctxPath}/static/date/style/documentation.css" type="text/css" />
     <link rel="stylesheet" href="${ctxPath}/static/date/style/jalendar.css" type="text/css" />
     <script type="text/javascript" src="${ctxPath}/static/date/js/jquery-1.10.2.min.js"></script><!--jQuery-->
@@ -52,7 +52,16 @@
         success: function (data) {
             $("#textVal").empty()
             $("#textVal").append(data.dom)
-
+            var dom = $(".day")
+            for(var i=0;i<dom.length;i++){
+                var domVal= $(dom[i]).attr("data-date")
+                var timeObj=data.timeObj;
+                for(var j=0;j<timeObj.length;j++){
+                    if(timeObj[j].time==domVal){
+                        $(dom[i]).css("background-color",timeObj[j].color)
+                    }
+                }
+            }
         }})
     $(function () {
 

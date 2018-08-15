@@ -6,15 +6,14 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IMemberCardService;
-import com.stylefeng.guns.modular.system.model.Dept;
-import com.stylefeng.guns.modular.system.model.MemberCard;
-import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
+import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
+import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
-import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +25,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员管理控制器
@@ -52,6 +51,10 @@ public class MembermanagementController extends BaseController {
     private IUserService userService;
     @Autowired
     private IDeptService deptService;
+    @Autowired
+    private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IQiandaoCheckinService qiandaoCheckinService;
 
     /**
      * 跳转到会员管理首页
@@ -60,10 +63,10 @@ public class MembermanagementController extends BaseController {
     public String index(Model model) {
         BaseEntityWrapper<User> deptBaseEntityWrapper = new BaseEntityWrapper<>();
         List list = userService.selectList(deptBaseEntityWrapper);
-        model.addAttribute("staffs",list);
+        model.addAttribute("staffs", list);
         EntityWrapper<Dept> deptBaseEntityWrapper1 = new EntityWrapper<>();
         List depts = deptService.selectList(deptBaseEntityWrapper1);
-        model.addAttribute("depts",depts);
+        model.addAttribute("depts", depts);
         return PREFIX + "membermanagement.html";
     }
 
@@ -74,7 +77,7 @@ public class MembermanagementController extends BaseController {
     public String membermanagementAdd(Model model) {
         BaseEntityWrapper<Dept> deptBaseEntityWrapper = new BaseEntityWrapper<>();
         List list = userService.selectList(deptBaseEntityWrapper);
-        model.addAttribute("staffs",list);
+        model.addAttribute("staffs", list);
         return PREFIX + "membermanagement_add.html";
     }
 
@@ -87,13 +90,14 @@ public class MembermanagementController extends BaseController {
         model.addAttribute("item", membermanagement);
         BaseEntityWrapper<Dept> deptBaseEntityWrapper = new BaseEntityWrapper<>();
         List list = userService.selectList(deptBaseEntityWrapper);
-        model.addAttribute("staffs",list);
+        model.addAttribute("staffs", list);
         LogObjectHolder.me().set(membermanagement);
         return PREFIX + "membermanagement_edit.html";
     }
 
     /**
      * 签到记录页面
+     *
      * @param membermanagementId
      * @param model
      * @return
@@ -101,15 +105,16 @@ public class MembermanagementController extends BaseController {
     @RequestMapping("/membermanagementcheckHistory/{membermanagementId}")
     public String membermanagementcheckHistory(@PathVariable Integer membermanagementId, Model model) {
         Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
-        model.addAttribute("memberId",membermanagementId);
+        model.addAttribute("memberId", membermanagementId);
         return PREFIX + "membermanagementcheckHistory.html";
     }
+
     /**
      * 获取会员管理列表
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String name, String address, String fstatus, String sex, String idcard, String phone, String stafff, String deptid, String province, String city, String district,String memberid) {
+    public Object list(String name, String address, String fstatus, String sex, String idcard, String phone, String stafff, String deptid, String province, String city, String district, String memberid) {
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
         EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
         if (!StringUtils.isEmpty(name)) baseEntityWrapper.eq("name", name);
@@ -124,9 +129,17 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(city)) baseEntityWrapper.eq("city", city);
         if (!StringUtils.isEmpty(district)) baseEntityWrapper.eq("district", district);
         if (!StringUtils.isEmpty(memberid)) baseEntityWrapper.eq("id", memberid);
-        baseEntityWrapper.eq("state",0);
-        Page<Membermanagement> result = membermanagementService.selectPage(page, baseEntityWrapper);
-        return super.packForBT(result);
+        baseEntityWrapper.eq("state", 0);
+        Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, baseEntityWrapper);
+        List<Map<String, Object>> records = mapPage.getRecords();
+        for (Map<String, Object> map : records) {
+            String s = (String) map.get("levelID");
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(s);
+            if(membershipcardtype!=null){
+                map.put("levelID",membershipcardtype.getCardname());
+            }
+        }
+        return super.packForBT(mapPage);
     }
 
     /**
@@ -135,12 +148,12 @@ public class MembermanagementController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Membermanagement membermanagement,String cardCode) {
-        membermanagement.setCreateTime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-        membermanagement.setDeptId(""+ShiroKit.getUser().getDeptId());
+    public Object add(Membermanagement membermanagement, String cardCode) {
+        membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
         membermanagementService.insert(membermanagement);
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
-        memberCardBaseEntityWrapper.eq("code",cardCode);
+        memberCardBaseEntityWrapper.eq("code", cardCode);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
         memberCard.setName(membermanagement.getName());
         memberCard.setMemberid(membermanagement.getId());
@@ -184,14 +197,16 @@ public class MembermanagementController extends BaseController {
     public Object getXieKaVal() {
         return getXieKaValInfo();
     }
+
     @RequestMapping(value = "/getUserInfo")
     @ResponseBody
     public Object getUserInfo(String value) {
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
-        memberCardBaseEntityWrapper.eq("code",value);
+        memberCardBaseEntityWrapper.eq("code", value);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
-       return memberCard;
+        return memberCard;
     }
+
     public String getXieKaValInfo() {
         String chars = "ABCDEF1234567890";
         StringBuilder sb = new StringBuilder();
@@ -206,7 +221,7 @@ public class MembermanagementController extends BaseController {
         }
         MemberCard memberCard = new MemberCard();
         memberCard.setCode(sb.toString());
-        memberCard.setCreatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        memberCard.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         memberCard.setDeptid(ShiroKit.getUser().getDeptId());
         memberCardService.insert(memberCard);
         return sb.toString();
@@ -218,11 +233,48 @@ public class MembermanagementController extends BaseController {
      */
     @RequestMapping("getMemberInfo")
     @ResponseBody
-    public Object selectMemberInfo(Integer memberId){
+    public Object selectMemberInfo(Integer memberId) {
         System.out.println(memberId);
         Membermanagement m = membermanagementService.selectById(memberId);
         System.out.println(m);
         return m;
     }
 
+    @RequestMapping("/openintroducer/{membermanagementId}")
+    public String openintroducerdata(@PathVariable Integer membermanagementId, Model model) {
+        model.addAttribute("memberId", membermanagementId);
+        return PREFIX + "openintroducer.html";
+    }
+
+    @RequestMapping(value = "/openintroducerdata/{id}")
+    @ResponseBody
+    public Object openintroducerdata(String name, @PathVariable Integer id) {
+        Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
+        EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
+        baseEntityWrapper.eq("introducerId", id);
+        Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, baseEntityWrapper);
+        List<Map<String, Object>> records = mapPage.getRecords();
+        for (Map<String, Object> map : records) {
+            String s = (String) map.get("levelID");
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(s);
+            if (membershipcardtype != null && membershipcardtype.getUpamount() == 0) {
+                //获取总签到场次次数
+                BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
+                qiandaoCheckinBaseEntityWrapper.eq("memberid", map.get("id"));
+                int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
+                map.put("levelID", "<span style='color:red;'>还差" + (10 - i) + "次签到成为普通会员</span>");
+                map.put("count", i);
+            } else if (membershipcardtype != null && membershipcardtype.getUpamount() != 0) {
+                map.put("levelID", membershipcardtype.getCardname());
+                //获取总签到场次次数
+                BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
+                qiandaoCheckinBaseEntityWrapper.eq("memberid", map.get("id"));
+                int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
+                map.put("count", i);
+
+            }
+
+        }
+        return super.packForBT(mapPage);
+    }
 }

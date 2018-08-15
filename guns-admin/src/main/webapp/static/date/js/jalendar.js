@@ -236,6 +236,14 @@ $(function () {
                 }
                 var valMonth = (month + 1)
                 var valYear = (year)
+                if(valMonth==(new Date().getMonth()+1)&&valYear==(new Date().getFullYear())){
+                    // $(".this-month").unbind('click');
+                    // $('#myId3').empty();
+                    // $("#myId3").append("<div id='textVal'></div>");
+                    // $('#myId3').jalendar();
+                    document.location.reload();
+                    return;
+                }
                 $.ajax({
                     url: '/checkin/findUserCheckInfoByMonth',
                     data: {memberId:$("#memberId").val(),valMonth:valMonth,valYear:valYear},
@@ -245,7 +253,16 @@ $(function () {
                     success: function (data) {
                         $("#textVal").empty()
                         $("#textVal").append(data.dom)
-
+                        var dom = $(".day")
+                        for(var i=0;i<dom.length;i++){
+                            var domVal= $(dom[i]).attr("data-date")
+                            var timeObj=data.timeObj;
+                            for(var j=0;j<timeObj.length;j++){
+                                if(timeObj[j].time==domVal){
+                                    $(dom[i]).css("background-color",timeObj[j].color)
+                                }
+                            }
+                        }
                     }})
                 calcMonth();
                 prevAddEvent();
@@ -261,6 +278,14 @@ $(function () {
                 }
                 var valMonth = (month + 1)
                 var valYear = (year)
+                if(valMonth==(new Date().getMonth()+1)&&valYear==(new Date().getFullYear())){
+                    // $(".this-month").unbind('click');
+                    // $('#myId3').empty();
+                    // $("#myId3").append("<div id='textVal'></div>");
+                    // $('#myId3').jalendar();
+                    document.location.reload();
+                    return;
+                }
                 $.ajax({
                     url: '/checkin/findUserCheckInfoByMonth',
                     data: {memberId:$("#memberId").val(),valMonth:valMonth,valYear:valYear},
@@ -270,7 +295,16 @@ $(function () {
                     success: function (data) {
                         $("#textVal").empty()
                         $("#textVal").append(data.dom)
-
+                        var dom = $(".day")
+                        for(var i=0;i<dom.length;i++){
+                            var domVal= $(dom[i]).attr("data-date")
+                            var timeObj=data.timeObj;
+                            for(var j=0;j<timeObj.length;j++){
+                                if(timeObj[j].time==domVal){
+                                    $(dom[i]).css("background-color",timeObj[j].color)
+                                }
+                            }
+                        }
                     }})
                 calcMonth();
                 prevAddEvent();
@@ -406,6 +440,7 @@ function findUserCheckInfoByMonyh(data) {
         contentType: 'application/x-www-form-urlencoded;charset=utf-8',
         async: false,
         success: function (data) {
+            $("#textVal").empty()
             $("#textVal").append(data.dom)
             var dom = $(".day")
             for(var i=0;i<dom.length;i++){
