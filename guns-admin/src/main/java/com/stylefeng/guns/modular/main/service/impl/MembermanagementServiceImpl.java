@@ -17,8 +17,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class MembermanagementServiceImpl extends ServiceImpl<MembermanagementMapper, Membermanagement> implements IMembermanagementService {
 
-    @Override
-    public Integer updateByIntegral(Integer memberId, double integral) {
-        return this.baseMapper.updateByIntegral(memberId,integral);
-    }
 }

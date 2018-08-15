@@ -13,11 +13,4 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IMembermanagementService extends IService<Membermanagement> {
 
-    /**
-     * 新增积分 更新会员总积分
-     * @param memberId
-     * @param integral
-     * @return
-     */
-    public Integer updateByIntegral(Integer memberId, double integral);
 }
