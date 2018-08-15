@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -81,6 +83,7 @@ public class IntegralrecordController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(Integralrecord integralrecord) {
         integralrecord.setType(0);
         integralrecord.setCreateTime(DateUtil.getTime());
@@ -92,6 +95,7 @@ public class IntegralrecordController extends BaseController {
         membermanagement.setCountPrice(actual);
         //更新会员总积分和实际积分
         membermanagementService.updateById(membermanagement);
+        new MembermanagementController().updateMemberLeave(membermanagement.getId()+"");
         return SUCCESS_TIP;
     }
 

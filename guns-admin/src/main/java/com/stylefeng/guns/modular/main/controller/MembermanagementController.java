@@ -331,4 +331,23 @@ public class MembermanagementController extends BaseController {
         membermanagementService.updateById(m);
         return SUCCESS_TIP;
     }
+
+    /**
+     * 修改用户等级
+     * @param memberId
+     */
+    public  void updateMemberLeave(String memberId){
+        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+        Double countPrice = membermanagement.getCountPrice();
+        BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
+        membershipcardtypeBaseEntityWrapper.orderBy("upamount",false);
+        List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
+        for(Membershipcardtype membershipcardtype:list){
+            if(countPrice>=membershipcardtype.getUpamount()){
+                membermanagement.setLevelID(membershipcardtype.getId()+"");
+                membermanagementService.updateById(membermanagement);
+                break;
+            }
+        }
+    }
 }
