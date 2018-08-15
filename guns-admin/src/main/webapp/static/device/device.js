@@ -382,15 +382,20 @@ function getXieKaVal() {
                         Feng.error("该卡以及绑定用户请换张卡试试!");
                         return
                     }else {
-                        var ajax = new $ax(Feng.ctxPath + "/membermanagement/getXieKaVal", function (data) {
-                            $("#writeData").val(data)
-                            $("#cardCode").val(data)
-                            //执行写数据
-                            writeData();
-                        }, function (data) {
-                            Feng.error("获取数据失败!" + data.responseJSON.message + "!");
-                        });
-                        ajax.start();
+                        if(data=="202"){
+                            Feng.error("该卡已挂失无法执行该操作!");
+                        }else {
+                            var ajax = new $ax(Feng.ctxPath + "/membermanagement/getXieKaVal", function (data) {
+                                $("#writeData").val(data)
+                                $("#cardCode").val(data)
+                                //执行写数据
+                                writeData();
+                            }, function (data) {
+                                Feng.error("获取数据失败!" + data.responseJSON.message + "!");
+                            });
+                            ajax.start();
+                        }
+
                     }
                 }
             });

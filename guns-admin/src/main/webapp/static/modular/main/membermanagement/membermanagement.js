@@ -172,7 +172,12 @@ Membermanagement.search1 = function () {
                 if(data.id!=undefined){
                     queryData['memberid'] = data.memberid;
                 }else {
-                    queryData['memberid'] = -1;
+                    if(data=="202"){
+                        Feng.error("该卡已挂失无法执行该操作!");
+                    }else {
+                        queryData['memberid'] = -1;
+
+                    }
                 }
 
                 Membermanagement.table.refresh({query: queryData});

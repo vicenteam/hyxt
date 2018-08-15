@@ -206,6 +206,17 @@ public class MembermanagementController extends BaseController {
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
         memberCardBaseEntityWrapper.eq("code", value);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
+        //卡片是否锁定
+       if(memberCard!=null&&memberCard.getMemberid()!=null){
+           Integer memberid = memberCard.getMemberid();
+           Membermanagement membermanagement = membermanagementService.selectById(memberid);
+           if(membermanagement!=null){
+               String townshipid = membermanagement.getTownshipid();
+               if(townshipid.equals("1")){
+                   return "202";
+               }
+           }
+       }
         return memberCard;
     }
 
