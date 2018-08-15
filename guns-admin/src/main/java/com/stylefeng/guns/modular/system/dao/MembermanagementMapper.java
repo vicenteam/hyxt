@@ -14,5 +14,4 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface MembermanagementMapper extends BaseMapper<Membermanagement> {
 
-    public Integer updateByIntegral(@Param("memberId") Integer memberId,@Param("integral") double integral);
 }

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 
+import java.sql.Wrapper;
+
 /**
  * 新增积分控制器
  *
@@ -85,7 +87,10 @@ public class IntegralrecordController extends BaseController {
         integralrecordService.insert(integralrecord);
         Membermanagement membermanagement = membermanagementService.selectById(integralrecord.getMemberid());
         double integral = (integralrecord.getIntegral()+membermanagement.getIntegral());
-        membermanagementService.updateByIntegral(integralrecord.getMemberid(),integral);
+        double actual = (integralrecord.getIntegral()+membermanagement.getCountPrice());
+        membermanagement.setIntegral(integral);
+        membermanagement.setCountPrice(actual);
+        membermanagementService.updateById(membermanagement);
         return SUCCESS_TIP;
     }
 
