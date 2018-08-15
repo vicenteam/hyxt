@@ -219,7 +219,7 @@ $(function () {
             }
 
             function prevAddEvent() {
-                $this.find('.day').removeClass('selected').removeAttr('style');
+                // $this.find('.day').removeClass('selected').removeAttr('style');
                 $this.find('.today').css('color', settings.color);
                 $this.find('.add-event').hide();
                 $this.children('.jalendar-wood').animate({'width': jalendarWoodW}, 200);
@@ -236,9 +236,20 @@ $(function () {
                 }
                 var valMonth = (month + 1)
                 var valYear = (year)
-                findUserCheckInfoByMonyh({valMonth: valMonth, valYear: valYear})
+                $.ajax({
+                    url: '/checkin/findUserCheckInfoByMonth',
+                    data: {memberId:$("#memberId").val(),valMonth:valMonth,valYear:valYear},
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+                    async: false,
+                    success: function (data) {
+                        $("#textVal").empty()
+                        $("#textVal").append(data.dom)
+
+                    }})
                 calcMonth();
                 prevAddEvent();
+                findUserCheckInfoByMonyh({valMonth: valMonth, valYear: valYear})
             });
             arrows[0].on('click', function () {
                 dayClick = $this.find('.this-month');
@@ -250,9 +261,20 @@ $(function () {
                 }
                 var valMonth = (month + 1)
                 var valYear = (year)
-                findUserCheckInfoByMonyh({valMonth: valMonth, valYear: valYear})
+                $.ajax({
+                    url: '/checkin/findUserCheckInfoByMonth',
+                    data: {memberId:$("#memberId").val(),valMonth:valMonth,valYear:valYear},
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+                    async: false,
+                    success: function (data) {
+                        $("#textVal").empty()
+                        $("#textVal").append(data.dom)
+
+                    }})
                 calcMonth();
                 prevAddEvent();
+                findUserCheckInfoByMonyh({valMonth: valMonth, valYear: valYear})
             });
 
             $this.on('click', '.this-month', function () {
@@ -357,25 +379,45 @@ $(function () {
 });
 
 function findUserCheckInfoByMonyh(data) {
-    var ajax = new $ax(Feng.ctxPath + "/checkin/findUserCheckInfoByMonth", function (data) {
-        $("#textVal").empty()
-        $("#textVal").append(data.dom)
-        var dom = $(".day")
-        for(var i=0;i<dom.length;i++){
-           var domVal= $(dom[i]).attr("data-date")
-            var timeObj=data.timeObj;
-           for(var j=0;j<timeObj.length;j++){
-               if(timeObj[j].time==domVal){
-                   // $(dom[i]).css("background-color",timeObj[j].color)
-               }
-           }
-        }
-    }, function (data) {
-    });
-    ajax.set("memberId", $("#memberId").val());
-    ajax.set("valMonth", data.valMonth);
-    ajax.set("valYear", data.valYear);
-    ajax.start();
+    // var ajax = new $ax(Feng.ctxPath + "/checkin/findUserCheckInfoByMonth", function (data) {
+    //     // $("#textVal").empty()
+    //     $("#textVal").append(data.dom)
+    //     var dom = $(".day")
+    //     for(var i=0;i<dom.length;i++){
+    //        var domVal= $(dom[i]).attr("data-date")
+    //         var timeObj=data.timeObj;
+    //        for(var j=0;j<timeObj.length;j++){
+    //            if(timeObj[j].time==domVal){
+    //                $(dom[i]).css("background-color",timeObj[j].color)
+    //            }
+    //        }
+    //     }
+    // }, function (data) {
+    // });
+    // ajax.set("memberId", $("#memberId").val());
+    // ajax.set("valMonth", data.valMonth);
+    // ajax.set("valYear", data.valYear);
+    // ajax.start();
+
+    $.ajax({
+        url: '/checkin/findUserCheckInfoByMonth',
+        data: {memberId:$("#memberId").val(),valMonth:data.valMonth,valYear:data.valYear},
+        type: 'POST',
+        contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+        async: false,
+        success: function (data) {
+            $("#textVal").append(data.dom)
+            var dom = $(".day")
+            for(var i=0;i<dom.length;i++){
+                var domVal= $(dom[i]).attr("data-date")
+                var timeObj=data.timeObj;
+                for(var j=0;j<timeObj.length;j++){
+                    if(timeObj[j].time==domVal){
+                        $(dom[i]).css("background-color",timeObj[j].color)
+                    }
+                }
+            }
+        }})
 }
 
 

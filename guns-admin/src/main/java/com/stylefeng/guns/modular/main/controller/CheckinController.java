@@ -249,7 +249,7 @@ public class CheckinController extends BaseController {
                 String updatetime = qi.getUpdatetime();
                 Date parse2 = DateUtil.parse(updatetime, "yyyy-MM-dd HH:mm:ss");
                 String s2 = DateUtil.formatDate(parse2, "dd/M/yyyy");
-                String[] split2 = createtime.split(" ");
+                String[] split2 = updatetime.split(" ");
                 String time12=split2[1];
                 sb.append("<div class='added-event' data-date='"+s2+"' data-time='"+time12+"' data-title='复签时间' style='background-color:"+backgroundcolor+";'></div>");
             }

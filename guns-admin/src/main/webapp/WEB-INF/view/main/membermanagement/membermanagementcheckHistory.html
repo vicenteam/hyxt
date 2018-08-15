@@ -1,4 +1,4 @@
-@layout("/common/_container.html"){
+
 <html >
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="${ctxPath}/static/date/style/jalendar.css" type="text/css" />
     <script type="text/javascript" src="${ctxPath}/static/date/js/jquery-1.10.2.min.js"></script><!--jQuery-->
     <script type="text/javascript" src="${ctxPath}/static/date/js/jalendar.js"></script>
+    <script src="${ctxPath}/static/js/jquery.min.js?v=2.1.4"></script>
     <style>
         .add-new{
             display: none;
@@ -31,8 +32,8 @@
 
     <div id="myId3" class="jalendar mid" style="margin-left: 10px;">
        <div id="textVal">
-           <!--<div class="added-event" data-date="13/8/2018" data-time="21:00:22" data-title="333"></div>-->
-           <!--<div class="added-event" data-date="13/8/2018" data-time="22:00" data-title="222"></div>-->
+           <div class="added-event" data-date="13/8/2018" data-time="21:00:22" data-title="333"></div>
+           <div class="added-event" data-date="13/8/2018" data-time="22:00" data-title="222"></div>
        </div>
     </div>
     <input type="hidden" id="memberId" value="${memberId}">
@@ -41,9 +42,20 @@
 </body>
 </html>
 <script>
+    var date= new Date();
+    $.ajax({
+        url: '/checkin/findUserCheckInfoByMonth',
+        data: {memberId:$("#memberId").val(),valMonth:(date.getMonth()+1),valYear:date.getFullYear()},
+        type: 'POST',
+        contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+        async: false,
+        success: function (data) {
+            $("#textVal").empty()
+            $("#textVal").append(data.dom)
+
+        }})
     $(function () {
-        var date= new Date();
+
         findUserCheckInfoByMonyh({valMonth:(date.getMonth()+1),valYear:date.getFullYear()});
     })
 </script>
-@}
