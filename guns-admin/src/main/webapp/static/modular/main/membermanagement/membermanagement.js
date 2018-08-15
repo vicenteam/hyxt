@@ -151,11 +151,12 @@ Membermanagement.search = function () {
     queryData['deptid'] = $("#deptid").val();
     queryData['province'] = $("#province").val();
     queryData['city'] = $("#city").val();
-    queryData['district'] = $("#district").val();
+    queryData['memberid'] = "";
+    console.log(queryData)
     Membermanagement.table.refresh({query: queryData});
 };
 Membermanagement.search1 = function () {
-    var queryData = {};
+    var queryData1 = {};
     readDeviceCard();
 //校验密码
     RfAuthenticationKey();
@@ -170,17 +171,17 @@ Membermanagement.search1 = function () {
             async: false,
             success: function (data) {
                 if(data.id!=undefined){
-                    queryData['memberid'] = data.memberid;
+                    queryData1['memberid'] = data.memberid;
                 }else {
                     if(data=="202"){
                         Feng.error("该卡已挂失无法执行该操作!");
                     }else {
-                        queryData['memberid'] = -1;
+                        queryData1['memberid'] = -1;
 
                     }
                 }
 
-                Membermanagement.table.refresh({query: queryData});
+                Membermanagement.table.refresh({query: queryData1});
             }})
     }
 
