@@ -14,16 +14,19 @@ var Checkin = {
 Checkin.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
-            {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'screenings', visible: true, align: 'center', valign: 'middle'},
+            {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
+            {title: '场次编号', field: 'screenings', visible: true, align: 'center', valign: 'middle'},
             {title: '签到人数', field: 'memberCount', visible: true, align: 'center', valign: 'middle'},
-            {title: '新卡签到数', field: 'newCount', visible: true, align: 'center', valign: 'middle'},
+            // {title: '新卡签到数', field: 'newCount', visible: true, align: 'center', valign: 'middle'},
             {title: '开始时间', field: 'startDate', visible: true, align: 'center', valign: 'middle'},
-            {title: '签到场次状态；1：签到中   2：结束签到', field: 'status', visible: true, align: 'center', valign: 'middle'},
+            {title: '签到场次状态', field: 'status', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                    if(value==1){
+                        return '进行中';
+                    }else {
+                        return '已结束';
+                    }
+                }},
             {title: '结束时间', field: 'endDate', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'createDate', visible: true, align: 'center', valign: 'middle'},
-            {title: '门店ID', field: 'deptId', visible: true, align: 'center', valign: 'middle'},
-            {title: '', field: 'isActive', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 

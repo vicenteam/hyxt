@@ -62,7 +62,11 @@ public class CheckinController extends BaseController {
         model.addAttribute("dept",dept);
         return PREFIX + "checkin.html";
     }
-
+    //签到场次
+    @RequestMapping("checkinIndex")
+    public String checkinIndex( Model model) {
+        return PREFIX + "checkinIndex.html";
+    }
     /**
      * 跳转到添加签到场次
      */
@@ -90,6 +94,8 @@ public class CheckinController extends BaseController {
     public Object list(String condition) {
         Page<Checkin> page = new PageFactory<Checkin>().defaultPage();
         BaseEntityWrapper<Checkin> baseEntityWrapper = new BaseEntityWrapper<>();
+        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("screenings",condition);
+        baseEntityWrapper.orderBy("startDate",false);
         Page<Checkin> result = checkinService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
     }
