@@ -1,0 +1,85 @@
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>管理</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <#NameCon id="name" name="姓名" />
+                            </div>
+
+                            <div class="col-sm-2">
+                                <#NameCon id="address" name="家庭住址" />
+                            </div>
+                            <div class="col-sm-2">
+                                <#SelectCon id="fstatus" name="家庭状况">
+                                <option value="">全部</option>
+                                <option value="1">有子女</option>
+                                <option value="2">无子女</option>
+                            </#SelectCon>
+                            </div>
+                            <div class="col-sm-2">
+                                <#SelectCon id="sex" name="性别">
+                                <option value="">全部</option>
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                                </#SelectCon>
+                            </div>
+                            <div class="col-sm-2">
+                                <#NameCon id="idcard" name="身份证" />
+                            </div>
+                            <div class="col-sm-2">
+                                <#NameCon id="phone" name="手机" />
+                            </div>
+                            <div class="col-sm-2">
+                                <#SelectCon id="stafff" name="服务员工">
+                                <option value="">全部</option>
+                                @for(item in staffs){
+                                <option value="${item.id}">${item.name}</option>
+                                @}
+                            </#SelectCon>
+                            </div>
+                            <div class="col-sm-2">
+                                <#SelectCon id="deptid" name="门店">
+                                <option value="">全部</option>
+                                @for(item in depts){
+                                <option value="${item.id}">${item.fullname}</option>
+                                @}
+                            </#SelectCon>
+                            </div>
+                            <div class="col-sm-2">
+                                <#AddressSelect id="province" province="province" name="所属地区"/>
+                            </div>
+                            <div class="col-sm-2">
+                                <#AddressSelect id="city" city="city" name="所属区域"/>
+                            </div>
+                            <div class="col-sm-2">
+                                <#AddressSelect id="district" district="district" name="所属区县"/>
+                            </div>
+            <div class="col-sm-2">
+                <#SelectCon id="townshipid" name="挂失状态">
+                <option value="">全部</option>
+                <option value="0">正常</option>
+                <option value="1">挂失中</option>
+            </#SelectCon>
+        </div>
+                            <div class="col-sm-2">
+                                <#button name="搜索" icon="fa-search" clickFun="Membermanagement.search()"/>
+                            </div>
+                        </div>
+
+                        <#table id="MembermanagementTable"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="${ctxPath}/static/modular/main/membermanagement/guashi.js"></script>
+@}

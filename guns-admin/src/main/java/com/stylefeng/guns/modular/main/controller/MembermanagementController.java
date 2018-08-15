@@ -114,7 +114,7 @@ public class MembermanagementController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String name, String address, String fstatus, String sex, String idcard, String phone, String stafff, String deptid, String province, String city, String district, String memberid) {
+    public Object list(String name, String address, String fstatus, String sex, String idcard, String phone, String stafff, String deptid, String province, String city, String district, String memberid,String townshipid) {
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
         EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
         if (!StringUtils.isEmpty(name)) baseEntityWrapper.eq("name", name);
@@ -129,6 +129,7 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(city)) baseEntityWrapper.eq("city", city);
         if (!StringUtils.isEmpty(district)) baseEntityWrapper.eq("district", district);
         if (!StringUtils.isEmpty(memberid)) baseEntityWrapper.eq("id", memberid);
+        if (!StringUtils.isEmpty(townshipid)) baseEntityWrapper.eq("townshipid", townshipid);
         baseEntityWrapper.eq("state", 0);
         Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = mapPage.getRecords();
@@ -151,6 +152,7 @@ public class MembermanagementController extends BaseController {
     public Object add(Membermanagement membermanagement, String cardCode) {
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
+        membermanagement.setTownshipid("0");
         membermanagementService.insert(membermanagement);
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
         memberCardBaseEntityWrapper.eq("code", cardCode);
@@ -276,5 +278,37 @@ public class MembermanagementController extends BaseController {
 
         }
         return super.packForBT(mapPage);
+    }
+
+    /**
+     * 进行挂失
+     * @param model
+     * @return
+     */
+    @RequestMapping("/guashi")
+    public String guashi( Model model) {
+        BaseEntityWrapper<User> deptBaseEntityWrapper = new BaseEntityWrapper<>();
+        List list = userService.selectList(deptBaseEntityWrapper);
+        model.addAttribute("staffs", list);
+        EntityWrapper<Dept> deptBaseEntityWrapper1 = new EntityWrapper<>();
+        List depts = deptService.selectList(deptBaseEntityWrapper1);
+        model.addAttribute("depts", depts);
+        return PREFIX + "guashi.html";
+    }
+    @RequestMapping("/guashiData")
+    @ResponseBody
+    public Object guashiData(String memberId) {
+        Membermanagement m = membermanagementService.selectById(memberId);
+        m.setTownshipid("1");
+        membermanagementService.updateById(m);
+        return SUCCESS_TIP;
+    }
+    @RequestMapping("/guashiData1")
+    @ResponseBody
+    public Object guashiData1(String memberId) {
+        Membermanagement m = membermanagementService.selectById(memberId);
+        m.setTownshipid("0");
+        membermanagementService.updateById(m);
+        return SUCCESS_TIP;
     }
 }
