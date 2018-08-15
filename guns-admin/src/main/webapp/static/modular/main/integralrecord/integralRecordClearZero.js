@@ -15,23 +15,9 @@ Integralrecord.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
             {title: '积分记录编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
-            {title: '会员名称', field: 'memberName', visible: true, align: 'center', valign: 'middle'},
-            {title: '会员卡号', field: 'membercadid', visible: true, align: 'center', valign: 'middle'},
-            {title: '积分值', field: 'integral', visible: true, align: 'center', valign: 'middle'},
-            {title: '附加参数，如果是本人或新人购物获得积分，则该列的值是该购物记录的ID，如果是带新人或新人签到获得积分，则是所带新人的ID', field: 'target', visible: false, align: 'center', valign: 'middle'},
-            {title: '积分类型', field: 'type', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-            if(value==0){
-                return '购物';
-            }else if(value == 1) {
-                return '推荐新人';
-            }else{
-                return "兑换";
-            }
-            }},
-            {title: '会员id', field: 'memberid', visible: false, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                    console.log(value)
-                }},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'}
+            {title: '部门', field: 'deptName', visible: true, align: 'center', valign: 'middle'},
+            {title: '时间', field: 'time', visible: true, align: 'center', valign: 'middle'},
+            {title: '操作', field: 'operation', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 
@@ -108,7 +94,7 @@ Integralrecord.search = function () {
 
 $(function () {
     var defaultColunms = Integralrecord.initColumn();
-    var table = new BSTable(Integralrecord.id, "/integralrecordquery/list", defaultColunms);
+    var table = new BSTable(Integralrecord.id, "/integralrecordclearzero/list", defaultColunms);
     //table.setPaginationType("client");
     table.setPaginationType("server");
     Integralrecord.table = table.init();

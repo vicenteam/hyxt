@@ -9,7 +9,11 @@ var IntegralrecordInfoDlg = {
                 notEmpty: {
                     message: '新增积分不能为空'
                 },
-                numeric: {message: '新增积分只能输入数字'}
+                numeric: {message: '新增积分只能输入数字'},
+                greaterThan: {
+                    value: 1,
+                    message: "新增积分最小输入值为 1"
+                }
             }
         }
     }
@@ -87,8 +91,14 @@ IntegralrecordInfoDlg.addSubmit = function() {
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/integralrecord/add", function(data){
         Feng.success("添加成功!");
-        window.parent.Integralrecord.table.refresh();
-        IntegralrecordInfoDlg.close();
+        $("#introducerName").val("");
+        $("#name").val("");
+        $("#memberid").val("");
+        $("#tel").val("");
+        $("#address").val("");
+        $("#integralSum").val("");
+        $("#countPrice").val("");
+        $("#levelID").val("");
     },function(data){
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
