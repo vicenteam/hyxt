@@ -1,0 +1,36 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="活动编号" value="${item.id}" underline="true"/>
+                            <#input id="name" name="活动名称" value="${item.name}" underline="true"/>
+                            <#input id="content" name="活动内容" value="${item.content}" underline="true"/>
+                            <#input id="creater" name="活动创建者" value="${item.creater}" underline="true"/>
+                            <#input id="deptid" name="所属部门" value="${item.deptid}" underline="true"/>
+                            <#input id="ruleexpression" name="活动规则(0累计签到 1连续签到 2积分兑换)" value="${item.ruleexpression}" />
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="begindate" name="活到开始时间" value="${item.begindate}" underline="true"/>
+                            <#input id="enddate" name="活动结束时间" value="${item.enddate}" underline="true"/>
+                            <#input id="createtime" name="" value="${item.createtime}" underline="true"/>
+                            <#input id="status" name="活动状态(0表示有效，1表示无效)" value="${item.status}" underline="true"/>
+                            <#input id="maxgetnum" name="最大领取次数" value="${item.maxgetnum}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ActivityInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="ActivityInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/main/activity/activity_info.js"></script>
+@}

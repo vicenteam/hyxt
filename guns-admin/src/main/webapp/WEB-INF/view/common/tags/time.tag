@@ -7,20 +7,19 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">${name}</label>
     <div class="col-sm-9">
-        <select class="form-control" id="${id}" name="${id}"
-                @if(isNotEmpty(disabled)){
-                disabled="${disabled}"
-                @}
-        >
-            ${tagBody!}
-        </select>
-        @if(isNotEmpty(hidden)){
-            <input class="form-control" type="hidden" id="${hidden}" value="${hiddenValue!}">
-        @}
+        <input type="text" class="form-control layer-date" id="${id}"/>
     </div>
 </div>
 @if(isNotEmpty(underline) && underline == 'true'){
     <div class="hr-line-dashed"></div>
 @}
+<script>
+    var domid='${id}';
+    var pattern='${pattern}';
+    laydate.render({
+        elem: '#'+domid
+        ,format: pattern,
+    });
+</script>
 
 
