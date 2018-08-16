@@ -25,7 +25,7 @@ Integralrecord.initColumn = function () {
             }else if (value == 1) {
                 return '推荐新人';
             }else if (value == 2){
-                return "兑换";
+                return "赠送";
             }else if (value == 3){
                 return "清零积分";
             }else if (value == 4){

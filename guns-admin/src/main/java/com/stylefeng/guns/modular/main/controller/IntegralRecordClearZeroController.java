@@ -15,6 +15,8 @@ import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,6 +76,7 @@ public class IntegralRecordClearZeroController extends BaseController {
      */
     @RequestMapping(value = "/clear")
     @ResponseBody
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object integralClear() {
         Integer deptId = ShiroKit.getUser().getDeptId();
         Integer staffId = ShiroKit.getUser().getId();
@@ -109,6 +112,7 @@ public class IntegralRecordClearZeroController extends BaseController {
      */
     @RequestMapping(value = "/rollBack")
     @ResponseBody
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object integralRollBack(Integer integralRecordId){
         BaseEntityWrapper<Integralrecord> wrapper = new BaseEntityWrapper<>();
         wrapper.eq("clearid",integralRecordId);
