@@ -9,6 +9,8 @@ import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
+import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,8 @@ public class IntegralRecordQueryController extends BaseController {
     private IIntegralrecordService integralrecordService;
     @Autowired
     private IMembermanagementService membermanagementService;
+    @Autowired
+    private IUserService userService;
 
     @RequestMapping("")
     public String index(){
@@ -47,12 +51,16 @@ public class IntegralRecordQueryController extends BaseController {
         Page<Integralrecord> page = new PageFactory<Integralrecord>().defaultPage();
         EntityWrapper<Integralrecord> entityWrapper = new EntityWrapper<>();
         Page<Map<String, Object>> result = integralrecordService.selectMapsPage(page, entityWrapper);
-        for(int i=0; i<result.getRecords().size(); i++){
-            Membermanagement m = membermanagementService.selectById(result.getRecords().get(i).get("memberid").toString());
-            result.getRecords().get(i).put("memberName",m.getName());
-            result.getRecords().get(i).put("membercadid",m.getCadID());
+        for(Map<String, Object> map : result.getRecords()){
+            if(map.get("memberid") != null){
+                Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());
+                map.put("memberName",membermanagement.getName());
+                map.put("membercadid",membermanagement.getCadID());
+            }
+            if(map.get("staffid") != null){
+                map.put("staffName",userService.selectById(map.get("staffid").toString()).getName());
+            }
         }
-        System.out.println(result.getRecords());
         return super.packForBT(result);
     }
 

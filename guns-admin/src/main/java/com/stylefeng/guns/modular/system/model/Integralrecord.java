@@ -45,6 +45,10 @@ public class Integralrecord extends Model<Integralrecord> {
      */
     private String createTime;
 
+    private Integer deptid;
+    private Integer clearid;
+    private Integer staffid;
+
 
     public Integer getId() {
         return id;
@@ -94,6 +98,30 @@ public class Integralrecord extends Model<Integralrecord> {
         this.createTime = createTime;
     }
 
+    public Integer getDeptid() {
+        return deptid;
+    }
+
+    public void setDeptid(Integer deptid) {
+        this.deptid = deptid;
+    }
+
+    public Integer getClearid() {
+        return clearid;
+    }
+
+    public void setClearid(Integer clearid) {
+        this.clearid = clearid;
+    }
+
+    public Integer getStaffid() {
+        return staffid;
+    }
+
+    public void setStaffid(Integer staffid) {
+        this.staffid = staffid;
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.id;
@@ -108,6 +136,9 @@ public class Integralrecord extends Model<Integralrecord> {
         ", type=" + type +
         ", memberid=" + memberid +
         ", createTime=" + createTime +
+        ", deptid=" + deptid +
+        ", clearid=" + clearid +
+        ", staffid=" + staffid +
         "}";
     }
 }

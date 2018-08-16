@@ -16,8 +16,11 @@ Integralrecord.initColumn = function () {
         {field: 'selectItem', radio: true},
             {title: '积分记录编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '部门', field: 'deptName', visible: true, align: 'center', valign: 'middle'},
-            {title: '时间', field: 'time', visible: true, align: 'center', valign: 'middle'},
-            {title: '操作', field: 'operation', visible: true, align: 'center', valign: 'middle'}
+            {title: '时间', field: 'createdt', visible: true, align: 'center', valign: 'middle'},
+            {title: '操作', field: 'operation', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                console.log(row.id);
+                    return '<button type="button" class="btn btn-primary button-margin" onclick="Integralrecord.recovery(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;恢复</button>'
+                }}
     ];
 };
 
@@ -36,51 +39,17 @@ Integralrecord.check = function () {
 };
 
 /**
- * 点击添加新增积分
- */
-Integralrecord.openAddIntegralrecord = function () {
-    var index = layer.open({
-        type: 2,
-        title: '添加新增积分',
-        area: ['800px', '420px'], //宽高
-        fix: false, //不固定
-        maxmin: true,
-        content: Feng.ctxPath + '/integralrecordquery/integralrecord_add'
-    });
-    this.layerIndex = index;
-};
-
-/**
- * 打开查看新增积分详情
- */
-Integralrecord.openIntegralrecordDetail = function () {
-    if (this.check()) {
-        var index = layer.open({
-            type: 2,
-            title: '新增积分详情',
-            area: ['800px', '420px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: Feng.ctxPath + '/integralrecordquery/integralrecord_update/' + Integralrecord.seItem.id
-        });
-        this.layerIndex = index;
-    }
-};
-
-/**
- * 删除新增积分
+ * 积分清零
  */
 Integralrecord.delete = function () {
-    if (this.check()) {
-        var ajax = new $ax(Feng.ctxPath + "/integralrecordquery/delete", function (data) {
-            Feng.success("删除成功!");
-            Integralrecord.table.refresh();
-        }, function (data) {
-            Feng.error("删除失败!" + data.responseJSON.message + "!");
-        });
-        ajax.set("integralrecordId",this.seItem.id);
-        ajax.start();
-    }
+    var ajax = new $ax(Feng.ctxPath + "/integralrecordclearzero/clear", function (data) {
+        Feng.success("删除成功!");
+        Integralrecord.table.refresh();
+    }, function (data) {
+        Feng.error("删除失败!" + data.responseJSON.message + "!");
+    });
+    // ajax.set("integralrecordId",this.seItem.id);
+    ajax.start();
 };
 
 /**
@@ -88,7 +57,7 @@ Integralrecord.delete = function () {
  */
 Integralrecord.search = function () {
     var queryData = {};
-    queryData['condition'] = $("#condition").val();
+    queryData['deptid'] = $("#deptid").val();
     Integralrecord.table.refresh({query: queryData});
 };
 
@@ -99,3 +68,15 @@ $(function () {
     table.setPaginationType("server");
     Integralrecord.table = table.init();
 });
+
+
+Integralrecord.recovery = function (id) {
+    var ajax = new $ax(Feng.ctxPath + "/integralrecordclearzero/rollBack", function (data) {
+        Feng.success("操作成功!");
+        Integralrecord.table.refresh();
+    }, function (data) {
+        Feng.error("操作失败!" + data.responseJSON.message + "!");
+    });
+    ajax.set("integralRecordId",id);
+    ajax.start();
+};

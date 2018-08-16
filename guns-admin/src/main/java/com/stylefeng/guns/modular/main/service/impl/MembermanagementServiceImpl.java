@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.main.service.impl;
 
+import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.dao.MembermanagementMapper;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
@@ -17,4 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class MembermanagementServiceImpl extends ServiceImpl<MembermanagementMapper, Membermanagement> implements IMembermanagementService {
 
+    @Override
+    public boolean updateIntegralRollBack(Integralrecord integralrecord) {
+        return this.baseMapper.updateIntegralRollBack(integralrecord);
+    }
 }

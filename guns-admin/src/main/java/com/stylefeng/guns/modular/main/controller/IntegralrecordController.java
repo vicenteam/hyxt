@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
@@ -89,6 +90,8 @@ public class IntegralrecordController extends BaseController {
     public Object add(Integralrecord integralrecord) {
         integralrecord.setType(0);
         integralrecord.setCreateTime(DateUtil.getTime());
+        integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+        integralrecord.setStaffid(ShiroKit.getUser().getId());
         integralrecordService.insert(integralrecord);
         Membermanagement membermanagement = membermanagementService.selectById(integralrecord.getMemberid());
         double integral = (integralrecord.getIntegral()+membermanagement.getIntegral());

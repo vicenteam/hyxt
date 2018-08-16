@@ -44,4 +44,9 @@
         id, cadID, NAME, telphone, sex, email, phone, state, integral, levelID, cardID, createTime, isoldsociety, birthday, deptName, introducerId, province, city, district, medicalHistory, familyStatusID, staffID, countyID, townshipid, healthStatus, CheckINTime1, CheckINTime2, recommendMember, address, countPrice, imgName, deptId, token
     </sql>
 
+    <update id="updateIntegralRollBack" parameterType="com.stylefeng.guns.modular.system.model.Integralrecord">
+      update main_membermanagement
+      set countPrice= #{integralrecord.integral} + countPrice
+      where id= #{integralrecord.memberid}
+    </update>
 </mapper>

@@ -10,11 +10,15 @@
         <result column="type" property="type" />
         <result column="memberid" property="memberid" />
         <result column="createTime" property="createTime" />
+        <result column="deptid" property="deptid" />
+        <result column="clearid" property="clearid" />
+        <result column="staffid" property="staffid" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, integral, target, type, memberid, createTime
     </sql>
+
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.system.dao;
 
+import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,4 +15,10 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface MembermanagementMapper extends BaseMapper<Membermanagement> {
 
+    /**
+     * 恢复积分
+     * @param integralrecord
+     * @return
+     */
+    boolean updateIntegralRollBack(@Param("integralrecord") Integralrecord integralrecord);
 }

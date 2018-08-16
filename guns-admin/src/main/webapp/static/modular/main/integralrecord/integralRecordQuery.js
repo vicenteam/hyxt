@@ -22,12 +22,17 @@ Integralrecord.initColumn = function () {
             {title: '积分类型', field: 'type', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
             if(value==0){
                 return '购物';
-            }else if(value == 1) {
+            }else if (value == 1) {
                 return '推荐新人';
-            }else{
+            }else if (value == 2){
                 return "兑换";
+            }else if (value == 3){
+                return "清零积分";
+            }else if (value == 4){
+                return "恢复积分";
             }
             }},
+            {title: '操作人', field: 'staffName', visible: true, align: 'center', valign: 'middle'},
             {title: '会员id', field: 'memberid', visible: false, align: 'center', valign: 'middle',formatter: function (value, row, index) {
                     console.log(value)
                 }},
