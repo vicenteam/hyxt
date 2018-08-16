@@ -44,7 +44,7 @@ public class IntegralGiftController extends BaseController {
     @Autowired
     private IMembermanagementService membermanagementService;
     @Autowired
-    private IClearService clearService;
+    private MembermanagementController membermanagementController;
 
     @RequestMapping("")
     public String index(Model model){
@@ -80,6 +80,8 @@ public class IntegralGiftController extends BaseController {
             integralrecord.setStaffid(ShiroKit.getUser().getId());
             //赠送积分记录添加
             integralrecordService.insert(integralrecord);
+            //如果积分上限更新会员等级
+            membermanagementController.updateMemberLeave(membermanagement.getId()+"");
         }
         return SUCCESS_TIP;
     }

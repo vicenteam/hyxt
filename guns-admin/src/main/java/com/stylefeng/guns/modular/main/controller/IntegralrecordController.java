@@ -100,7 +100,7 @@ public class IntegralrecordController extends BaseController {
         membermanagement.setCountPrice(actual);
         //更新会员总积分和实际积分
         membermanagementService.updateById(membermanagement);
-       membermanagementController.updateMemberLeave(membermanagement.getId()+"");
+        membermanagementController.updateMemberLeave(membermanagement.getId()+"");
         return SUCCESS_TIP;
     }
 
