@@ -10,12 +10,40 @@
                     <div class="col-sm-12">
                         <div class="row">
                             <div class="col-sm-2">
-                                <#NameCon id="condition" name="名称" />
+                                <#NameCon id="memberName" name="会员名称" />
                             </div>
                             <div class="col-sm-2">
-                                <#button name="搜索" icon="fa-search" clickFun="Integralrecord.search()"/>
+                                <#NameCon id="cadId" name="会员卡号" />
                             </div>
-                        </div>
+                            <div class="col-sm-2">
+                                <#SelectCon name="积分类型" id="integralType" underline="true">
+                                    <option value="-1">全部</option>
+                                    <option value="0">购物</option>
+                                    <option value="1">推荐新人</option>
+                                    <option value="2">赠送</option>
+                                    <option value="3">清零积分</option>
+                                    <option value="4">恢复积分</option>
+                                    <option value="5">兑换</option>
+                                </#SelectCon>
+                            </div>
+                            <div class="col-sm-2">
+                                <#SelectCon name="操作人" id="operator" underline="true">
+                                    <option value="-1">全部</option>
+                                    @for(item in users){
+                                    <option value="${item.id}" >${item.name}</option>
+                                    @}
+                                </#SelectCon>
+                            </div>
+                            <div class="col-sm-2">
+                                <#time id="begindate" name="开始时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss" />
+                            </div>
+                            <div class="col-sm-2">
+                                <#time id="enddate" name="结束时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss" />
+                            </div>
+                                <div class="col-sm-2">
+                                    <#button name="搜索" icon="fa-search" clickFun="Integralrecord.search()"/>
+                                </div>
+                            </div>
                         <div class="hidden-xs" id="IntegralrecordTableToolbar" role="group">
                             @if(shiro.hasPermission("/integralrecord/add")){
                                 <#button name="添加" icon="fa-plus" clickFun="Integralrecord.openAddIntegralrecord()"/>
