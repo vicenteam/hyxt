@@ -93,6 +93,11 @@ public class ActivityController extends BaseController {
             String creater = a.getCreater();
             User user = userService.selectById(creater);
             a.setCreater(user.getName());
+            //获取当前活动签到人数
+            BaseEntityWrapper<ActivityMember> activityMemberBaseEntityWrapper = new BaseEntityWrapper<>();
+            activityMemberBaseEntityWrapper.eq("activityid",a.getId());
+            int i = activityMemberService.selectCount(activityMemberBaseEntityWrapper);
+            a.setJifen((double) i);
         });
         return super.packForBT(result);
     }

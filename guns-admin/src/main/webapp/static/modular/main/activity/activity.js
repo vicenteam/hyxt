@@ -40,7 +40,7 @@ Activity.initColumn = function () {
                     }
                 }},
             {title: '最大领取次数', field: 'maxgetnum', visible: true, align: 'center',width:'100px',valign: 'middle'},
-            {title: '当前参与人数', field: 'countnum', visible: true, align: 'center',width:'100px',valign: 'middle'},
+            {title: '当前领取总数', field: 'jifen', visible: true, align: 'center',width:'100px',valign: 'middle'},
             {title: '操作', field: 'id', visible: true, align: 'center',valign: 'middle',formatter: function (value, row, index) {
                     var doma= '<button type="button" class="btn btn-primary button-margin" onclick="Activity.lingqu(' + row.id + ')" id="" '
                     if(row.status!=2){
