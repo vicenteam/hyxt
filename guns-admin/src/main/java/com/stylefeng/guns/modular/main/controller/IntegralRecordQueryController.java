@@ -54,15 +54,17 @@ public class IntegralRecordQueryController extends BaseController {
     @ResponseBody
     public Object list(String condition, String operator, String memberName, String cadId
                         , String integralType, String begindate, String enddate) {
-        System.out.println(" ------*****------ "+operator+": "+memberName+": "+cadId+": "+integralType+": "+begindate+": "+enddate);
+//        System.out.println(" ------*****------ "+operator+": "+memberName+": "+cadId+": "+integralType+": "+begindate+": "+enddate);
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         if(! cadId.equals("")) mWrapper.eq("cadID",cadId);
         if(! memberName.equals("")) mWrapper.like("name",memberName);
+        //会员 memberName、cadId 条件筛选
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
         Integer[] mIdArray = new Integer[membermanagements.size()];
         for(int i=0; i<mIdArray.length; i++){
             mIdArray[i] = membermanagements.get(i).getId();
         }
+        //操作人 operator 条件筛选
         BaseEntityWrapper<User> uWrapper = new BaseEntityWrapper<>();
         if(! operator.equals("-1")) uWrapper.eq("id",operator);
         List<User> users = userService.selectList(uWrapper);
@@ -70,6 +72,7 @@ public class IntegralRecordQueryController extends BaseController {
         for(int i=0; i<uIdArray.length; i++){
             uIdArray[i] = users.get(i).getId();
         }
+        //把 membermanagement 与 user 条件放入 积分记录表实现条件分页查询
         Page<Integralrecord> page = new PageFactory<Integralrecord>().defaultPage();
         BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
         if(! integralType.equals("-1")) iWrapper.like("type",integralType);
