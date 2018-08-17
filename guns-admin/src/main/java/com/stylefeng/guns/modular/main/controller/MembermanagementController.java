@@ -1,13 +1,11 @@
 package com.stylefeng.guns.modular.main.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
-import com.stylefeng.guns.modular.main.service.IMemberCardService;
-import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
-import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
+import com.stylefeng.guns.modular.main.service.*;
+import com.stylefeng.guns.modular.main.service.IBaMedicalService;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -56,6 +53,10 @@ public class MembermanagementController extends BaseController {
     private IMembershipcardtypeService membershipcardtypeService;
     @Autowired
     private IQiandaoCheckinService qiandaoCheckinService;
+    @Autowired
+    private IMemberBamedicalService memberBamedicalService;
+    @Autowired
+    private IBaMedicalService baMedicalService;
 
     /**
      * 跳转到会员管理首页
@@ -78,7 +79,20 @@ public class MembermanagementController extends BaseController {
     public String membermanagementAdd(Model model) {
         BaseEntityWrapper<Dept> deptBaseEntityWrapper = new BaseEntityWrapper<>();
         List list = userService.selectList(deptBaseEntityWrapper);
+        EntityWrapper<BaMedical> memberBamedicalEntityWrapper = new EntityWrapper<>();
+        List<BaMedical> baMedicals = baMedicalService.selectList(memberBamedicalEntityWrapper);
         model.addAttribute("staffs", list);
+        StringBuilder sb=new StringBuilder();
+        for(int i=1;i<baMedicals.size();i++){
+            sb.append("<tr>");
+                sb.append(" <td style='width: 20px'><input name='baMedicals' type='checkbox'  value='"+baMedicals.get(i-1).getId()+"'> </td><td style='width: 170px'>"+baMedicals.get(i-1).getName()+"</td>");
+                sb.append(" <td style='width: 20px'><input name='baMedicals' type='checkbox'  value='"+baMedicals.get(i).getId()+"'> </td><td style='width: 170px'>"+baMedicals.get(i).getName()+"</td>");
+            sb.append("</tr>");
+            i++;
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("val",sb.toString());
+        model.addAttribute("baMedicals", map);
         return PREFIX + "membermanagement_add.html";
     }
 

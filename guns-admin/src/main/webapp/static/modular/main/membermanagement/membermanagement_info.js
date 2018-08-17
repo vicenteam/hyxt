@@ -136,6 +136,7 @@ MembermanagementInfoDlg.addSubmit = function() {
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.membermanagementInfoData);
+    ajax.set("baMedicals","");
     ajax.start();
 }
 
