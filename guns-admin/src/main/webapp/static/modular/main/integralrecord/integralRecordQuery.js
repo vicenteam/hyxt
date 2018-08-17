@@ -17,7 +17,13 @@ Integralrecord.initColumn = function () {
             {title: '积分记录编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '会员名称', field: 'memberName', visible: true, align: 'center', valign: 'middle'},
             {title: '会员卡号', field: 'membercadid', visible: true, align: 'center', valign: 'middle'},
-            {title: '积分值', field: 'integral', visible: true, align: 'center', valign: 'middle'},
+            {title: '积分值', field: 'integral', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                     if (row.type == 5||row.type == 3){
+                        return "<span style='color: red'>-"+value+"</span>";
+                    }else {
+                         return "<span style='color: green'>+"+value+"</span>";
+                     }
+                }},
             {title: '附加参数，如果是本人或新人购物获得积分，则该列的值是该购物记录的ID，如果是带新人或新人签到获得积分，则是所带新人的ID', field: 'target', visible: false, align: 'center', valign: 'middle'},
             {title: '积分类型', field: 'type', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
             if(value==0){

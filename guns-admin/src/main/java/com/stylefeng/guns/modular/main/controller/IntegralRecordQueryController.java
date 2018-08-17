@@ -50,6 +50,7 @@ public class IntegralRecordQueryController extends BaseController {
     public Object list(String condition) {
         Page<Integralrecord> page = new PageFactory<Integralrecord>().defaultPage();
         EntityWrapper<Integralrecord> entityWrapper = new EntityWrapper<>();
+        entityWrapper.orderBy("createTime",false);
         Page<Map<String, Object>> result = integralrecordService.selectMapsPage(page, entityWrapper);
         for(Map<String, Object> map : result.getRecords()){
             if(map.get("memberid") != null){
