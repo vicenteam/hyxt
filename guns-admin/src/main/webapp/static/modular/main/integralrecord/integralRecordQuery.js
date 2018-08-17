@@ -41,9 +41,7 @@ Integralrecord.initColumn = function () {
             }
             }},
             {title: '操作人', field: 'staffName', visible: true, align: 'center', valign: 'middle'},
-            {title: '会员id', field: 'memberid', visible: false, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-                    console.log(value)
-                }},
+            {title: '会员id', field: 'memberid', visible: false, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'}
     ];
 };
@@ -63,60 +61,28 @@ Integralrecord.check = function () {
 };
 
 /**
- * 点击添加新增积分
- */
-Integralrecord.openAddIntegralrecord = function () {
-    var index = layer.open({
-        type: 2,
-        title: '添加新增积分',
-        area: ['800px', '420px'], //宽高
-        fix: false, //不固定
-        maxmin: true,
-        content: Feng.ctxPath + '/integralrecordquery/integralrecord_add'
-    });
-    this.layerIndex = index;
-};
-
-/**
- * 打开查看新增积分详情
- */
-Integralrecord.openIntegralrecordDetail = function () {
-    if (this.check()) {
-        var index = layer.open({
-            type: 2,
-            title: '新增积分详情',
-            area: ['800px', '420px'], //宽高
-            fix: false, //不固定
-            maxmin: true,
-            content: Feng.ctxPath + '/integralrecordquery/integralrecord_update/' + Integralrecord.seItem.id
-        });
-        this.layerIndex = index;
-    }
-};
-
-/**
- * 删除新增积分
- */
-Integralrecord.delete = function () {
-    if (this.check()) {
-        var ajax = new $ax(Feng.ctxPath + "/integralrecordquery/delete", function (data) {
-            Feng.success("删除成功!");
-            Integralrecord.table.refresh();
-        }, function (data) {
-            Feng.error("删除失败!" + data.responseJSON.message + "!");
-        });
-        ajax.set("integralrecordId",this.seItem.id);
-        ajax.start();
-    }
-};
-
-/**
  * 查询新增积分列表
  */
 Integralrecord.search = function () {
     var queryData = {};
-    queryData['condition'] = $("#condition").val();
+    queryData['operator'] = $("#operator").val();
+    queryData['memberName'] = $("#memberName").val();
+    queryData['cadId'] = $("#cadId").val();
+    queryData['integralType'] = $("#integralType").val();
+    queryData['begindate'] = $("#begindate").val();
+    queryData['enddate'] = $("#enddate").val();
     Integralrecord.table.refresh({query: queryData});
+};
+
+Integralrecord.form = function () {
+    var queryData = {};
+    queryData['operator'] = $("#operator").val();
+    queryData['memberName'] = $("#memberName").val();
+    queryData['cadId'] = $("#cadId").val();
+    queryData['integralType'] = $("#integralType").val();
+    queryData['begindate'] = $("#begindate").val();
+    queryData['enddate'] = $("#enddate").val();
+    return queryData;
 };
 
 $(function () {
@@ -124,5 +90,6 @@ $(function () {
     var table = new BSTable(Integralrecord.id, "/integralrecordquery/list", defaultColunms);
     //table.setPaginationType("client");
     table.setPaginationType("server");
+    table.setQueryParams(Integralrecord.form());
     Integralrecord.table = table.init();
 });

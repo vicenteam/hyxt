@@ -13,9 +13,12 @@ import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +41,9 @@ public class IntegralRecordQueryController extends BaseController {
     private IUserService userService;
 
     @RequestMapping("")
-    public String index(){
+    public String index(Model model){
+        BaseEntityWrapper<User> wrapper = new BaseEntityWrapper<>();
+        model.addAttribute("users",userService.selectList(wrapper));
         return PREFIX + "integralRecordQuery.html";
     }
 
@@ -47,12 +52,33 @@ public class IntegralRecordQueryController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
+    public Object list(String condition, String operator, String memberName, String cadId
+                        , String integralType, String begindate, String enddate) {
+        System.out.println(" ------*****------ "+operator+": "+memberName+": "+cadId+": "+integralType+": "+begindate+": "+enddate);
+        BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
+        if(! cadId.equals("")) mWrapper.eq("cadID",cadId);
+        if(! memberName.equals("")) mWrapper.like("name",memberName);
+        List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
+        Integer[] mIdArray = new Integer[membermanagements.size()];
+        for(int i=0; i<mIdArray.length; i++){
+            mIdArray[i] = membermanagements.get(i).getId();
+        }
+        BaseEntityWrapper<User> uWrapper = new BaseEntityWrapper<>();
+        if(! operator.equals("-1")) uWrapper.eq("id",operator);
+        List<User> users = userService.selectList(uWrapper);
+        Integer[] uIdArray = new Integer[users.size()];
+        for(int i=0; i<uIdArray.length; i++){
+            uIdArray[i] = users.get(i).getId();
+        }
         Page<Integralrecord> page = new PageFactory<Integralrecord>().defaultPage();
-        EntityWrapper<Integralrecord> entityWrapper = new EntityWrapper<>();
-        entityWrapper.orderBy("createTime",false);
-        Page<Map<String, Object>> result = integralrecordService.selectMapsPage(page, entityWrapper);
-        for(Map<String, Object> map : result.getRecords()){
+        BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
+        if(! integralType.equals("-1")) iWrapper.like("type",integralType);
+        iWrapper.in("memberid",mIdArray);
+        iWrapper.in("staffid",uIdArray);
+        iWrapper.between("createTime",begindate,enddate);
+        iWrapper.orderBy("createTime",false);
+        Page<Map<String, Object>> serverPage = integralrecordService.selectMapsPage(page, iWrapper);
+        for(Map<String, Object> map : serverPage.getRecords()){
             if(map.get("memberid") != null){
                 Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());
                 map.put("memberName",membermanagement.getName());
@@ -62,7 +88,7 @@ public class IntegralRecordQueryController extends BaseController {
                 map.put("staffName",userService.selectById(map.get("staffid").toString()).getName());
             }
         }
-        return super.packForBT(result);
+        return super.packForBT(serverPage);
     }
 
     @RequestMapping(value = "test")
