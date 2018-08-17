@@ -86,6 +86,7 @@ public class ActivityController extends BaseController {
     public Object list(String condition) {
         Page<Activity> page = new PageFactory<Activity>().defaultPage();
         BaseEntityWrapper<Activity> baseEntityWrapper = new BaseEntityWrapper<>();
+        baseEntityWrapper.orderBy("createtime",false);
         Page<Activity> result = activityService.selectPage(page, baseEntityWrapper);
         List<Activity> records = result.getRecords();
         records.forEach(a -> {
@@ -220,7 +221,7 @@ public class ActivityController extends BaseController {
                 }
             }
         }
-//        BaseEntityWrapper<ActivityMember> activityMemberBaseEntityWrapper = new BaseEntityWrapper<>();
+//        BaseEntityWrapper<ActivityMember> activityMemberBaseEntityWrapper = new BaseEntityWrapper<>兑换();
 //        activityMemberBaseEntityWrapper.eq("memberid", memberinfo.get("id"));
 //        activityMemberBaseEntityWrapper.eq("activityid", activityId);
 //        int i = activityMemberService.selectCount(activityMemberBaseEntityWrapper);
