@@ -22,6 +22,8 @@ import com.stylefeng.guns.modular.system.model.Integralrecord;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 
 import java.sql.Wrapper;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 新增积分控制器
@@ -88,20 +90,56 @@ public class IntegralrecordController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(Integralrecord integralrecord) {
-        integralrecord.setType(0);
-        integralrecord.setCreateTime(DateUtil.getTime());
-        integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
-        integralrecord.setStaffid(ShiroKit.getUser().getId());
-        integralrecordService.insert(integralrecord);
-        Membermanagement membermanagement = membermanagementService.selectById(integralrecord.getMemberid());
-        double integral = (integralrecord.getIntegral()+membermanagement.getIntegral());
-        double actual = (integralrecord.getIntegral()+membermanagement.getCountPrice());
-        membermanagement.setIntegral(integral);
-        membermanagement.setCountPrice(actual);
-        //更新会员总积分和实际积分
-        membermanagementService.updateById(membermanagement);
-        membermanagementController.updateMemberLeave(membermanagement.getId()+"");
+        List<Membermanagement> membermanagements = new ArrayList<>();
+        Membermanagement membermanagement = new Membermanagement();
+        membermanagement.setId(integralrecord.getMemberid());
+        membermanagements.add(membermanagement);
+        //积分添加操作
+        insertIntegral(integralrecord.getIntegral(),0,membermanagements);
         return SUCCESS_TIP;
+    }
+
+    /**
+     * 会员积分增加并新增记录
+     * @param integral
+     * @param type
+     * @param mList
+     */
+    public void insertIntegral(double integral, Integer type, List<Membermanagement> mList){
+        Membermanagement membermanagement = new Membermanagement();
+        Integralrecord integralrecord = new Integralrecord();
+        double nowIntegral = 0;
+        double nowCountPrice = 0;
+        for(Membermanagement memberId : mList){  //循环当前门店会员列表为
+//            System.out.println(" -------****------ "+memberId.getIntegral());
+            if(memberId.getIntegral() != null && memberId.getCountPrice() != null){
+                nowIntegral = memberId.getIntegral();
+                nowCountPrice = memberId.getCountPrice();
+            }else {
+                Membermanagement mInfo = membermanagementService.selectById(memberId.getId());
+                nowIntegral = mInfo.getIntegral();
+                nowCountPrice = mInfo.getCountPrice();
+            }
+            membermanagement.setId(memberId.getId());
+            if(type != 5){ // 判断是否为兑换
+                membermanagement.setIntegral(nowIntegral+integral); //总积分数 + 新增积分数
+                membermanagement.setCountPrice(nowCountPrice+integral);//可用积分数 + 新增积分数
+            }else {  //扣除积分
+                membermanagement.setCountPrice(nowCountPrice-integral);//可用积分数 - 兑换积分数
+            }
+            //更新会员总积分和实际积分
+            membermanagementService.updateById(membermanagement);
+            membermanagementController.updateMemberLeave(memberId.getId()+"");
+            //添加积分记录
+            integralrecord.setIntegral(integral);
+            integralrecord.setType(type);
+            integralrecord.setCreateTime(DateUtil.getTime());
+            integralrecord.setMemberid(memberId.getId());
+            integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+            integralrecord.setStaffid(ShiroKit.getUser().getId());
+            integralrecordService.insert(integralrecord);
+        }
+
     }
 
     /**

@@ -48,6 +48,8 @@ public class ActivityController extends BaseController {
     private IActivityMemberService activityMemberService;
     @Autowired
     private IQiandaoCheckinService qiandaoCheckinService;
+    @Autowired
+    private IntegralrecordController integralrecordController;
 
     /**
      * 跳转到活动管理首页
@@ -211,7 +213,8 @@ public class ActivityController extends BaseController {
 
     /**
      * 领取活动奖励
-     * @param activity
+     * @param activityId
+     * @param memberId
      * @return
      */
     @RequestMapping(value = "/lingqu")
@@ -222,7 +225,13 @@ public class ActivityController extends BaseController {
         Integer ruleexpression = activity.getRuleexpression();
         if(ruleexpression==2){//积分操作 积分兑换
             Double jifen = activity.getJifen();//将被扣除的积分
+            //积分操作
+            List<Membermanagement> membermanagements = new ArrayList<>();
+            Membermanagement membermanagement = new Membermanagement();
+            membermanagement.setId(Integer.parseInt(memberId));
+            membermanagements.add(membermanagement);
             //调用积分变动方法
+            integralrecordController.insertIntegral(jifen,5,membermanagements);
         }
         insertAcitvityMember(activityId,memberId);
         return SUCCESS_TIP;

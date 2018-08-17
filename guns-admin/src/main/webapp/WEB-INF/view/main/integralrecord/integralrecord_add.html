@@ -183,24 +183,24 @@
         });
     });
 
-    // $(function () {
-    //     var memberId = 13;
-    //     $.ajax({
-    //         url: '/membermanagement/getMemberInfo',
-    //         data: { memberId: memberId },
-    //         type: 'POST',
-    //         async: false,
-    //         success: function (data) {
-    //             $("#introducerName").val(data.cadID);
-    //             $("#name").val(data.name);
-    //             $("#memberid").val(data.id);
-    //             $("#tel").val(data.phone);
-    //             $("#address").val(data.address);
-    //             $("#integralSum").val(data.integral);
-    //             $("#countPrice").val(data.countPrice);
-    //             $("#levelID").val(data.levelID);
-    //         }
-    //     });
-    // })
+    $(function () {
+        var memberId = 13;
+        $.ajax({
+            url: '/membermanagement/getMemberInfo',
+            data: { memberId: memberId },
+            type: 'POST',
+            async: false,
+            success: function (data) {
+                $("#introducerName").val(data.cadID);
+                $("#name").val(data.name);
+                $("#memberid").val(data.id);
+                $("#tel").val(data.phone);
+                $("#address").val(data.address);
+                $("#integralSum").val(data.integral);
+                $("#countPrice").val(data.countPrice);
+                $("#levelID").val(data.levelID);
+            }
+        });
+    })
 </script>
 @}

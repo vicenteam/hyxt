@@ -30,6 +30,8 @@ Integralrecord.initColumn = function () {
                 return "清零积分";
             }else if (value == 4){
                 return "恢复积分";
+            }else if (value == 5){
+                return "兑换";
             }
             }},
             {title: '操作人', field: 'staffName', visible: true, align: 'center', valign: 'middle'},

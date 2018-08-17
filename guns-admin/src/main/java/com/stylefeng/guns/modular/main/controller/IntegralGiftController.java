@@ -45,6 +45,8 @@ public class IntegralGiftController extends BaseController {
     private IMembermanagementService membermanagementService;
     @Autowired
     private MembermanagementController membermanagementController;
+    @Autowired
+    private IntegralrecordController integralrecordController;
 
     @RequestMapping("")
     public String index(Model model){
@@ -60,29 +62,31 @@ public class IntegralGiftController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(double integral) {
-        System.out.println(integral);
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
         List<Membermanagement> ms = membermanagementService.selectList(wrapper);
-        Membermanagement m = new Membermanagement();
-        Integralrecord integralrecord = new Integralrecord();
-        for (Membermanagement membermanagement : ms){
-            m.setId(membermanagement.getId());
-            m.setCountPrice(membermanagement.getCountPrice()+integral);
-            m.setIntegral(membermanagement.getIntegral()+integral);
-            //会员积分赠送保存
-            membermanagementService.updateById(m);
+        //积分添加操作
+        integralrecordController.insertIntegral(integral,2,ms);
 
-            integralrecord.setIntegral(integral);
-            integralrecord.setMemberid(membermanagement.getId());
-            integralrecord.setType(2);
-            integralrecord.setCreateTime(DateUtil.getTime());
-            integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
-            integralrecord.setStaffid(ShiroKit.getUser().getId());
-            //赠送积分记录添加
-            integralrecordService.insert(integralrecord);
-            //如果积分上限更新会员等级
-            membermanagementController.updateMemberLeave(membermanagement.getId()+"");
-        }
+//        Membermanagement m = new Membermanagement();
+//        Integralrecord integralrecord = new Integralrecord();
+//        for (Membermanagement membermanagement : ms){
+//            m.setId(membermanagement.getId());
+//            m.setCountPrice(membermanagement.getCountPrice()+integral);
+//            m.setIntegral(membermanagement.getIntegral()+integral);
+//            //会员积分赠送保存
+//            membermanagementService.updateById(m);
+//
+//            integralrecord.setIntegral(integral);
+//            integralrecord.setMemberid(membermanagement.getId());
+//            integralrecord.setType(2);
+//            integralrecord.setCreateTime(DateUtil.getTime());
+//            integralrecord.setDeptid(ShiroKit.getUser().getDeptId());
+//            integralrecord.setStaffid(ShiroKit.getUser().getId());
+//            //赠送积分记录添加
+//            integralrecordService.insert(integralrecord);
+//            //如果积分上限更新会员等级
+//            membermanagementController.updateMemberLeave(membermanagement.getId()+"");
+//        }
         return SUCCESS_TIP;
     }
 }
