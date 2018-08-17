@@ -7,7 +7,11 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">${name}</label>
     <div class="col-sm-9">
-        <input type="text" class="form-control layer-date" id="${id}"/>
+        <input type="text" class="form-control layer-date" id="${id}"
+               @if(isNotEmpty(value)){
+               value="${tool.dateType(value)}"
+               @}
+        />
     </div>
 </div>
 @if(isNotEmpty(underline) && underline == 'true'){

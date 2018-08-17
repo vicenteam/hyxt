@@ -6,12 +6,14 @@ import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import com.stylefeng.guns.modular.task.ActivityTask;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -50,6 +52,8 @@ public class ActivityController extends BaseController {
     private IQiandaoCheckinService qiandaoCheckinService;
     @Autowired
     private IntegralrecordController integralrecordController;
+    @Autowired
+    private ActivityTask activityTask;
 
     /**
      * 跳转到活动管理首页
@@ -83,10 +87,12 @@ public class ActivityController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Object list(String condition) {
+    public Object list(String condition) throws ParseException {
+        activityTask.scannerActivity();
         Page<Activity> page = new PageFactory<Activity>().defaultPage();
         BaseEntityWrapper<Activity> baseEntityWrapper = new BaseEntityWrapper<>();
         baseEntityWrapper.orderBy("createtime",false);
+        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("name",condition);
         Page<Activity> result = activityService.selectPage(page, baseEntityWrapper);
         List<Activity> records = result.getRecords();
         records.forEach(a -> {

@@ -2,7 +2,68 @@
  * 初始化活动管理详情对话框
  */
 var ActivityInfoDlg = {
-    activityInfoData : {}
+    activityInfoData : {},
+    validateFields: {
+        name: {
+            validators: {
+                notEmpty: {
+                    message: '活动名称不能为空'
+                }
+            }
+        },
+        content: {
+            validators: {
+                notEmpty: {
+                    message: '活动内容不能为空'
+                }
+            }
+        },
+        begindate: {
+            validators: {
+                notEmpty: {
+                    message: '开始时间不能为空'
+                }
+            }
+        },
+        enddate: {
+            validators: {
+                notEmpty: {
+                    message: '结束时间不能为空'
+                }
+            }
+        },
+        qiandaonum: {
+            validators: {
+                notEmpty: {
+                    message: '签到次数不能为空'
+                },
+                numeric:{
+                    message: '只能为数字'
+                }
+            }
+        }
+        ,
+        maxgetnum: {
+            validators: {
+                notEmpty: {
+                    message: '最大领取次数不能为空'
+                },
+                numeric:{
+                    message: '只能为数字'
+                }
+            }
+        } ,
+        jifen: {
+            validators: {
+                notEmpty: {
+                    message: '"消耗积分不能为空'
+                },
+                numeric:{
+                    message: '只能为数字'
+                }
+            }
+        }
+    }
 };
 
 /**
@@ -59,7 +120,11 @@ ActivityInfoDlg.collectData = function() {
     .set('qiandaonum')
     .set('maxgetnum');
 }
-
+ActivityInfoDlg.validate = function () {
+    // $('#membermanagementInfoTable').data("bootstrapValidator").resetForm();
+    $('#activityId').bootstrapValidator('validate');
+    return $("#activityId").data('bootstrapValidator').isValid();
+};
 /**
  * 提交添加
  */
@@ -67,7 +132,16 @@ ActivityInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    if (!this.validate()) {
+        return;
+    }
+    if($("#begindate").val().length==0){
+        Feng.error("请选择活动开始时间")
+        return;
+    }if($("#enddate").val().length==0){
+        Feng.error("请选择活动结束时间")
+        return;
+    }
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/activity/add", function(data){
         Feng.success("添加成功!");
@@ -124,5 +198,5 @@ ActivityInfoDlg.lingqu = function() {
 }
 
 $(function() {
-
+    Feng.initValidator("activityId", ActivityInfoDlg.validateFields);
 });

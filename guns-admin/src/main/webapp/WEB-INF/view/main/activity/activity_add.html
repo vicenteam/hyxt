@@ -1,7 +1,7 @@
 @layout("/common/_container.html"){
 <div class="ibox float-e-margins">
     <div class="ibox-content">
-        <div class="form-horizontal">
+        <div class="form-horizontal" id="activityId">
 
             <div class="row">
                 <div class="col-sm-4 b-r">
@@ -12,14 +12,14 @@
                     <option value="1">连续签到</option>
                     <option value="2">积分兑换</option>
                 </#select>
-                <#input id="qiandaonum" name="签到次数" underline="true"/>
+                <#input id="qiandaonum" name="签到次数" underline="true" value="0"/>
                 </div>
 
                 <div class="col-sm-4">
-                    <#time id="begindate" name="活到开始时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss"  underline="true"/>
+                    <#time id="begindate" name="活动开始时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss"  underline="true"/>
                     <#time id="enddate" name="活动结束时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss"  underline="true" />
                     <#input id="maxgetnum" name="最大领取次数" underline="true"/>
-                    <#input id="jifen" name="消耗积分" underline="true"/>
+                    <#input id="jifen" name="消耗积分" underline="true" value="0"/>
                 </div>
             </div>
 

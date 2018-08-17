@@ -32,11 +32,11 @@ Activity.initColumn = function () {
             {title: '活动结束时间', field: 'enddate', visible: true, align: 'center',width:'160px', valign: 'middle'},
             {title: '活动状态', field: 'status', visible: true, align: 'center', valign: 'middle',width:'100px',formatter: function (value, row, index) {
                     if(value==0){
-                        return '未开始';
+                        return '<span style="color: #8c8c8c">未开始</span>';
                     }else  if(value==1){
                         return '<span style="color:red">已过期</span>';
                     }else {
-                        return '进行中';
+                        return '<span style="color: green">进行中</span>';
                     }
                 }},
             {title: '最大领取次数', field: 'maxgetnum', visible: true, align: 'center',width:'100px',valign: 'middle'},
@@ -47,7 +47,7 @@ Activity.initColumn = function () {
                         doma+=' disabled="disabled"'
                     }
                     doma+='><i class="fa fa-edit"></i>领取</button>'
-                       doma+=  '<button type="button" class="btn btn-primary button-margin" onclick="Activity.update()" id=""'
+                       doma+=  '<button type="button" class="btn btn-primary button-margin" onclick="Activity.openActivityDetail(' + row.id + ')" id=""'
                     if(row.status!=0){
                         doma+=' disabled="disabled"'
                     }
@@ -95,18 +95,16 @@ Activity.openAddActivity = function () {
 /**
  * 打开查看活动管理详情
  */
-Activity.openActivityDetail = function () {
-    if (this.check()) {
+Activity.openActivityDetail = function (id) {
         var index = layer.open({
             type: 2,
-            title: '活动管理详情',
+            title: '修改活动',
             area: ['800px', '420px'], //宽高
             fix: false, //不固定
             maxmin: true,
-            content: Feng.ctxPath + '/activity/activity_update/' + Activity.seItem.id
+            content: Feng.ctxPath + '/activity/activity_update/' + id
         });
         this.layerIndex = index;
-    }
 };
 /**
  * 领取活动奖励
