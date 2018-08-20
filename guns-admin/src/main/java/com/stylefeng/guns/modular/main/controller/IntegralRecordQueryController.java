@@ -78,7 +78,13 @@ public class IntegralRecordQueryController extends BaseController {
         if(! integralType.equals("-1")) iWrapper.like("type",integralType);
         iWrapper.in("memberid",mIdArray);
         iWrapper.in("staffid",uIdArray);
-        iWrapper.between("createTime",begindate,enddate);
+        if(! begindate.equals("") && ! enddate.equals("")){
+            iWrapper.between("createTime",begindate,enddate);
+        }else if(! begindate.equals("")){
+            iWrapper.between("createTime",begindate,"9999-08-16 11:03:35");
+        }else if (! enddate.equals("")){
+            iWrapper.between("createTime","0001-08-16 11:03:35",enddate);
+        }
         iWrapper.orderBy("createTime",false);
         Page<Map<String, Object>> serverPage = integralrecordService.selectMapsPage(page, iWrapper);
         for(Map<String, Object> map : serverPage.getRecords()){
