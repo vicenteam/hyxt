@@ -114,6 +114,10 @@ MembermanagementInfoDlg.addSubmit = function() {
     if (!this.validate()) {
         return;
     }
+    var baMedicals="";
+    baMedicals = $("input:checkbox[name='baMedicals']:checked").map(function(index,elem) {
+        return $(elem).val();
+    }).get().join(',');
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/membermanagement/add", function(data){
         Feng.success("添加成功!");
@@ -136,7 +140,7 @@ MembermanagementInfoDlg.addSubmit = function() {
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.membermanagementInfoData);
-    ajax.set("baMedicals","");
+    ajax.set("baMedicals",baMedicals);
     ajax.start();
 }
 
@@ -147,7 +151,10 @@ MembermanagementInfoDlg.editSubmit = function() {
 
     this.clearData();
     this.collectData();
-
+    var baMedicals="";
+    baMedicals = $("input:checkbox[name='baMedicals']:checked").map(function(index,elem) {
+        return $(elem).val();
+    }).get().join(',');
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/membermanagement/update", function(data){
         Feng.success("修改成功!");
@@ -157,6 +164,7 @@ MembermanagementInfoDlg.editSubmit = function() {
         Feng.error("修改失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.membermanagementInfoData);
+    ajax.set("baMedicals",baMedicals);
     ajax.start();
 }
 

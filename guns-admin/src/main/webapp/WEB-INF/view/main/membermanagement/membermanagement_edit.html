@@ -25,7 +25,14 @@
             <option value="1">是</option>
             <option value="2">否</option>
         </#select>
-
+        <div class="form-group">
+            <label class="col-sm-3 control-label">病史</label><input type="hidden" value="${userbaMedicals.val}" id="userbaMedicals">
+            <div class="col-sm-9" >
+                <table id="baMedicalsItem">
+                    ${baMedicals.val}
+                </table>
+            </div>
+        </div>
 
                 </div>
     <div class="col-sm-6 b-r">
@@ -38,7 +45,7 @@
         <option value="1">有子女</option>
         <option value="2">无子女</option>
     </#select>
-    <#input id="medicalHistory" name="病史" underline="true" value="${item.medicalHistory}"/>
+
     <input type="hidden" id="hide_staffID" value="${item.staffID}">
     <input type="hidden" id="hide_sex" value="${item.sex}">
     <input type="hidden" id="hide_isoldsociety" value="${item.isoldsociety}">
@@ -76,5 +83,14 @@
 
    })
 
+</script>
+<script>
+    //绑定历史病史
+    var userbaMedicals=$("#userbaMedicals").val();
+    var baMedicalss=userbaMedicals.split(",")
+    for(var i=0;i<baMedicalss.length;i++){
+        if(baMedicalss[i].length!=0)
+        $("input[name='baMedicals'][value="+baMedicalss[i]+"]").attr("checked","checked");
+    }
 </script>
 @}

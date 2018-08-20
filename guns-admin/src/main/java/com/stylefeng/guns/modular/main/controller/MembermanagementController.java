@@ -106,7 +106,30 @@ public class MembermanagementController extends BaseController {
         BaseEntityWrapper<Dept> deptBaseEntityWrapper = new BaseEntityWrapper<>();
         List list = userService.selectList(deptBaseEntityWrapper);
         model.addAttribute("staffs", list);
+        EntityWrapper<BaMedical> memberBamedicalEntityWrapper = new EntityWrapper<>();
+        List<BaMedical> baMedicals = baMedicalService.selectList(memberBamedicalEntityWrapper);
+        StringBuilder sb=new StringBuilder();
+        for(int i=1;i<baMedicals.size();i++){
+            sb.append("<tr>");
+            sb.append(" <td style='width: 20px'><input name='baMedicals' type='checkbox'  value='"+baMedicals.get(i-1).getId()+"'> </td><td style='width: 170px'>"+baMedicals.get(i-1).getName()+"</td>");
+            sb.append(" <td style='width: 20px'><input name='baMedicals' type='checkbox'  value='"+baMedicals.get(i).getId()+"'> </td><td style='width: 170px'>"+baMedicals.get(i).getName()+"</td>");
+            sb.append("</tr>");
+            i++;
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("val",sb.toString());
+        model.addAttribute("baMedicals", map);
+        EntityWrapper<MemberBamedical> memberBamedicalEntityWrapper1 = new EntityWrapper<>();
+        memberBamedicalEntityWrapper1.eq("memberid",membermanagementId);
+        List<MemberBamedical> memberBamedicals = memberBamedicalService.selectList(memberBamedicalEntityWrapper1);
+        String userbaMedicals="";
+        for(MemberBamedical ba:memberBamedicals){
+            userbaMedicals+= ba.getBamedicalid()+",";
+        }
         LogObjectHolder.me().set(membermanagement);
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("val",userbaMedicals);
+        model.addAttribute("userbaMedicals", map1);
         return PREFIX + "membermanagement_edit.html";
     }
 
@@ -164,7 +187,7 @@ public class MembermanagementController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Membermanagement membermanagement, String cardCode) {
+    public Object add(Membermanagement membermanagement, String cardCode,String baMedicals) {
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
         membermanagement.setTownshipid("0");
@@ -175,6 +198,17 @@ public class MembermanagementController extends BaseController {
         memberCard.setName(membermanagement.getName());
         memberCard.setMemberid(membermanagement.getId());
         memberCardService.updateById(memberCard);
+
+        //保存用户健康信息
+        if(!StringUtils.isEmpty(baMedicals)){
+            String[] split = baMedicals.split(",");
+            for(String s:split){
+                MemberBamedical memberBamedical = new MemberBamedical();
+                memberBamedical.setBamedicalid(Integer.parseInt(s));
+                memberBamedical.setMemberid(membermanagement.getId());
+                memberBamedicalService.insert(memberBamedical);
+            }
+        }
         return SUCCESS_TIP;
     }
 
@@ -195,8 +229,23 @@ public class MembermanagementController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Object update(Membermanagement membermanagement) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Object update(Membermanagement membermanagement,String baMedicals) {
         membermanagementService.updateById(membermanagement);
+        //删除历史健康记录
+        EntityWrapper<MemberBamedical> memberBamedicalEntityWrapper = new EntityWrapper<>();
+        memberBamedicalEntityWrapper.eq("memberid",membermanagement.getId());
+        memberBamedicalService.delete(memberBamedicalEntityWrapper);
+        //保存用户健康信息
+        if(!StringUtils.isEmpty(baMedicals)){
+            String[] split = baMedicals.split(",");
+            for(String s:split){
+                MemberBamedical memberBamedical = new MemberBamedical();
+                memberBamedical.setMemberid(membermanagement.getId());
+                memberBamedical.setBamedicalid(Integer.parseInt(s));
+                memberBamedicalService.insert(memberBamedical);
+            }
+        }
         return SUCCESS_TIP;
     }
 
