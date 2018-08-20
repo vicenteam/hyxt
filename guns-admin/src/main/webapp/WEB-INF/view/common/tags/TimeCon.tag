@@ -13,3 +13,11 @@
     </div>
     <input type="text" class="form-control layer-date" id="${id}"/>
 </div>
+<script>
+    var domid='${id}';
+    var pattern='${pattern}';
+    laydate.render({
+        elem: '#'+domid
+        ,format: pattern,
+    });
+</script>
