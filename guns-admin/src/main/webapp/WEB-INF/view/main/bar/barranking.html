@@ -31,7 +31,7 @@
                 async: false,
                 success: function (data) {
                     for(var i=0; i<data.length; i++){
-                        xData.push(data[i].name);
+                        xData.push("["+data[i].levelName+"]"+data[i].name);
                         sData.push(data[i].integral);
                     }
                 }
@@ -67,7 +67,7 @@
                 ],
                 series : [
                     {
-                        name:'直接访问',
+                        name:'总积分',
                         type:'bar',
                         barWidth: '60%',
                         data: sData
