@@ -8,6 +8,7 @@
                 <div class="col-sm-4 b-r">
                             <#input id="cadID" name="身份证号码" underline="true" button="写卡" buttonId="write"/>
                              <#input id="introducerName" name="推荐人" underline="true" button="读卡" buttonId="read" disabled="disabled"/>
+                    <#avatar id="avatar" name="头像" underline="true" />
                             <#select id="staffID" name="服务员工" underline="true">
                             <option value="">请选择</option>
                                 @for(item in staffs){
@@ -194,6 +195,14 @@
     })
     $("#read").click(function () {
         getUserInfo();
+    })
+</script>
+<script>
+    $(function () {
+        // 初始化头像上传
+        var avatarUp = new $WebUpload("avatar");
+        avatarUp.setUploadBarId("progressBar");
+        avatarUp.init();
     })
 </script>
 @}
