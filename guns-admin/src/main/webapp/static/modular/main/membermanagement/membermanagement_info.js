@@ -98,9 +98,9 @@ MembermanagementInfoDlg.collectData = function() {
     .set('recommendMember')
     .set('address')
     .set('countPrice')
-    .set('imgName')
     .set('deptId')
     .set('cardCode')
+    .set('avatar')
     .set('token');
 }
 

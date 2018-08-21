@@ -13,6 +13,7 @@
                     @}
                 </#select>
                 <#input id="name" name="姓名" underline="true" value="${item.name}"/>
+                <#avatar id="avatar" name="头像" underline="true" avatarImg="${item.avatar}"/>
                 <#select id="sex" name="性别" underline="true">
                 <option value="">请选择</option>
                 <option value="1">男</option>
@@ -92,5 +93,13 @@
         if(baMedicalss[i].length!=0)
         $("input[name='baMedicals'][value="+baMedicalss[i]+"]").attr("checked","checked");
     }
+</script>
+<script>
+    $(function () {
+        // 初始化头像上传
+        var avatarUp = new $WebUpload("avatar");
+        avatarUp.setUploadBarId("progressBar");
+        avatarUp.init();
+    })
 </script>
 @}

@@ -17,7 +17,7 @@
        </div><br>
         <div style="width: 850px;height: 300px;">
             <div style="height: 100%;width: 45%;border:1px solid lavender">
-                <img src="/s.jpg">
+                <img src="/s.jpg" id="avatar"/>
             </div>
             <div style="height: 100%;width: 52%;float: right;margin-top: -300px">
                 <div style="clear:both;">
@@ -260,6 +260,7 @@
         $("#memberlevelId").val(data.levelID);
         $("#mamberStaffId").val(data.staffID);
         $("#manmberid").val(data.id);
+        $("#avatar").attr('src','/kaptcha/'+data.avatar);
         if(data.qiandao==0){
             $('#check1').removeAttr("disabled");
             $("#check2").attr("disabled","disabled")

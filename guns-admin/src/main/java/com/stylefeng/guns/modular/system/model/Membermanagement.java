@@ -119,7 +119,7 @@ public class Membermanagement extends Model<Membermanagement> {
     /**
      * 用户图片名称
      */
-    private String imgName;
+    private String avatar;
     /**
      * 所属门店id
      */
@@ -367,12 +367,12 @@ public class Membermanagement extends Model<Membermanagement> {
         this.countPrice = countPrice;
     }
 
-    public String getImgName() {
-        return imgName;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setImgName(String imgName) {
-        this.imgName = imgName;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getDeptId() {
@@ -429,7 +429,6 @@ public class Membermanagement extends Model<Membermanagement> {
         ", recommendMember=" + recommendMember +
         ", address=" + address +
         ", countPrice=" + countPrice +
-        ", imgName=" + imgName +
         ", deptId=" + deptId +
         ", token=" + token +
         "}";
