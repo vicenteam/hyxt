@@ -83,15 +83,16 @@ public class IntegralRecordClearZeroController extends BaseController {
 
         BaseEntityWrapper<Membermanagement> wrapper = new BaseEntityWrapper<>();
         List<Membermanagement> mList = membermanagementService.selectList(wrapper);
-        Integralrecord clearM = new Integralrecord();
+        // clear start
         Clear clear = new Clear();
         clear.setDeptid(deptId);
         clear.setStaffid(staffId);
         clear.setCreatedt(DateUtil.getTime());
         //积分清零记录表保存
         clearService.insert(clear);
-        for(Membermanagement m : mList){
-            clearM.setIntegral(m.getCountPrice());
+        Integralrecord clearM = new Integralrecord();
+        for(Membermanagement m : mList){  //循环门店会员列表 并插入积分记录表
+            clearM.setIntegral(m.getIntegral()); // 清零会员可用积分
             clearM.setType(3);
             clearM.setMemberid(m.getId());
             clearM.setDeptid(deptId);
@@ -100,7 +101,7 @@ public class IntegralRecordClearZeroController extends BaseController {
             clearM.setCreateTime(DateUtil.getTime());
             //插入清除积分记录
             integralrecordService.insert(clearM);
-            m.setCountPrice(0.0);
+            m.setIntegral(0.0);
             //清零会员可用积分
             membermanagementService.updateById(m);
         }

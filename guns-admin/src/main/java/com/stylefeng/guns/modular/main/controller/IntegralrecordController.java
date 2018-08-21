@@ -122,10 +122,10 @@ public class IntegralrecordController extends BaseController {
             }
             membermanagement.setId(memberId.getId());
             if(type != 5){ // 判断是否为兑换
-                membermanagement.setIntegral(nowIntegral+integral); //总积分数 + 新增积分数
-                membermanagement.setCountPrice(nowCountPrice+integral);//可用积分数 + 新增积分数
+                membermanagement.setIntegral(nowIntegral+integral); //可用积分数 + 新增积分数
+                membermanagement.setCountPrice(nowCountPrice+integral); //总积分数 + 新增积分数
             }else {  //扣除积分
-                membermanagement.setCountPrice(nowCountPrice-integral);//可用积分数 - 兑换积分数
+                membermanagement.setIntegral(nowIntegral-integral);//可用积分数 - 兑换积分数
             }
             //更新会员总积分和实际积分
             membermanagementService.updateById(membermanagement);

@@ -46,7 +46,7 @@
 
     <update id="updateIntegralRollBack" parameterType="com.stylefeng.guns.modular.system.model.Integralrecord">
       update main_membermanagement
-      set countPrice= #{integralrecord.integral} + countPrice
+      set integral= #{integralrecord.integral} + integral
       where id= #{integralrecord.memberid}
     </update>
 </mapper>
