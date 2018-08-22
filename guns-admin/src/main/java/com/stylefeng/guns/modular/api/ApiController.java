@@ -7,6 +7,7 @@ import com.stylefeng.guns.core.shiro.ShiroUser;
 import com.stylefeng.guns.core.util.JwtTokenUtil;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
 import com.stylefeng.guns.modular.system.model.User;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -37,6 +38,7 @@ public class ApiController extends BaseController {
      * api登录接口，通过账号密码获取token
      */
     @RequestMapping("/auth")
+    @ApiOperation("登录")
     public Object auth(@RequestParam("username") String username,
                        @RequestParam("password") String password) {
 
@@ -71,8 +73,9 @@ public class ApiController extends BaseController {
     /**
      * 测试接口是否走鉴权
      */
+    @ApiOperation("测试")
     @RequestMapping(value = "/test", method = RequestMethod.POST)
-    public Object test() {
+    public Object test(String token) {
         return SUCCESS_TIP;
     }
 
