@@ -24,10 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 会员管理控制器
@@ -57,6 +54,12 @@ public class MembermanagementController extends BaseController {
     private IMemberBamedicalService memberBamedicalService;
     @Autowired
     private IBaMedicalService baMedicalService;
+    @Autowired
+    private IActivityService activityService;
+    @Autowired
+    private IntegralrecordController integralrecordController;
+    @Autowired
+    private ActivityController activityController;
 
     /**
      * 跳转到会员管理首页
@@ -207,6 +210,26 @@ public class MembermanagementController extends BaseController {
                 memberBamedical.setBamedicalid(Integer.parseInt(s));
                 memberBamedical.setMemberid(membermanagement.getId());
                 memberBamedicalService.insert(memberBamedical);
+            }
+        }
+        //判断推荐人]
+        String introducerId = membermanagement.getIntroducerId();
+        if(!StringUtils.isEmpty(introducerId)){
+            Membermanagement membermanagement1 = membermanagementService.selectById(introducerId);
+            BaseEntityWrapper<Activity> activityBaseEntityWrapper = new BaseEntityWrapper<>();
+            activityBaseEntityWrapper.eq("ruleexpression",3);
+            Activity activity = activityService.selectOne(activityBaseEntityWrapper);
+            if(membermanagement1!=null){
+                Integer ruleexpression = activity.getRuleexpression();
+                if (ruleexpression == 2) {//积分操作 积分兑换
+                    Double jifen = activity.getJifen();//将被扣除的积分
+                    //积分操作
+                    List<Membermanagement> membermanagements = new ArrayList<>();
+                    membermanagements.add(membermanagement);
+                    //调用积分变动方法
+                    integralrecordController.insertIntegral(jifen, 1, membermanagements);
+                }
+                activityController.insertAcitvityMember(activity.getId()+"", membermanagement.getId()+"");
             }
         }
         return SUCCESS_TIP;

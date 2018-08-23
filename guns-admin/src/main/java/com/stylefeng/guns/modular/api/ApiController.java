@@ -63,7 +63,9 @@ public class ApiController extends BaseController {
 
         if (passwordTrueFlag) {
             HashMap<String, Object> result = new HashMap<>();
-            result.put("token", JwtTokenUtil.generateToken(String.valueOf(user.getId())));
+            String value = JwtTokenUtil.generateToken(String.valueOf(user.getId()));
+            result.put("token", value);
+            System.out.println(JwtTokenUtil.getUsernameFromToken(value));
             return result;
         } else {
             return new ErrorTip(500, "账号密码错误！");
