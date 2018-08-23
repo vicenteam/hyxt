@@ -163,6 +163,7 @@ public class ShiroConfig {
         hashMap.put("/static/**", "anon");
         hashMap.put("/gunsApi/**", "anon");
         //
+        hashMap.put("/api/**", "anon");
         hashMap.put("/webjars/**", "anon");
         hashMap.put("/v2/**", "anon");
         hashMap.put("/swagger-resources/**", "anon");

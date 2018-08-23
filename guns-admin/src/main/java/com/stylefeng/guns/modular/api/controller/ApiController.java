@@ -1,4 +1,4 @@
-package com.stylefeng.guns.modular.api;
+package com.stylefeng.guns.modular.api.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.base.tips.ErrorTip;
@@ -38,7 +38,6 @@ public class ApiController extends BaseController {
      * api登录接口，通过账号密码获取token
      */
     @RequestMapping("/auth")
-    @ApiOperation("登录")
     public Object auth(@RequestParam("username") String username,
                        @RequestParam("password") String password) {
 
@@ -63,9 +62,7 @@ public class ApiController extends BaseController {
 
         if (passwordTrueFlag) {
             HashMap<String, Object> result = new HashMap<>();
-            String value = JwtTokenUtil.generateToken(String.valueOf(user.getId()));
-            result.put("token", value);
-            System.out.println(JwtTokenUtil.getUsernameFromToken(value));
+            result.put("token", JwtTokenUtil.generateToken(String.valueOf(user.getId())));
             return result;
         } else {
             return new ErrorTip(500, "账号密码错误！");
@@ -75,7 +72,6 @@ public class ApiController extends BaseController {
     /**
      * 测试接口是否走鉴权
      */
-    @ApiOperation("测试")
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public Object test(String token) {
         return SUCCESS_TIP;
