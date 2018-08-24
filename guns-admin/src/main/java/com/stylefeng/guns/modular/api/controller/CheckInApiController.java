@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.api.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.modular.api.apiparam.RequstData;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.base.BaseController;
 import com.stylefeng.guns.modular.api.model.checkin.CheckInModel;
@@ -42,9 +43,10 @@ private IMembermanagementService membermanagementService;
             @ApiImplicitParam(required = true, name = "selectYear", value = "查询年", paramType = "query"),
             @ApiImplicitParam(required = true, name = "selectMonth", value = "查询月", paramType = "query"),
     })
-    public ResponseData<CheckInModel> getCheckInRecord(String selectId,Integer selectType,String selectYear,String selectMonth){
+    public ResponseData<CheckInModel> getCheckInRecord(RequstData requstData, String selectId, Integer selectType, String selectYear, String selectMonth){
         ResponseData<CheckInModel> checkInModelResponseData = new ResponseData<>();
         EntityWrapper<QiandaoCheckin> memberCardEntityWrapper = new EntityWrapper<>();
+        memberCardEntityWrapper.eq("deptid",requstData.getDeptId());
         memberCardEntityWrapper.eq("memberid",selectId);
         String starTime=selectYear+"-";
         if(selectMonth.length()==1){
