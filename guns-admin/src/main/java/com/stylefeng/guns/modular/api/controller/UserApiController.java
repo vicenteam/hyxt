@@ -9,6 +9,8 @@ import com.stylefeng.guns.modular.api.model.user.UserModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
 import com.stylefeng.guns.modular.system.model.User;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -35,6 +37,10 @@ public class UserApiController extends BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation("登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "username", value = "登录名", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "password", value = "登录密码", paramType = "query")
+    })
     public ResponseData<UserModel> login(@RequestParam("username") String username,
                                          @RequestParam("password") String password) throws Exception {
         ResponseData<UserModel> userResponseData = new ResponseData<>();
