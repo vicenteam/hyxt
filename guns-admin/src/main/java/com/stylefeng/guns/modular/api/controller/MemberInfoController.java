@@ -1,7 +1,6 @@
 package com.stylefeng.guns.modular.api.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.modular.api.apiparam.RequstData;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.base.BaseController;
@@ -18,11 +17,11 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -53,18 +52,19 @@ public class MemberInfoController extends BaseController {
     })
     public ResponseData<MemberInfoModel> searchMemberInfo(RequstData requstData, String selectId, String selectType)throws Exception{
         ResponseData<MemberInfoModel> responseData = new ResponseData<>();
+        // 调用查询方式接口
         ResponseData<MemberModel> dataCollection = memberApiController.getMemberInfo(requstData, selectId, selectType);
-        MemberModel modelInfo = dataCollection.getDataCollection(); //获取会员信息
-        Membermanagement mInfo = membermanagementService.selectById(modelInfo.getMemberId());
-        if(mInfo != null){
-            String mIName = "";
+        MemberModel modelInfo = dataCollection.getDataCollection();
+        if(modelInfo != null){
+            Membermanagement mInfo = membermanagementService.selectById(modelInfo.getMemberId()); //获取会员信息
+            StringBuilder mIName = new StringBuilder("");
             Membermanagement mIntroducer = membermanagementService.selectById(mInfo.getIntroducerId()); // 获取推荐人信息
-            if(mIntroducer != null) mIName = mIntroducer.getName();
+            if(mIntroducer != null) mIName.append(mIntroducer.getName());
             EntityWrapper<ActivityMember> aWrapper = new EntityWrapper<>();
             aWrapper.eq("memberid",mInfo.getId());
             aWrapper.eq("deptid",mInfo.getDeptId());
 //            aWrapper.groupBy("memberid");
-            List<ActivityMember> aList = activityMemberService.selectList(aWrapper);
+            List<ActivityMember> aList = activityMemberService.selectList(aWrapper); //获取活动信息表数据
             Integer aCount = 0;
             if(aList != null){  //获取会员活动次数
                 aCount = aList.size();
@@ -77,14 +77,13 @@ public class MemberInfoController extends BaseController {
             qWrapper.eq("deptid",mInfo.getDeptId());
             List<QiandaoCheckin> qInfo = qiandaoCheckinService.selectList(qWrapper);
             // 数值初始化
-            Integer singInCount = 0; Integer singOutCount = 0; String singInNew = ""; String singOutNew = "";
-            for(int i=0; i<qInfo.size(); i++){  // 求取签到、复签次数
-                if(qInfo.get(i).getCreatetime() != null && ! qInfo.get(i).getCreatetime().equals("")){
-
-                    singInCount ++;
+            Integer singInCount = 0; Integer singOutCount = 0;
+            for(int i=0,size=qInfo.size(); i<size; i++){  // 求取签到、复签次数
+                if(! StringUtils.isEmpty(qInfo.get(i).getCreatetime())){
+                    singInCount += 1;
                 }
-                if(qInfo.get(i).getUpdatetime() != null && ! qInfo.get(i).getUpdatetime().equals("")){
-                    singOutCount ++;
+                if(! StringUtils.isEmpty(qInfo.get(i).getUpdatetime())){
+                    singOutCount += 1;
                 }
             }
             //result info
@@ -94,7 +93,7 @@ public class MemberInfoController extends BaseController {
             infoModel.setCreateDt(mInfo.getCreateTime());
             infoModel.setDeptName(dName.getFullname());
             infoModel.setServicePerson(uName.getName());
-            infoModel.setIntroducer(mIName);
+            infoModel.setIntroducer(mIName.toString());
             infoModel.setSignInNew(qiandaoCheckinService.selectNewCreateTime(mInfo.getId())); //最新签到时间
             infoModel.setSignInCount(singInCount);
             infoModel.setSingOutNew(qiandaoCheckinService.selectNewUpdateTime(mInfo.getId())); //最新复签时间
@@ -104,6 +103,8 @@ public class MemberInfoController extends BaseController {
             infoModel.setLevelId(tName.getCardname());
             //result info
             responseData.setDataCollection(infoModel);
+        }else {
+            throw new NullPointerException("卡片信息无效");
         }
         return responseData;
     }
