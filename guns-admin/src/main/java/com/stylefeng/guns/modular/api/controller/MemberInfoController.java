@@ -72,18 +72,22 @@ public class MemberInfoController extends BaseController {
             Membershipcardtype tName = membershipcardtypeService.selectById(Integer.parseInt(mInfo.getLevelID())); //获取会员等级
             Dept dName = deptService.selectById(mInfo.getDeptId()); // 获取门店名称
             User uName = userService.selectById(mInfo.getStaffID()); //获取服务员工
-            EntityWrapper<QiandaoCheckin> qWrapper = new EntityWrapper<>();
-            qWrapper.eq("memberid",mInfo.getId());
-            qWrapper.eq("deptid",mInfo.getDeptId());
-            List<QiandaoCheckin> qInfo = qiandaoCheckinService.selectList(qWrapper);
             // 数值初始化
             Integer singInCount = 0; Integer singOutCount = 0;
-            for(int i=0,size=qInfo.size(); i<size; i++){  // 求取签到、复签次数
-                if(! StringUtils.isEmpty(qInfo.get(i).getCreatetime())){
-                    singInCount += 1;
+            for(int i=0; i<2; i++){  //获取签到、复签次数
+                EntityWrapper<QiandaoCheckin> qWrapper = new EntityWrapper<>();
+                qWrapper.eq("memberid",mInfo.getId());
+                qWrapper.eq("deptid",mInfo.getDeptId());
+                if(i == 0) {
+                    qWrapper.notIn("createtime","null","");
+                }else if(i == 1){
+                    qWrapper.notIn("updatetime","null","");
                 }
-                if(! StringUtils.isEmpty(qInfo.get(i).getUpdatetime())){
-                    singOutCount += 1;
+                Integer qNumber = qiandaoCheckinService.selectCount(qWrapper);
+                if(i == 0){
+                    singInCount = qNumber;
+                }else if(i == 1){
+                    singOutCount = qNumber;
                 }
             }
             //result info
