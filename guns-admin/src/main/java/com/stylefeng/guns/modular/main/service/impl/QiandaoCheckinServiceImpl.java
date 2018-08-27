@@ -17,4 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class QiandaoCheckinServiceImpl extends ServiceImpl<QiandaoCheckinMapper, QiandaoCheckin> implements IQiandaoCheckinService {
 
+    @Override
+    public String selectNewCreateTime(Integer memberId) {
+        return this.baseMapper.selectNewCreateTime(memberId);
+    }
+
+    @Override
+    public String selectNewUpdateTime(Integer memberId) {
+        return this.baseMapper.selectNewUpdateTime(memberId);
+    }
 }

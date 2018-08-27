@@ -13,4 +13,17 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface IQiandaoCheckinService extends IService<QiandaoCheckin> {
 
+    /**
+     * 查询最新签到时间
+     * @param memberId
+     * @return
+     */
+    String selectNewCreateTime(Integer memberId);
+
+    /**
+     * 查询最新复签时间
+     * @param memberId
+     * @return
+     */
+    String selectNewUpdateTime(Integer memberId);
 }

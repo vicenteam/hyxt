@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.system.dao;
 
 import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,17 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface QiandaoCheckinMapper extends BaseMapper<QiandaoCheckin> {
 
+    /**
+     * 查询最新签到时间
+     * @param memberId
+     * @return
+     */
+    String selectNewCreateTime(@Param("memberId")Integer memberId);
+
+    /**
+     * 查询最新复签时间
+     * @param memberId
+     * @return
+     */
+    String selectNewUpdateTime(@Param("memberId")Integer memberId);
 }

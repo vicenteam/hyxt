@@ -7,33 +7,33 @@ import io.swagger.annotations.ApiModelProperty;
 public class ParameterModel {
 
     @ApiModelProperty("卡片id")
-    private Integer code;
+    private String code;
     @ApiModelProperty("会员id")
-    private Integer memberid;
+    private String memberid;
     @ApiModelProperty("身份证id")
-    private Integer cadid;
+    private String cadid;
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public Integer getMemberid() {
+    public String getMemberid() {
         return memberid;
     }
 
-    public void setMemberid(Integer memberid) {
+    public void setMemberid(String memberid) {
         this.memberid = memberid;
     }
 
-    public Integer getCadid() {
+    public String getCadid() {
         return cadid;
     }
 
-    public void setCadid(Integer cadid) {
+    public void setCadid(String cadid) {
         this.cadid = cadid;
     }
 }

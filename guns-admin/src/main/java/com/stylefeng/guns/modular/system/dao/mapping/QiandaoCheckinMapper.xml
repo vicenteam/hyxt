@@ -18,4 +18,17 @@
         id, memberid, createtime, updatetime, checkinid, deptid, status
     </sql>
 
+    <select id="selectNewCreateTime" resultType="java.lang.String">
+        select createtime
+        from main_qiandao_checkin
+        where memberid= #{memberId}
+        AND createtime=(select max(createtime) from main_qiandao_checkin)
+    </select>
+
+    <select id="selectNewUpdateTime" resultType="java.lang.String">
+        select updatetime
+        from main_qiandao_checkin
+        where memberid= #{memberId}
+        AND updatetime=(select max(updatetime) from main_qiandao_checkin)
+    </select>
 </mapper>
