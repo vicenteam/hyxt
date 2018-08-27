@@ -75,6 +75,7 @@ public class MemberInfoController extends BaseController {
                 signOutCount += 1;
             }
         }
+
         //result info
         MemberInfoModel infoModel = new ReflectionObject<MemberInfoModel>().change(mInfo, new MemberInfoModel());
         infoModel.setAvatar(mInfo.getAvatar());
@@ -89,6 +90,7 @@ public class MemberInfoController extends BaseController {
         infoModel.setSingOutCount(signOutCount);
         infoModel.setActivityNumber(aCount);
         infoModel.setMemberStatus(mInfo.getTownshipid());
+        infoModel.setLevelId(tName.getCardname());
         //result info
         responseData.setDataCollection(infoModel);
         return responseData;
