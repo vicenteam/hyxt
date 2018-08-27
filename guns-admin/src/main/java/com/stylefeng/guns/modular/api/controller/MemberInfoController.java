@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/memberClientInfo")
@@ -43,7 +42,7 @@ public class MemberInfoController extends BaseController {
     private IQiandaoCheckinService qiandaoCheckinService;
 
     @RequestMapping(value = "resultInfo",method = RequestMethod.POST)
-    @ApiOperation("登录")
+    @ApiOperation("会员详情获取")
     public ResponseData<MemberInfoModel> searchMemberInfo(ParameterModel parameterModel){
         ResponseData<MemberInfoModel> responseData = new ResponseData<>();
         String mIName = "";
