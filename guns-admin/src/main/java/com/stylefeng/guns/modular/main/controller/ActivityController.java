@@ -201,7 +201,7 @@ public class ActivityController extends BaseController {
                 //对比总签到次数与活动累计签到次数 >=满足
                 if (i >= activity.getQiandaonum()) {
                     memberinfo.put("error", "200");
-                    insertAcitvityMember(activityId, memberId + "");
+//                    insertAcitvityMember(activityId, memberId + "");
                 } else {
                     //获取明天时间
                     Date date = new Date();//取时间

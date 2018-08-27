@@ -12,17 +12,9 @@ public class ResponseData<T> {
      */
     private String resultCode = StaticVariable.REQUEST_SUCCESS;
     /**
-     * 当前页数
-     */
-    private String currentPage = StaticVariable.CURRENTPAGE;
-    /**
      * 响应数据
      */
     private T dataCollection;
-    /**
-     * 总页数
-     */
-    private String totalPage = StaticVariable.TOTALPAGE;
 
 
     public String getResultMessage() {
@@ -41,13 +33,6 @@ public class ResponseData<T> {
         this.resultCode = resultCode;
     }
 
-    public String getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(String currentPage) {
-        this.currentPage = currentPage;
-    }
 
     public T getDataCollection() {
         return dataCollection;
@@ -57,13 +42,6 @@ public class ResponseData<T> {
         this.dataCollection = dataCollection;
     }
 
-    public String getTotalPage() {
-        return totalPage;
-    }
-
-    public void setTotalPage(String totalPage) {
-        this.totalPage = totalPage;
-    }
 
 
     @Override
@@ -71,9 +49,7 @@ public class ResponseData<T> {
         return "ResponseData{" +
                 "resultMessage='" + resultMessage + '\'' +
                 ", resultCode='" + resultCode + '\'' +
-                ", currentPage='" + currentPage + '\'' +
                 ", dataCollection='" + dataCollection + '\'' +
-                ", totalPage='" + totalPage + '\'' +
                 '}';
     }
 
