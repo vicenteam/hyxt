@@ -6,6 +6,7 @@ import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.base.BaseController;
 import com.stylefeng.guns.modular.api.model.memerber.MemberInfoModel;
 import com.stylefeng.guns.modular.api.model.memerber.MemberModel;
+import com.stylefeng.guns.modular.api.model.memerber.RecommendModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
@@ -143,20 +144,19 @@ public class MemberInfoController extends BaseController {
             @ApiImplicitParam(required = true, name = "selectId", value = "查询id", paramType = "query"),
             @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2身份证查询 3 memberId查询)", paramType = "query"),
     })
-    public ResponseData recommendInfo(RequstData requstData, String selectId, String selectType) throws Exception{
-        ResponseData<List<MemberInfoModel>> resultInfo = new ResponseData<>();
+    public ResponseData<RecommendModel> recommendInfo(RequstData requstData, String selectId, String selectType) throws Exception{
+        ResponseData<RecommendModel> resultInfo = new ResponseData<>();
+        RecommendModel recommendModel = new RecommendModel();
         List<MemberInfoModel> memberInfoList = new ArrayList<>();
         ResponseData<MemberModel> dataCollection = memberApiController.getMemberInfo(requstData, selectId, selectType);
         MemberModel modelInfo = dataCollection.getDataCollection();
         if(modelInfo != null){
+            recommendModel.setName(modelInfo.getName());
+            recommendModel.setCadID(modelInfo.getCadID()); //获取推荐人信息
             EntityWrapper<Membermanagement> mWrapper = new EntityWrapper<>();
             mWrapper.eq("introducerId",modelInfo.getMemberId());
             mWrapper.eq("deptid",modelInfo.getDeptId());
             List<Membermanagement> mRInfos = membermanagementService.selectList(mWrapper); //获取被推荐人信息
-            MemberInfoModel mI1 = new MemberInfoModel();
-            mI1.setName(modelInfo.getName());
-            mI1.setCadID(modelInfo.getCadID());
-            memberInfoList.add(mI1); //赋值推荐人信息
             for(int i=0,size=mRInfos.size(); i<size; i++){  //循环赋值被推荐人信息
                 MemberInfoModel mI2 = new MemberInfoModel();
                 mI2.setName(mRInfos.get(i).getName());
@@ -173,7 +173,8 @@ public class MemberInfoController extends BaseController {
                 mI2.setMemberStatus(mRInfos.get(i).getState());
                 memberInfoList.add(mI2);
             }
-            resultInfo.setDataCollection(memberInfoList);
+            recommendModel.setmInfos(memberInfoList);
+            resultInfo.setDataCollection(recommendModel);
         }else{
             throw new Exception("");
         }
