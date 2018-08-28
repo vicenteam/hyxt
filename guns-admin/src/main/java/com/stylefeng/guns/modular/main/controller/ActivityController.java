@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -181,7 +182,7 @@ public class ActivityController extends BaseController {
         Activity activity = activityService.selectById(activityId);
         Integer ruleexpression = activity.getRuleexpression();
         //是否存在参与活动或参与活动是否达到最大上限
-        BaseEntityWrapper<ActivityMember> qiWrapper = new BaseEntityWrapper<>();
+        EntityWrapper<ActivityMember> qiWrapper = new EntityWrapper<>();
         qiWrapper.eq("memberid", memberId);
         qiWrapper.eq("activityid", activityId);
         int i1 = activityMemberService.selectCount(qiWrapper);
@@ -193,7 +194,7 @@ public class ActivityController extends BaseController {
                 String begindate = activity.getBegindate();//活动开始日期
                 String enddate = activity.getEnddate();//活动结束日期
                 //查询会员签到记录从开始日期-结束日期的总签到次数
-                BaseEntityWrapper<QiandaoCheckin> qWrapper = new BaseEntityWrapper<>();
+                EntityWrapper<QiandaoCheckin> qWrapper = new EntityWrapper<>();
                 qWrapper.eq("memberid", memberId);
                 qWrapper.isNotNull("updatetime");
                 qWrapper.between("createtime", begindate, enddate);

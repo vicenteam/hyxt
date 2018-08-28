@@ -90,6 +90,7 @@ public class CheckInApiController extends BaseController {
         EntityWrapper<Checkin> checkinEntityWrapper = new EntityWrapper<>();
         checkinEntityWrapper.eq("deptid", requstData.getDeptId());
         checkinEntityWrapper.eq("status", 1);
+        checkinEntityWrapper.orderBy("createDate", false);
         List<Checkin> checkins = checkinService.selectList(checkinEntityWrapper);
         List<CountersigningInfoMode> countersigningInfoModes = new ReflectionObject<CountersigningInfoMode>().changeList(checkins, new CountersigningInfoMode());
         checkInModelResponseData.setDataCollection(countersigningInfoModes);
@@ -114,7 +115,7 @@ public class CheckInApiController extends BaseController {
         QiandaoCheckin qiandaoCheckin = qiandaoCheckinService.selectOne(qiandaoCheckinEntityWrapper);
         if(qiandaoCheckin==null){
             //进行首签
-            throw new Exception("该用户未首签,不能进行复签操作!");
+            throw new Exception("该场次用户未首签,不能进行复签操作!");
         }else {
             if(StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())){
                 //进行复签
@@ -122,10 +123,10 @@ public class CheckInApiController extends BaseController {
                 qiandaoCheckinService.updateById(qiandaoCheckin);
             }else {
                 //不能进行操作
-                throw new Exception("该用户已经复签不能重复操作!");
+                throw new Exception("该场次用户已经复签不能重复操作!");
             }
         }
-        checkInModelResponseData.setDataCollection("复签成功!");
+        checkInModelResponseData.setResultMessage("复签成功!");
         return checkInModelResponseData;
     }
     @RequestMapping(value = "/closecountersigning", method = RequestMethod.POST)
