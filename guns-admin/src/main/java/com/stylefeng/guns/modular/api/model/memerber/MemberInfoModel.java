@@ -34,13 +34,13 @@ public class MemberInfoModel {
     @ApiModelProperty("最近签到时间")
     private String signInNew;
     @ApiModelProperty("复签次数")
-    private Integer singOutCount;
+    private Integer signOutCount;
     @ApiModelProperty("最近复签时间")
-    private String singOutNew;
+    private String signOutNew;
     @ApiModelProperty("活动次数")
     private Integer activityNumber;
     @ApiModelProperty("会员状态")
-    private String memberStatus;
+    private Integer memberStatus;
 
     public Integer getId() {
         return id;
@@ -154,20 +154,20 @@ public class MemberInfoModel {
         this.signInNew = signInNew;
     }
 
-    public Integer getSingOutCount() {
-        return singOutCount;
+    public Integer getSignOutCount() {
+        return signOutCount;
     }
 
-    public void setSingOutCount(Integer singOutCount) {
-        this.singOutCount = singOutCount;
+    public void setSignOutCount(Integer signOutCount) {
+        this.signOutCount = signOutCount;
     }
 
-    public String getSingOutNew() {
-        return singOutNew;
+    public String getSignOutNew() {
+        return signOutNew;
     }
 
-    public void setSingOutNew(String singOutNew) {
-        this.singOutNew = singOutNew;
+    public void setSignOutNew(String signOutNew) {
+        this.signOutNew = signOutNew;
     }
 
     public Integer getActivityNumber() {
@@ -178,11 +178,11 @@ public class MemberInfoModel {
         this.activityNumber = activityNumber;
     }
 
-    public String getMemberStatus() {
+    public Integer getMemberStatus() {
         return memberStatus;
     }
 
-    public void setMemberStatus(String memberStatus) {
+    public void setMemberStatus(Integer memberStatus) {
         this.memberStatus = memberStatus;
     }
 }
