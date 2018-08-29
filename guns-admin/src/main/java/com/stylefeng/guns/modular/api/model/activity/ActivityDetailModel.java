@@ -16,7 +16,7 @@ public class ActivityDetailModel {
     @ApiModelProperty("最大领取次数")
     private Integer activityMaxgetnum;
     @ApiModelProperty("领取时间")
-    private Integer activityReceiveTime;
+    private String activityReceiveTime;
     @ApiModelProperty("当前领取次数")
     private Integer activityReceiveNum;
 
@@ -60,11 +60,11 @@ public class ActivityDetailModel {
         this.activityMaxgetnum = activityMaxgetnum;
     }
 
-    public Integer getActivityReceiveTime() {
+    public String getActivityReceiveTime() {
         return activityReceiveTime;
     }
 
-    public void setActivityReceiveTime(Integer activityReceiveTime) {
+    public void setActivityReceiveTime(String activityReceiveTime) {
         this.activityReceiveTime = activityReceiveTime;
     }
 
