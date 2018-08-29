@@ -1,14 +1,21 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.ICheckinService;
+import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.system.model.Checkin;
+import com.stylefeng.guns.modular.system.model.Membermanagement;
+import com.stylefeng.guns.modular.system.model.Membershipcardtype;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +28,7 @@ import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
 import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 复签记录控制器
@@ -38,6 +46,10 @@ public class QiandaoCheckinController extends BaseController {
     private IQiandaoCheckinService qiandaoCheckinService;
     @Autowired
     private ICheckinService checkinService;
+    @Autowired
+    private IMembermanagementService membermanagementService;
+    @Autowired
+    private IMembershipcardtypeService membershipcardtypeService;
 
     /**
      * 跳转到复签记录首页
@@ -108,6 +120,7 @@ public class QiandaoCheckinController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object update(String memberId,String chechId) {
         BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
         qiandaoCheckinBaseEntityWrapper.eq("memberid",memberId);
@@ -116,6 +129,21 @@ public class QiandaoCheckinController extends BaseController {
         if(qiandaoCheckin!=null&&StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())){
             qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
             qiandaoCheckinService.updateById(qiandaoCheckin);
+            //如果当前用户复签次数累计>=10次更新为普通会员卡
+            BaseEntityWrapper<QiandaoCheckin> qiandaoc = new BaseEntityWrapper<>();
+            qiandaoc.eq("memberid", memberId);
+            qiandaoc.isNotNull("updatetime");
+            int count = qiandaoCheckinService.selectCount(qiandaoc);
+            if(count>=10){
+                Membermanagement membermanagement = membermanagementService.selectById(memberId);
+                if(membermanagement.getLevelID().equals("1")){//零时卡更新普通会员卡
+                    List<Membershipcardtype> list = membershipcardtypeService.selectList(new BaseEntityWrapper<Membershipcardtype>());
+                    if(list.size()>=2){
+                        membermanagement.setLevelID(list.get(1).getId()+"");
+                    }
+                }
+                membermanagementService.updateById(membermanagement);
+            }
             //复签成功后统计当前场次完整签到人数
             Checkin checkin = checkinService.selectById(chechId);
             if(checkin!=null){

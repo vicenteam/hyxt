@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.api.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.modular.api.apiparam.RequstData;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.base.BaseController;
@@ -171,6 +172,19 @@ public class MemberInfoController extends BaseController {
                     mI2.setSignOutNew(maps.get("signOutNew").toString());
                 }
                 mI2.setMemberStatus(mRInfos.get(i).getState());
+                mI2.setSex(mRInfos.get(i).getSex());
+                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(mRInfos.get(i).getLevelID());
+                if (membershipcardtype != null && membershipcardtype.getUpamount() == 0) {
+                    //获取总签到场次次数
+                    EntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new EntityWrapper<>();
+                    qiandaoCheckinBaseEntityWrapper.eq("memberid", modelInfo.getMemberId());
+                    qiandaoCheckinBaseEntityWrapper.eq("deptid", requstData.getDeptId());
+                    qiandaoCheckinBaseEntityWrapper.isNotNull("updatetime");
+                    int count = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
+                    mI2.setLevelId("还差" + (10 - i) + "次签到成为普通会员");
+                } else if (membershipcardtype != null && membershipcardtype.getUpamount() != 0) {
+                    mI2.setLevelId(membershipcardtype.getCardname());
+                }
                 memberInfoList.add(mI2);
             }
             recommendModel.setmInfos(memberInfoList);

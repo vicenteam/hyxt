@@ -369,6 +369,7 @@ public class MembermanagementController extends BaseController {
                 //获取总签到场次次数
                 BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
                 qiandaoCheckinBaseEntityWrapper.eq("memberid", map.get("id"));
+                qiandaoCheckinBaseEntityWrapper.isNotNull("updatetime");
                 int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
                 map.put("levelID", "<span style='color:red;'>还差" + (10 - i) + "次签到成为普通会员</span>");
                 map.put("count", i);
