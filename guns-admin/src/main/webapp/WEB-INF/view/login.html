@@ -20,19 +20,33 @@
 <body class="gray-bg">
 
 <div class="middle-box text-center loginscreen">
-    <div style="padding: 100px 0px;">
+    <div style="padding: 100px 0px; width:80%">
         <div>
-            <h1 class="logo-name">GS</h1>
+            <!--<h1 class="logo-name">会签系统</h1>-->
         </div>
-        <h3>欢迎使用 Guns</h3>
+        <h3>会签系统</h3>
         <br/>
         <h4 style="color: red;">${tips!}</h4>
         <form class="m-t" role="form" action="${ctxPath}/login" method="post">
-            <div class="form-group">
-                <input type="text" name="username" class="form-control" placeholder="用户名" required="">
+            <!--<div class="form-group">-->
+                <!--<input type="text" name="username" class="form-control" placeholder="用户名" required="">-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<input type="password" name="password" class="form-control" placeholder="密码" required="">-->
+            <!--</div>-->
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <label data-toggle="dropdown" class="btn btn-white dropdown-toggle" >账号:
+                    </label>
+                </div>
+                <input class="form-control" name="username" placeholder="" type="text" required="">
             </div>
-            <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="密码" required="">
+            <div class="input-group" style="margin-top: 5px">
+                <div class="input-group-btn">
+                    <label data-toggle="dropdown" class="btn btn-white dropdown-toggle" >密码:
+                    </label>
+                </div>
+                <input class="form-control" name="password" placeholder="" type="password" required="">
             </div>
             @if(kaptcha.getKaptchaOnOff() == true){
             <div class="form-group" style="float: left;">
@@ -51,7 +65,8 @@
                     </label>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+
+            <button type="submit" class="btn btn-primary block full-width m-b" >登 录</button>
             </p>
         </form>
     </div>
