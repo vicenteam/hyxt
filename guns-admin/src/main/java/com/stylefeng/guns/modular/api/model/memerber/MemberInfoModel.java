@@ -39,7 +39,7 @@ public class MemberInfoModel {
     private String signOutNew;
     @ApiModelProperty("活动次数")
     private Integer activityNumber;
-    @ApiModelProperty("会员状态")
+    @ApiModelProperty("会员状态 (0可用 1不可用)")
     private Integer memberStatus;
 
     public Integer getId() {
