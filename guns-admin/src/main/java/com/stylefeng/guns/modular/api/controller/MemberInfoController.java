@@ -53,7 +53,7 @@ public class MemberInfoController extends BaseController {
     @ApiOperation("会员详情获取")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "selectId", value = "查询id", paramType = "query"),
-            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2身份证查询 3 memberId查询)", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2 姓名,身份证查询 3 memberId查询)", paramType = "query"),
     })
     public ResponseData<MemberInfoModel> searchMemberInfo(RequstData requstData, String selectId, String selectType)throws Exception{
         ResponseData<MemberInfoModel> responseData = new ResponseData<>();
@@ -143,7 +143,7 @@ public class MemberInfoController extends BaseController {
     @ApiOperation("推荐人与被推荐人信息")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "selectId", value = "查询id", paramType = "query"),
-            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2身份证查询 3 memberId查询)", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2 姓名,身份证查询 3 memberId查询)", paramType = "query"),
     })
     public ResponseData<RecommendModel> recommendInfo(RequstData requstData, String selectId, String selectType) throws Exception{
         ResponseData<RecommendModel> resultInfo = new ResponseData<>();

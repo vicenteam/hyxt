@@ -146,7 +146,7 @@ public class ActivityApiController extends BaseController {
     @ApiOperation("活动领取页面-基础信息")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "selectId", value = "查询id", paramType = "query"),
-            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2身份证查询 3 memberId查询)", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2 姓名,身份证查询 3 memberId查询)", paramType = "query"),
     })
 //    public  ResponseData<SettlementActivityPageDataModel> getmemberInfo(RequstData requstData, String selectId, String selectType) throws Exception {
     public  ResponseData<MemberModel> getmemberInfo(RequstData requstData, String selectId, String selectType) throws Exception {

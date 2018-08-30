@@ -47,7 +47,7 @@ public class CheckInApiController extends BaseController {
     @ApiOperation("获取签到详情数据")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "selectId", value = "查询id", paramType = "query"),
-            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2身份证查询 3 memberId查询)", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2 姓名,身份证查询 3 memberId查询)", paramType = "query"),
             @ApiImplicitParam(required = true, name = "selectYear", value = "查询年", paramType = "query"),
             @ApiImplicitParam(required = true, name = "selectMonth", value = "查询月", paramType = "query"),
     })

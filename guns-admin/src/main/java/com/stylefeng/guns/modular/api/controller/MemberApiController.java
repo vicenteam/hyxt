@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/memberapi")
 public class MemberApiController extends BaseController {
@@ -38,7 +40,7 @@ public class MemberApiController extends BaseController {
     @ApiOperation("获取会员信息")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "selectId", value = "查询id", paramType = "query"),
-            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2身份证查询 3 memberId查询)", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "selectType", value = "查询方式(1 读卡查询 2 姓名,身份证查询 3 memberId查询)", paramType = "query"),
     })
     public ResponseData<MemberModel> getMemberInfo(RequstData requstData,String selectId, String selectType ) throws Exception {
         ResponseData<MemberModel> memberModelResponseData = new ResponseData<>();
@@ -62,7 +64,16 @@ public class MemberApiController extends BaseController {
             EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
             membermanagementEntityWrapper.eq("deptid",requstData.getDeptId());
             membermanagementEntityWrapper.eq("cadID",selectId);
-            Membermanagement membermanagement = membermanagementService.selectOne(membermanagementEntityWrapper);
+            membermanagementEntityWrapper.or().eq("NAME",selectId);
+            Membermanagement membermanagement =null;// membermanagementService.selectOne(membermanagementEntityWrapper);
+            List<Membermanagement> membermanagements = membermanagementService.selectList(membermanagementEntityWrapper);
+            if(membermanagements.size()==0){
+                throw new Exception("未查询到相应信息!");
+            }
+            if(membermanagements.size()>1){
+                throw new Exception("相同信息过多,换身份证号试试!");
+            }
+            membermanagement=membermanagements.get(0);
             if(membermanagement!=null){
                 MemberModel change = new ReflectionObject<MemberModel>().change(membermanagement, new MemberModel());
                 change.setMemberId(membermanagement.getId());
