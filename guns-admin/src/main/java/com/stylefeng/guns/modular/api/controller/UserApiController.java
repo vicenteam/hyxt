@@ -61,6 +61,7 @@ public class UserApiController extends BaseController {
         boolean passwordTrueFlag = md5CredentialsMatcher.doCredentialsMatch(
                 usernamePasswordToken, simpleAuthenticationInfo);
         if (passwordTrueFlag) {
+            if(user.getStatus()!=1)throw new Exception("登录失败,请联系管理员!");
             //数据库entity对象转model层对象
             UserModel change = new ReflectionObject<UserModel>().change(user, new UserModel());
             change.setUserId(change.getId());
