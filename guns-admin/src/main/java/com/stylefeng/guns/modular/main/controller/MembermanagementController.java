@@ -371,7 +371,7 @@ public class MembermanagementController extends BaseController {
                 qiandaoCheckinBaseEntityWrapper.eq("memberid", map.get("id"));
                 qiandaoCheckinBaseEntityWrapper.isNotNull("updatetime");
                 int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
-                map.put("levelID", "<span style='color:red;'>还差" + (10 - i) + "次签到成为普通会员</span>");
+                map.put("levelID", "<span style='color:red;'>还差" + (membershipcardtype.getCheckleavenum() - i) + "次签到成为普通会员</span>");
                 map.put("count", i);
             } else if (membershipcardtype != null && membershipcardtype.getUpamount() != 0) {
                 map.put("levelID", membershipcardtype.getCardname());

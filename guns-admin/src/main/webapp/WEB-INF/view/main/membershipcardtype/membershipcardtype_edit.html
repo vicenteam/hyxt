@@ -3,12 +3,14 @@
     <div class="ibox-content">
         <div class="form-horizontal" id="membershipcardtypeInfoTable">
             <input type="hidden" id="id"  name="id" value="${item.id}">
+            <input type="hidden" id="checkleavenum_temp"   value="${item.checkleavenum}">
             <div class="row">
                 <div class="col-sm-6 b-r">
                             <#input id="cardname" name="会员等级名称" value="${item.cardname}" underline="true"/>
                             <!--<#input id="signin" name="签到积分" value="${item.signin}" underline="true"/>-->
                             <!--<#input id="shopping" name="购物积分" value="${item.shopping}" underline="true"/>-->
                             <#input id="newpoints" name="带新人奖励积分" value="${item.newpoints}" underline="true"/>
+                    <div id="checkleavenumDiv"></div>
                 </div>
 
                 <div class="col-sm-6">
@@ -33,4 +35,17 @@
     </div>
 </div>
 <script src="${ctxPath}/static/modular/main/membershipcardtype/membershipcardtype_info.js"></script>
+<script>
+    if($("#id").val()==1){
+        var dom='<div class="form-group">\n' +
+            '    <label class="col-sm-3 control-label">签到升级次数</label>\n' +
+            '    <div class="col-sm-9">\n' +
+            '        <input class="form-control" id="checkleavenum" name="checkleavenum" type="text">\n' +
+            '\n' +
+            '    </div>\n' +
+            '</div><div class="hr-line-dashed"></div>';
+        $("#checkleavenumDiv").append(dom);
+    }
+    $("#checkleavenum").val($("#checkleavenum_temp").val())
+</script>
 @}

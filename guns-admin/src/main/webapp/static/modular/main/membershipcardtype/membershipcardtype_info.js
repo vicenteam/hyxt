@@ -82,6 +82,7 @@ MembershipcardtypeInfoDlg.collectData = function() {
     .set('deptid')
     .set('tips')
     .set('status')
+    .set('checkleavenum')
     .set('createdt')
     .set('updatedt');
 }
@@ -139,6 +140,7 @@ MembershipcardtypeInfoDlg.editSubmit = function() {
         Feng.error("修改失败!" + data.responseJSON.message + "!");
     });
     ajax.set(this.membershipcardtypeInfoData);
+    ajax.set("checkleavenum",$("#checkleavenum").val());
     ajax.start();
 }
 

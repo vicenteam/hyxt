@@ -17,6 +17,7 @@
         <result column="status" property="status" />
         <result column="createdt" property="createdt" />
         <result column="updatedt" property="updatedt" />
+        <result column="checkleavenum" property="checkleavenum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

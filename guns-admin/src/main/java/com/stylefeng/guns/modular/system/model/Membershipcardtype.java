@@ -63,7 +63,15 @@ public class Membershipcardtype extends Model<Membershipcardtype> {
     private Integer status;
     private String createdt;
     private String updatedt;
+    private Integer checkleavenum;
 
+    public Integer getCheckleavenum() {
+        return checkleavenum;
+    }
+
+    public void setCheckleavenum(Integer checkleavenum) {
+        this.checkleavenum = checkleavenum;
+    }
 
     public Integer getId() {
         return id;
