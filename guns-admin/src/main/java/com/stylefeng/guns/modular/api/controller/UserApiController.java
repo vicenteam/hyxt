@@ -65,7 +65,7 @@ public class UserApiController extends BaseController {
             //数据库entity对象转model层对象
             UserModel change = new ReflectionObject<UserModel>().change(user, new UserModel());
             change.setUserId(change.getId());
-            change.setAccount("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
+            change.setAvatar("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
             userResponseData.setDataCollection(change);
         } else {
             throw new Exception("用户名或密码错误!");
