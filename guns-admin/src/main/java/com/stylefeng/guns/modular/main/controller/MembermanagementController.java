@@ -1,5 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -9,6 +11,9 @@ import com.stylefeng.guns.modular.main.service.IBaMedicalService;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import com.stylefeng.guns.modular.system.utils.MemberExcel;
+import com.stylefeng.guns.modular.system.utils.SignInExcel;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -24,6 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -37,6 +47,7 @@ import java.util.*;
 public class MembermanagementController extends BaseController {
 
     private String PREFIX = "/main/membermanagement/";
+    private List<Membermanagement> membermanagements;
 
     @Autowired
     private IMembermanagementService membermanagementService;
@@ -172,6 +183,7 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(memberid)) baseEntityWrapper.eq("id", memberid);
         if (!StringUtils.isEmpty(townshipid)) baseEntityWrapper.eq("townshipid", townshipid);
         baseEntityWrapper.eq("state", 0);
+        membermanagements = membermanagementService.selectList(baseEntityWrapper);
         Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = mapPage.getRecords();
         for (Map<String, Object> map : records) {
@@ -435,6 +447,36 @@ public class MembermanagementController extends BaseController {
                 membermanagementService.updateById(membermanagement);
                 break;
             }
+        }
+    }
+
+    @RequestMapping("export_excel")
+    public void export(HttpServletResponse response, HttpServletRequest request) throws Exception{
+        List<MemberExcel> memberExcels = new ArrayList<>();
+        for(Membermanagement m : membermanagements){
+            MemberExcel memberExcel = new MemberExcel();
+            memberExcel.setmName(m.getName());
+            memberExcel.setmSex(m.getSex());
+            memberExcel.setmPhone(m.getPhone());
+            memberExcel.setmIntegral(m.getIntegral());
+            memberExcel.setmLevel(membershipcardtypeService.selectById(m.getLevelID()).getCardname());
+            memberExcel.setmCreateDt(m.getCreateTime());
+            memberExcel.setmIsoldsociety(m.getIsoldsociety());
+            memberExcel.setmAddress(m.getAddress());
+            memberExcel.setmCountPrice(m.getCountPrice());
+            memberExcels.add(memberExcel);
+        }
+        ExportParams params = new ExportParams();
+        Workbook workbook = ExcelExportUtil.exportExcel(params, MemberExcel.class, memberExcels);
+        response.setHeader("content-Type","application/vnc.ms-excel");
+        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("会员信息", "UTF-8")+".xls");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
         }
     }
 }

@@ -19,12 +19,12 @@ public interface QiandaoCheckinMapper extends BaseMapper<QiandaoCheckin> {
      * @param memberId
      * @return
      */
-    String selectNewCreateTime(@Param("memberId")Integer memberId);
+    String selectNewCreateTime(@Param("memberId")Integer memberId, @Param("beginTime")String beginTime, @Param("endTime")String endTime);
 
     /**
      * 查询最新复签时间
      * @param memberId
      * @return
      */
-    String selectNewUpdateTime(@Param("memberId")Integer memberId);
+    String selectNewUpdateTime(@Param("memberId")Integer memberId, @Param("beginTime")String beginTime, @Param("endTime")String endTime);
 }

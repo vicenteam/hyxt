@@ -18,12 +18,12 @@ public interface IQiandaoCheckinService extends IService<QiandaoCheckin> {
      * @param memberId
      * @return
      */
-    String selectNewCreateTime(Integer memberId);
+    String selectNewCreateTime(Integer memberId, String beginTime, String endTime);
 
     /**
      * 查询最新复签时间
      * @param memberId
      * @return
      */
-    String selectNewUpdateTime(Integer memberId);
+    String selectNewUpdateTime(Integer memberId, String beginTime, String endTime);
 }

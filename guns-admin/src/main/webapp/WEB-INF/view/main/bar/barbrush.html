@@ -4,6 +4,9 @@
     <meta charset="utf-8">
 </head>
 <body style="height: 100%; margin: 0">
+<div style="width:100%">
+    <button class="layui-btn" onclick="exportExcel()">Excel导出</button>
+</div>
 <div id="container" style="height: 100%"></div>
 <div id="container2" style="height: 100%"></div>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
@@ -402,6 +405,19 @@
         myChart2.setOption(option2, true);
     }
 </script>
+<script src="${ctxPath}/static/js/plugins/layer/layer.js"></script>
+<script>
+    function exportExcel() {
+        layer.open({
+            type: 2,
+            title: '签到记录导出向导',
+            area: ['800px', '450px'], //宽高
+            fix: false, //不固定
+            maxmin: true,
+            content: '/barbrush/exportView'
+        });
 
+    }
+</script>
 </body>
 </html>

@@ -78,7 +78,7 @@ public class MemberInfoController extends BaseController {
             Dept dName = deptService.selectById(mInfo.getDeptId()); // 获取门店名称
             User uName = userService.selectById(mInfo.getStaffID()); //获取服务员工
             // 获取签到、复签次数
-            Map<String, Object> maps = this.signInCount(mInfo.getId(),mInfo.getDeptId());
+            Map<String, Object> maps = this.signInCount(mInfo.getId(),mInfo.getDeptId(),"","");
             //result info
             MemberInfoModel infoModel = new ReflectionObject<MemberInfoModel>().change(mInfo, new MemberInfoModel());
             infoModel.setAvatar(mInfo.getAvatar());
@@ -108,7 +108,7 @@ public class MemberInfoController extends BaseController {
      * @param deptId
      * @return
      */
-    public Map<String, Object>  signInCount(Integer memberId, String deptId){
+    public Map<String, Object>  signInCount(Integer memberId, String deptId, String beginTime, String endTime){
         Map<String, Object> maps = new HashMap<>();
         // 数值初始化
         Integer signInCount = 0; Integer signOutCount = 0;
@@ -116,6 +116,9 @@ public class MemberInfoController extends BaseController {
             EntityWrapper<QiandaoCheckin> qWrapper = new EntityWrapper<>();
             qWrapper.eq("memberid",memberId);
             qWrapper.eq("deptid",deptId);
+            if(! StringUtils.isEmpty(beginTime) || !StringUtils.isEmpty(endTime)){
+                qWrapper.between("createTime",beginTime,endTime);
+            }
             if(i == 0) {
                 qWrapper.notIn("createtime","null","");
             }else if(i == 1){
@@ -130,10 +133,10 @@ public class MemberInfoController extends BaseController {
                 maps.put("signOutCount",signOutCount);
             }
         }
-        String signInNew = qiandaoCheckinService.selectNewCreateTime(memberId);
+        String signInNew = qiandaoCheckinService.selectNewCreateTime(memberId,beginTime,endTime);
         if(signInNew == null) signInNew = "";
         maps.put("signInNew",signInNew);
-        String signOutNew = qiandaoCheckinService.selectNewUpdateTime(memberId);
+        String signOutNew = qiandaoCheckinService.selectNewUpdateTime(memberId,beginTime,endTime);
         if(signOutNew == null) signOutNew = "";
         maps.put("signOutNew",signOutNew);
         return maps;
@@ -164,7 +167,7 @@ public class MemberInfoController extends BaseController {
                 mI2.setCadID(mRInfos.get(i).getCadID());
                 mI2.setCreateDt(mRInfos.get(i).getCreateTime());
                 // 获取签到、复签次数
-                Map<String, Object> maps = this.signInCount(mRInfos.get(i).getId(),mRInfos.get(i).getDeptId());
+                Map<String, Object> maps = this.signInCount(mRInfos.get(i).getId(),mRInfos.get(i).getDeptId(),"","");
                 if(maps.size() > 0){
                     mI2.setSignInCount((Integer) maps.get("signInCount"));
                     mI2.setSignInNew(maps.get("signInNew").toString());

@@ -195,3 +195,7 @@ $(function () {
     table.setPaginationType("server");
     Membermanagement.table = table.init();
 });
+
+Membermanagement.exportExcel = function () {
+    window.location.href=Feng.ctxPath +"/membermanagement/export_excel";
+};

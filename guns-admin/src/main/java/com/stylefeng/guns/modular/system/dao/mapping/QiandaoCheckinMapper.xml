@@ -22,13 +22,33 @@
         select createtime
         from main_qiandao_checkin
         where memberid= #{memberId}
-        AND createtime=(select max(createtime) from main_qiandao_checkin)
+        AND createtime=(
+              select max(createtime)
+              from main_qiandao_checkin
+              where 1=1
+            <if test="beginTime != null and beginTime != ''">
+              and createtime >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and createtime &lt;= #{endTime}
+            </if>
+          )
     </select>
 
     <select id="selectNewUpdateTime" resultType="java.lang.String">
         select updatetime
         from main_qiandao_checkin
         where memberid= #{memberId}
-        AND updatetime=(select max(updatetime) from main_qiandao_checkin)
+        AND updatetime=(
+            select max(updatetime)
+            from main_qiandao_checkin
+            where 1=1
+            <if test="beginTime != null and beginTime != ''">
+                and createtime >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and createtime &lt;= #{endTime}
+            </if>
+            )
     </select>
 </mapper>
