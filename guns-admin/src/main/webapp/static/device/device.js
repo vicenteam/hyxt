@@ -323,6 +323,7 @@ function readDeviceCard() {
     }else {
         OpenDevice();
     }
+    return ret;
 
 }
 //操作卡片数据
@@ -360,11 +361,16 @@ function writeData() {
 }
 
 
+
 /**
  * 从服务端获取写卡数据
  */
 function getXieKaVal() {
-    readDeviceCard();
+   var carduuid= document.getElementById("readDeviceCard").value;
+   if(carduuid.length==0){
+       Feng.error("请重试!");
+       return;
+   }
 //校验密码
     RfAuthenticationKey();
     var ret = CZx_32Ctrl.RfRead(DeviceHandle.value,BlockM1.value);
@@ -373,7 +379,8 @@ function getXieKaVal() {
         if(ret.length>0){
             $.ajax({
                 url: '/membermanagement/getUserInfo',
-                data: {value:ret},
+                // data: {value:ret},
+                data: {value:carduuid},
                 type: 'POST',
                 contentType: 'application/x-www-form-urlencoded;charset=utf-8',
                 async: false,
