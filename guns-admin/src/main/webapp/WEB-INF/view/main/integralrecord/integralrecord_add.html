@@ -7,7 +7,7 @@
             <input type="hidden" id="memberid" name="memberid"/>
             <div class="row">
                 <div class="col-sm-4 b-r">
-                    <#input id="introducerName" name="会员卡号" underline="true" button="读卡" buttonId="read" disabled="disabled"/>
+                    <#input id="introducerName" name="身份证号" underline="true" button="读卡" buttonId="read" disabled="disabled"/>
                     <#input id="name" name="会员名称" underline="true" readonly="readonly"/>
                     <#input id="levelID" name="会员等级" underline="true" readonly="readonly"/>
                     <#input id="tel" name="联系方式" underline="true" readonly="readonly"/>
@@ -159,12 +159,10 @@
 <script src="${ctxPath}/static/modular/main/integralrecord/integralrecord_info.js"></script>
 <script src="${ctxPath}/static/device/device.js"></script>
 <script>
-    $("#write").click(function () {
-        getXieKaVal();
-    });
     $("#read").click(function () {
         getUserInfo();
         var memberId = $("#introducerId").val();
+        // var memberId = $("#readDeviceCard").val();
         $.ajax({
             url: '/membermanagement/getMemberInfo',
             data: { memberId: memberId },

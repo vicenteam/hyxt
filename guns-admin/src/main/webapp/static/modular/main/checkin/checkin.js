@@ -26,7 +26,15 @@ Checkin.initColumn = function () {
                         return '已结束';
                     }
                 }},
-            {title: '结束时间', field: 'endDate', visible: true, align: 'center', valign: 'middle'},
+            {title: '结束时间', field: 'endDate', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                    if(row.status==1){
+                        return '<button class="btn btn-sm btn-danger" type="button" id="checkin_close" onclick="checkin_close('+row.id+')">\n' +
+                            '                <i class="ace-icon fa "></i> 结束签到\n' +
+                            '            </button>';
+                    }else {
+                        return value;
+                    }
+                }},
     ];
 };
 
@@ -108,3 +116,17 @@ $(function () {
     table.setPaginationType("server");
     Checkin.table = table.init();
 });
+function checkin_close(id) {
+    layer.confirm('您确定要结束签到吗？', {btn: ['确定', '取消']}, function () {
+        layer.closeAll('dialog');
+        var ajax = new $ax(Feng.ctxPath + "/checkin/updatecheck", function (data) {
+            Feng.success("操作成功!");
+            Checkin.table.refresh();
+        }, function (data) {
+            Feng.error("操作失败!" + data.responseJSON.message + "!");
+        });
+        ajax.set("checkid", id);
+        ajax.start();
+    });
+
+}

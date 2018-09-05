@@ -423,7 +423,8 @@ function getUserInfo() {
     }, function (data) {
         Feng.error("获取数据失败!" + data.responseJSON.message + "!");
     });
-    ajax.setData({value:$("#readData").val()})
+    // ajax.setData({value:$("#readData").val()})
+    ajax.setData({value:$("#readDeviceCard").val()})
     ajax.start();
 }
 
