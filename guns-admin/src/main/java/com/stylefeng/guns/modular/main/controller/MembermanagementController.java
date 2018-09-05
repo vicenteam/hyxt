@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.main.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -202,13 +203,14 @@ public class MembermanagementController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Membermanagement membermanagement, String cardCode,String baMedicals) {
+    public Object add(Membermanagement membermanagement, String cardCode,String baMedicals,String code) {
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
         membermanagement.setTownshipid("0");
         membermanagementService.insert(membermanagement);
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
-        memberCardBaseEntityWrapper.eq("code", cardCode);
+//        memberCardBaseEntityWrapper.eq("code", cardCode);
+        memberCardBaseEntityWrapper.eq("code", code);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
         memberCard.setName(membermanagement.getName());
         memberCard.setMemberid(membermanagement.getId());
@@ -295,8 +297,8 @@ public class MembermanagementController extends BaseController {
 
     @RequestMapping(value = "/getXieKaVal")
     @ResponseBody
-    public Object getXieKaVal() {
-        return getXieKaValInfo();
+    public Object getXieKaVal(String code) throws Exception {
+        return getXieKaValInfo(code);
     }
 
     @RequestMapping(value = "/getUserInfo")
@@ -319,20 +321,23 @@ public class MembermanagementController extends BaseController {
         return memberCard;
     }
 
-    public String getXieKaValInfo() {
+    public String getXieKaValInfo(String code) throws Exception {
         String chars = "ABCDEF1234567890";
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 32; i++) {
             sb.append(chars.charAt((int) (Math.random() * 16)));
         }
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
-        memberCardBaseEntityWrapper.eq("code", sb.toString());
+//        memberCardBaseEntityWrapper.eq("code", sb.toString());
+        memberCardBaseEntityWrapper.eq("code", code);
         int i = memberCardService.selectCount(memberCardBaseEntityWrapper);
         if (i != 0) {
-            getXieKaValInfo();
+            throw new Exception("失败");
+//            getXieKaValInfo(code);
         }
         MemberCard memberCard = new MemberCard();
-        memberCard.setCode(sb.toString());
+//        memberCard.setCode(sb.toString());
+        memberCard.setCode(code);
         memberCard.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         memberCard.setDeptid(ShiroKit.getUser().getDeptId());
         memberCardService.insert(memberCard);

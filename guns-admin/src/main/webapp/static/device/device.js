@@ -366,6 +366,7 @@ function writeData() {
  * 从服务端获取写卡数据
  */
 function getXieKaVal() {
+    readDeviceCard();
    var carduuid= document.getElementById("readDeviceCard").value;
    if(carduuid.length==0){
        Feng.error("请重试!");
@@ -400,6 +401,7 @@ function getXieKaVal() {
                             }, function (data) {
                                 Feng.error("获取数据失败!" + data.responseJSON.message + "!");
                             });
+                            ajax.set("code",carduuid);
                             ajax.start();
                         }
 

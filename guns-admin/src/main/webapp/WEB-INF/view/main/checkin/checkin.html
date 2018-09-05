@@ -286,7 +286,8 @@
                 Feng.error("获取数据失败!!");
                 cleninfo()
             });
-            ajax.setData({value:$("#readData").val(),checkid:$("#checkid").val()})
+            // ajax.setData({value:$("#readData").val(),checkid:$("#checkid").val()})
+            ajax.setData({value:$("#readDeviceCard").val(),checkid:$("#checkid").val()})
             ajax.start();
         }else {
             Feng.error("请先创建签到场次!");

@@ -165,7 +165,8 @@ Membermanagement.search1 = function () {
         DevBeep();
         $.ajax({
             url: '/membermanagement/getUserInfo',
-            data: {value:ret},
+            // data: {value:ret},
+            data: {value:$("#readDeviceCard").val()},
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded;charset=utf-8',
             async: false,

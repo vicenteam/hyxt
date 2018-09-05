@@ -141,6 +141,7 @@ MembermanagementInfoDlg.addSubmit = function() {
     });
     ajax.set(this.membermanagementInfoData);
     ajax.set("baMedicals",baMedicals);
+    ajax.set("code",$("#readDeviceCard").val());
     ajax.start();
 }
 
