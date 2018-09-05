@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public class BaseController {
         ResponseData responseData = new ResponseData();
         responseData.setResultCode("202");
         responseData.setResultMessage(e.getMessage());
+        responseData.setDataCollection(new Object());
         e.printStackTrace();
         return responseData;
     }

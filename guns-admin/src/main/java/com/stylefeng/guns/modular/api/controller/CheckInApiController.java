@@ -140,7 +140,7 @@ public class CheckInApiController extends BaseController {
         checkin.setEndDate(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
         checkin.setStatus(2);
         checkinService.updateById(checkin);
-        checkInModelResponseData.setDataCollection("操作成功!");
+//        checkInModelResponseData.setDataCollection("操作成功!");
         return checkInModelResponseData;
     }
 }
