@@ -41,6 +41,26 @@ public class MemberInfoModel {
     private Integer activityNumber;
     @ApiModelProperty("会员状态 (0可用 1不可用)")
     private Integer memberStatus;
+    @ApiModelProperty("总获得积分")
+    private Double countPrice;
+    @ApiModelProperty("当前可用积分呢")
+    private Double integral;
+
+    public Double getCountPrice() {
+        return countPrice;
+    }
+
+    public void setCountPrice(Double countPrice) {
+        this.countPrice = countPrice;
+    }
+
+    public Double getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Double integral) {
+        this.integral = integral;
+    }
 
     public Integer getId() {
         return id;

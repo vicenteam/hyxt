@@ -132,6 +132,7 @@ public class ActivityApiController extends BaseController {
             detailModel.setActivityMaxgetnum(maxgetnum);
             detailModel.setActivityName(name);
             detailModel.setActivityReceiveNum(activityMembers.size());
+            detailModel.setActivityStatus(a.getStatus());
             if(activityMembers.size()>0){
                 detailModel.setActivityReceiveTime(activityMembers.get(0).getCreatetime());
             }

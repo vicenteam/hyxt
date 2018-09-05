@@ -10,7 +10,7 @@ public class RecommendModel {
 
     @ApiModelProperty("推荐人名称")
     private String name;
-    @ApiModelProperty("卡片id")
+    @ApiModelProperty("身份证")
     private String cadID;
     @ApiModelProperty("被推荐新信息")
     private List<MemberInfoModel> mInfos;

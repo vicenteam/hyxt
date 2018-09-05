@@ -50,7 +50,7 @@ public class MemberModel {
      * 会员等级id
      */
     @ApiModelProperty("会员等级id")
-    private String levelID;
+    private String levelId;
     /**
      * 会员卡信息
      */
@@ -185,12 +185,12 @@ public class MemberModel {
         this.integral = integral;
     }
 
-    public String getLevelID() {
-        return levelID;
+    public String getLevelId() {
+        return levelId;
     }
 
-    public void setLevelID(String levelID) {
-        this.levelID = levelID;
+    public void setLevelId(String levelId) {
+        this.levelId = levelId;
     }
 
     public String getCardID() {
