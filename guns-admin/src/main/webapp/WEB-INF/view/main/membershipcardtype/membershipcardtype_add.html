@@ -8,18 +8,19 @@
                             <#input id="cardname" name="会员等级名称" underline="true"/>
                             <!--<#input id="signin" name="签到积分" underline="true"/>-->
                             <!--<#input id="shopping" name="购物积分" underline="true"/>-->
-                            <#input id="newpoints" name="带新人奖励积分" underline="true"/>
+                            <!--<#input id="newpoints" name="带新人奖励积分" underline="true"/>-->
+                    <#input id="tips" name="备注" underline="true"/>
 
                 </div>
 
                 <div class="col-sm-6">
                             <!--<#input id="signinnew" name="新人签到积分" underline="true"/>-->
                             <!--<#input id="shoppingnew" name="新人购物积分" underline="true"/>-->
-                            <#input id="upamount" name="等级积分" underline="true"/>
+                            <#input id="upamount" name="升级所需积分" underline="true"/>
                             <#select name="部门名称" id="deptid" underline="true">
                                 <option value="${dept.id}">${dept.fullname}</option>
                             </#select>
-                            <#input id="tips" name="备注" underline="true"/>
+
                 </div>
             </div>
 

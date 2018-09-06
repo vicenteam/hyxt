@@ -12,14 +12,6 @@ var MembershipcardtypeInfoDlg = {
                 }
             }
         },
-        newpoints: {
-            validators: {
-                notEmpty: {
-                    message: '带新人奖励积分不能为空'
-                },
-                numeric: {message: '带新人奖励积分只能输入数字'}
-            }
-        },
         upamount: {
             validators: {
                 notEmpty: {
