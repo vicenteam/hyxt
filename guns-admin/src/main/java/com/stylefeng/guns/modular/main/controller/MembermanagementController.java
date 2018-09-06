@@ -235,8 +235,8 @@ public class MembermanagementController extends BaseController {
             Activity activity = activityService.selectOne(activityBaseEntityWrapper);
             if(membermanagement1!=null){
                 Integer ruleexpression = activity.getRuleexpression();
-                if (ruleexpression == 2) {//积分操作 积分兑换
-                    Double jifen = activity.getJifen();//将被扣除的积分
+                if (ruleexpression == 3) {//积分操作
+                    Double jifen = activity.getJifen();//
                     //积分操作
                     List<Membermanagement> membermanagements = new ArrayList<>();
                     membermanagements.add(membermanagement);
