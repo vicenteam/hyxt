@@ -122,9 +122,11 @@ public class MemberInfoController extends BaseController {
                 qWrapper.between("createTime",beginTime,endTime);
             }
             if(i == 0) {
-                qWrapper.notIn("createtime","null","");
+                qWrapper.ne("createtime","");
+                qWrapper.isNotNull("createtime");
             }else if(i == 1){
-                qWrapper.notIn("updatetime","null","");
+                qWrapper.ne("updatetime","");
+                qWrapper.isNotNull("updatetime");
             }
             Integer qNumber = qiandaoCheckinService.selectCount(qWrapper);
             if(i == 0){

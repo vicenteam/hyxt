@@ -15,6 +15,10 @@ import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.system.utils.MemberExcel;
 import com.stylefeng.guns.modular.system.utils.SignInExcel;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -457,31 +461,74 @@ public class MembermanagementController extends BaseController {
 
     @RequestMapping("export_excel")
     public void export(HttpServletResponse response, HttpServletRequest request) throws Exception{
-        List<MemberExcel> memberExcels = new ArrayList<>();
+        List<Map<String,Object>> memberExcels = new ArrayList<>();
         for(Membermanagement m : membermanagements){
-            MemberExcel memberExcel = new MemberExcel();
-            memberExcel.setmName(m.getName());
-            memberExcel.setmSex(m.getSex());
-            memberExcel.setmPhone(m.getPhone());
-            memberExcel.setmIntegral(m.getIntegral());
-            memberExcel.setmLevel(membershipcardtypeService.selectById(m.getLevelID()).getCardname());
-            memberExcel.setmCreateDt(m.getCreateTime());
-            memberExcel.setmIsoldsociety(m.getIsoldsociety());
-            memberExcel.setmAddress(m.getAddress());
-            memberExcel.setmCountPrice(m.getCountPrice());
-            memberExcels.add(memberExcel);
+            Map<String,Object> mMap = new LinkedHashMap<>();
+            mMap.put("name",m.getName());
+            mMap.put("sex",m.getSex());
+            mMap.put("phone",m.getPhone());
+            mMap.put("address",m.getAddress());
+            mMap.put("integral",m.getIntegral());
+            mMap.put("countPrice",m.getCountPrice());
+            mMap.put("isoldsociety",m.getIsoldsociety());
+            mMap.put("level",membershipcardtypeService.selectById(m.getLevelID()).getCardname());
+            mMap.put("createDt",m.getCreateTime());
+            memberExcels.add(mMap);
         }
-        ExportParams params = new ExportParams();
-        Workbook workbook = ExcelExportUtil.exportExcel(params, MemberExcel.class, memberExcels);
-        response.setHeader("content-Type","application/vnc.ms-excel");
-        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("会员信息", "UTF-8")+".xls");
+        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
+        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
+        Map<String,Object> mapTile = memberExcels.get(0);
+        //创建excel 数据列名
+        SXSSFRow rowTitle = sxssfSheet.createRow(0);
+        Integer j = 0;
+        for (Map.Entry<String,Object> entry: mapTile.entrySet()) {
+            if(entry.getKey().equals("name")){
+                CellUtil.createCell(rowTitle,j,"客户名称");
+            }else if (entry.getKey().equals("sex")){
+                CellUtil.createCell(rowTitle,j,"性别");
+            }else if (entry.getKey().equals("phone")){
+                CellUtil.createCell(rowTitle,j,"联系电话");
+            }else if (entry.getKey().equals("address")){
+                CellUtil.createCell(rowTitle,j,"联系地址");
+            }else if (entry.getKey().equals("integral")){
+                CellUtil.createCell(rowTitle,j,"可用积分");
+            }else if (entry.getKey().equals("countPrice")){
+                CellUtil.createCell(rowTitle,j,"总积分");
+            }else if (entry.getKey().equals("isoldsociety")){
+                CellUtil.createCell(rowTitle,j,"是否老年协会会员");
+            }else if (entry.getKey().equals("level")){
+                CellUtil.createCell(rowTitle,j,"卡片等级");
+            }else if (entry.getKey().equals("createDt")){
+                CellUtil.createCell(rowTitle,j,"开卡时间");
+            }
+            j++;
+        }
+        for (int i = 0; i < memberExcels.size(); i++) {
+            Map<String,Object> nMap = memberExcels.get(i);
+            SXSSFRow row = sxssfSheet.createRow(i+1);
+            // 数据
+            Integer k = 0;
+            for (Map.Entry<String,Object> ma: nMap.entrySet()) {
+                String value = "";
+                if(ma.getValue() != null){
+                    value = ma.getValue().toString();
+                }
+                CellUtil.createCell(row,k,value);
+                k++;
+            }
+        }
+        response.setHeader("content-Type","application/vnc.ms-excel;charset=utf-8");
+        //文件名使用uuid，避免重复
+        response.setHeader("Content-Disposition", "attachment;filename=" + "会员信息" + ".xlsx");
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
         try {
-            workbook.write(outputStream);
+            sxssfWorkbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
+            memberExcels.clear();
+            outputStream.close();
         }
     }
 }

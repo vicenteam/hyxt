@@ -5,14 +5,23 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.modular.api.controller.MemberInfoController;
+import com.stylefeng.guns.modular.main.service.ICheckinService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.utils.BarRankingExcel;
 import com.stylefeng.guns.modular.system.utils.SignInExcel;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -43,6 +52,10 @@ public class BarbrushController extends BaseController {
     private MemberInfoController memberInfoController;
     @Autowired
     private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private ICheckinService checkinService;
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到签到数据图表
@@ -160,34 +173,70 @@ public class BarbrushController extends BaseController {
             qWrapper.between("createTime",beginTime,endTime);
         }
         qWrapper.eq("status",0);
-        qWrapper.groupBy("memberid");
         List<QiandaoCheckin> qLists = qiandaoCheckinService.selectList(qWrapper);
-        List<SignInExcel> signInExcels = new ArrayList<>();
+        List<Map<String,Object>> signInExcels = new ArrayList<>();
         Membermanagement membermanagement;
         for(QiandaoCheckin list: qLists){
             membermanagement = membermanagementService.selectById(list.getMemberid());
-            Map<String,Object> signInMaps = memberInfoController.signInCount(list.getMemberid(),list.getDeptid().toString(),beginTime,endTime);
-            SignInExcel signInExcel = new SignInExcel();
-            signInExcel.setmName(membermanagement.getName());
-            signInExcel.setCadID(membermanagement.getCadID());
-            signInExcel.setmLevel(membershipcardtypeService.selectById(membermanagement.getLevelID()).getCardname());
-            signInExcel.setSignInCount((Integer) signInMaps.get("signInCount"));
-            signInExcel.setSignInNew(signInMaps.get("signInNew").toString());
-            signInExcel.setSignOutCount((Integer) signInMaps.get("signOutCount"));
-            signInExcel.setSignOutNew(signInMaps.get("signOutNew").toString());
-            signInExcels.add(signInExcel);
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("name",membermanagement.getName());
+            map.put("cadID",membermanagement.getCadID());
+            map.put("level",membershipcardtypeService.selectById(membermanagement.getLevelID()).getCardname());
+            map.put("createtime",list.getCreatetime());
+            map.put("updatetime",list.getUpdatetime());
+            map.put("check",checkinService.selectById(list.getCheckinid()).getScreenings());
+            map.put("dept",deptService.selectById(list.getDeptid()).getFullname());
+            signInExcels.add(map);
         }
-        ExportParams params = new ExportParams();
-        Workbook workbook = ExcelExportUtil.exportExcel(params, SignInExcel.class, signInExcels);
-        response.setHeader("content-Type","application/vnc.ms-excel");
-        response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode("会员签到信息", "UTF-8")+".xls");
-        response.setCharacterEncoding("UTF-8");
+        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
+        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
+        Map<String,Object> mapTile = signInExcels.get(0);
+        //创建excel 数据列名
+        SXSSFRow rowTitle = sxssfSheet.createRow(0);
+        Integer j = 0;
+        for (Map.Entry<String,Object> entry: mapTile.entrySet()) {
+            if(entry.getKey().equals("name")){
+                CellUtil.createCell(rowTitle,j,"客户名称");
+            }else if (entry.getKey().equals("cadID")){
+                CellUtil.createCell(rowTitle,j,"身份证");
+            }else if (entry.getKey().equals("level")){
+                CellUtil.createCell(rowTitle,j,"卡片等级");
+            }else if (entry.getKey().equals("createtime")){
+                CellUtil.createCell(rowTitle,j,"签到时间");
+            }else if (entry.getKey().equals("updatetime")){
+                CellUtil.createCell(rowTitle,j,"复签时间");
+            }else if (entry.getKey().equals("check")){
+                CellUtil.createCell(rowTitle,j,"签到场次");
+            }else if (entry.getKey().equals("dept")){
+                CellUtil.createCell(rowTitle,j,"门店名称");
+            }
+            j++;
+        }
+        for (int i = 0; i < signInExcels.size(); i++) {
+            Map<String,Object> nMap = signInExcels.get(i);
+            SXSSFRow row = sxssfSheet.createRow(i+1);
+            // 数据
+            Integer k = 0;
+            for (Map.Entry<String,Object> ma: nMap.entrySet()) {
+                String value = "";
+                if(ma.getValue() != null){
+                    value = ma.getValue().toString();
+                }
+                CellUtil.createCell(row,k,value);
+                k++;
+            }
+        }
+        response.setHeader("content-Type","application/vnc.ms-excel;charset=utf-8");
+        //文件名使用uuid，避免重复
+        response.setHeader("Content-Disposition", "attachment;filename=" + "会员签到信息" + ".xlsx");
         ServletOutputStream outputStream = response.getOutputStream();
         try {
-            workbook.write(outputStream);
+            sxssfWorkbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
+            signInExcels.clear();
+            outputStream.close();
         }
     }
 }

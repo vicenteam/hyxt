@@ -21,11 +21,11 @@
     <select id="selectNewCreateTime" resultType="java.lang.String">
         select createtime
         from main_qiandao_checkin
-        where memberid= #{memberId}
+        where 1=1
         AND createtime=(
               select max(createtime)
               from main_qiandao_checkin
-              where 1=1
+              where memberid= #{memberId}
             <if test="beginTime != null and beginTime != ''">
               and createtime >= #{beginTime}
             </if>
@@ -38,11 +38,11 @@
     <select id="selectNewUpdateTime" resultType="java.lang.String">
         select updatetime
         from main_qiandao_checkin
-        where memberid= #{memberId}
+        where 1=1
         AND updatetime=(
             select max(updatetime)
             from main_qiandao_checkin
-            where 1=1
+            where memberid= #{memberId}
             <if test="beginTime != null and beginTime != ''">
                 and createtime >= #{beginTime}
             </if>
