@@ -39,7 +39,7 @@ Membermanagement.initColumn = function () {
             {title: '操作', field: 'id', visible: true, align: 'center', width:'440px', valign: 'middle',formatter: function (value, row, index) {
 
                     return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
-                        '<button type="button" class="btn btn-danger button-margin" onclick="Membermanagement.delete()" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>'+
+                        '<button type="button" class="btn btn-danger button-margin" onclick="Membermanagement.delete(' + row.id + ')" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>'+
                     '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;推荐人</button>' +
                     '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
                 }},
@@ -123,17 +123,18 @@ Membermanagement.openintroducer = function (id) {
 /**
  * 删除会员基础信息
  */
-Membermanagement.delete = function () {
-    if (this.check()) {
+Membermanagement.delete = function (id) {
+    layer.confirm('您确定要删除本条数据吗？', {btn: ['确定', '取消']}, function () {
+        layer.closeAll('dialog');
         var ajax = new $ax(Feng.ctxPath + "/membermanagement/delete", function (data) {
             Feng.success("删除成功!");
             Membermanagement.table.refresh();
         }, function (data) {
             Feng.error("删除失败!" + data.responseJSON.message + "!");
         });
-        ajax.set("membermanagementId",this.seItem.id);
+        ajax.set("membermanagementId",id);
         ajax.start();
-    }
+    });
 };
 
 /**

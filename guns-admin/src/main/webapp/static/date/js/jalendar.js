@@ -255,6 +255,9 @@ $(function () {
                         $("#textVal").append(data.dom)
                         var dom = $(".day")
                         for(var i=0;i<dom.length;i++){
+                            $(dom[i]).css("background-color","#feffea")
+                        }
+                        for(var i=0;i<dom.length;i++){
                             var domVal= $(dom[i]).attr("data-date")
                             var timeObj=data.timeObj;
                             for(var j=0;j<timeObj.length;j++){
@@ -296,6 +299,9 @@ $(function () {
                         $("#textVal").empty()
                         $("#textVal").append(data.dom)
                         var dom = $(".day")
+                        for(var i=0;i<dom.length;i++){
+                            $(dom[i]).css("background-color","#feffea")
+                        }
                         for(var i=0;i<dom.length;i++){
                             var domVal= $(dom[i]).attr("data-date")
                             var timeObj=data.timeObj;
@@ -443,6 +449,9 @@ function findUserCheckInfoByMonyh(data) {
             $("#textVal").empty()
             $("#textVal").append(data.dom)
             var dom = $(".day")
+            for(var i=0;i<dom.length;i++){
+                $(dom[i]).css("background-color","#feffea")
+            }
             for(var i=0;i<dom.length;i++){
                 var domVal= $(dom[i]).attr("data-date")
                 var timeObj=data.timeObj;
