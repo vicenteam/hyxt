@@ -91,6 +91,7 @@ public class IntegralRecordQueryController extends BaseController {
             if(map.get("memberid") != null){
                 Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());
                 map.put("memberName",membermanagement.getName());
+                map.put("memberPhone",membermanagement.getPhone());
                 map.put("membercadid",membermanagement.getCadID());
             }
             if(map.get("staffid") != null){
