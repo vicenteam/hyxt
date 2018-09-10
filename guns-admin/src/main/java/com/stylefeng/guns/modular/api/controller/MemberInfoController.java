@@ -178,7 +178,7 @@ public class MemberInfoController extends BaseController {
                     mI2.setSignOutCount((Integer) maps.get("signOutCount"));
                     mI2.setSignOutNew(maps.get("signOutNew").toString());
                 }
-                mI2.setMemberStatus(mRInfos.get(i).getState());
+                mI2.setMemberStatus(Integer.parseInt(mRInfos.get(i).getTownshipid()));
                 mI2.setSex(mRInfos.get(i).getSex());
                 Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(mRInfos.get(i).getLevelID());
                 if (membershipcardtype != null && membershipcardtype.getUpamount() == 0) {
