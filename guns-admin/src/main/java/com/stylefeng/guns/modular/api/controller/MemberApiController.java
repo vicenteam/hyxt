@@ -53,11 +53,13 @@ public class MemberApiController extends BaseController {
             MemberCard memberCard = memberCardService.selectOne(memberCardEntityWrapper);
             if(memberCard!=null){
                 Membermanagement membermanagement = membermanagementService.selectById(memberCard.getMemberid());
-                if(membermanagement!=null){
+                if(membermanagement!=null&&membermanagement.getTownshipid().equals("0")){
                     MemberModel change = new ReflectionObject<MemberModel>().change(membermanagement, new MemberModel());
                     change.setMemberId(membermanagement.getId());
                     change.setAvatar("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
                     memberModelResponseData.setDataCollection(change);
+                }else {
+                    throw new Exception("该会员已挂失无法执行操作!");
                 }
             }
         }else if(selectType.equals("2")){
@@ -74,19 +76,23 @@ public class MemberApiController extends BaseController {
                 throw new Exception("相同信息过多,换身份证号试试!");
             }
             membermanagement=membermanagements.get(0);
-            if(membermanagement!=null){
+            if(membermanagement!=null&&membermanagement.getTownshipid().equals("0")){
                 MemberModel change = new ReflectionObject<MemberModel>().change(membermanagement, new MemberModel());
                 change.setMemberId(membermanagement.getId());
                 change.setAvatar("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
                 memberModelResponseData.setDataCollection(change);
+            }else {
+                throw new Exception("该会员已挂失无法执行操作!");
             }
         }else if(selectType.equals("3")){
             Membermanagement membermanagement = membermanagementService.selectById(selectId);
-            if(membermanagement!=null){
+            if(membermanagement!=null&&membermanagement.getTownshipid().equals("0")){
                 MemberModel change = new ReflectionObject<MemberModel>().change(membermanagement, new MemberModel());
                 change.setMemberId(membermanagement.getId());
                 change.setAvatar("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
                 memberModelResponseData.setDataCollection(change);
+            }else {
+                throw new Exception("该会员已挂失无法执行操作!");
             }
         }
         return  memberModelResponseData;
