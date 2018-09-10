@@ -240,7 +240,7 @@ public class MembermanagementController extends BaseController {
                     //调用积分变动方法
                     integralrecordController.insertIntegral(jifen, 1, membermanagements);
                 }
-                activityController.insertAcitvityMember(activity.getId()+"", membermanagement.getId()+"");
+                activityController.insertAcitvityMember(activity.getId()+"", membermanagement.getId()+"",ShiroKit.getUser().getDeptId());
             }
         }
         return SUCCESS_TIP;

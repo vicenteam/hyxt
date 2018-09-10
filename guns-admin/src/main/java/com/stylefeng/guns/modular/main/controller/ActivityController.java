@@ -264,16 +264,16 @@ public class ActivityController extends BaseController {
             //调用积分变动方法
             integralrecordController.insertIntegral(jifen, 5, membermanagements);
         }
-        insertAcitvityMember(activityId, memberId);
+        insertAcitvityMember(activityId, memberId,Integer.parseInt(activity.getDeptid()));
         return SUCCESS_TIP;
     }
 
-    public void insertAcitvityMember(String activityId, String memberId) {
+    public void insertAcitvityMember(String activityId, String memberId,Integer deptId) {
         ActivityMember activityMember = new ActivityMember();
         activityMember.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         activityMember.setActivityid(Integer.parseInt(activityId));
         activityMember.setMemberid(Integer.parseInt(memberId));
-        activityMember.setDeptid(ShiroKit.getUser().getDeptId());
+        activityMember.setDeptid(deptId);
         activityMemberService.insert(activityMember);
     }
 }
