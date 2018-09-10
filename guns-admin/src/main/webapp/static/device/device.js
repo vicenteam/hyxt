@@ -326,6 +326,24 @@ function readDeviceCard() {
     return ret;
 
 }
+    function readDeviceCard2() {
+        var ret = CZx_32Ctrl.RfCard(DeviceHandle.value,0);
+        if(CZx_32Ctrl.lErrorCode == 0)
+        {
+            //UidM1.value = CZx_32Ctrl.HexAsc(ret,4);
+            $("#otherCardUUID").val(ret)
+        }
+        else if(CZx_32Ctrl.lErrorCode == -22)
+        {
+            document.getElementById("readDeviceCard").value = "";
+            readDeviceCard2();
+            // alert("读取卡片UID，错误码为：" + CZx_32Ctrl.lErrorCode);
+        }else {
+            OpenDevice();
+        }
+        return ret;
+
+    }
 //操作卡片数据
 function readData() {
     readDeviceCard();
@@ -344,6 +362,24 @@ function readData() {
         alert("读数据失败，错误码为：" + CZx_32Ctrl.lErrorCode);
     }
 }
+    function readData2() {
+       var uuid= readDeviceCard2();
+        //校验密码
+        RfAuthenticationKey();
+        var ret = CZx_32Ctrl.RfRead(DeviceHandle.value,BlockM1.value);
+        if(CZx_32Ctrl.lErrorCode == 0)
+        {
+            document.getElementById("readData").value = ret;//CZx_32Ctrl.HexAsc(ret,17)
+            // alert("读数据成功");
+            DevBeep();
+        }
+        else
+        {
+            document.getElementById("readData").value = "";
+            alert("读数据失败，错误码为：" + CZx_32Ctrl.lErrorCode);
+        }
+        return uuid;
+    }
 function writeData() {
     readDeviceCard();
     //校验密码
@@ -427,4 +463,16 @@ function getUserInfo() {
     ajax.setData({value:$("#readDeviceCard").val()})
     ajax.start();
 }
+    function getUserInfo2() {
+        var uuid=readData2();
+        var ajax = new $ax(Feng.ctxPath + "/membermanagement/getUserInfo", function (data) {
+            $("#introducerId").val(data.memberid);
+            $("#introducerName").val(data.name);
+        }, function (data) {
+            Feng.error("获取数据失败!" + data.responseJSON.message + "!");
+        });
+        // ajax.setData({value:$("#readData").val()})
+        ajax.setData({value:$("#otherCardUUID").val()})
+        ajax.start();
+    }
 

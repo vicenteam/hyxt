@@ -200,7 +200,8 @@ public class MembermanagementController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Membermanagement membermanagement, String cardCode,String baMedicals,String code) {
+    public Object add(Membermanagement membermanagement, String cardCode,String baMedicals,String code) throws Exception {
+        if(StringUtils.isEmpty(code))throw new Exception("请进行读卡操作！");
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
         membermanagement.setTownshipid("0");

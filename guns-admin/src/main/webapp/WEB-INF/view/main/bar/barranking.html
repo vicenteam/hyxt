@@ -33,6 +33,7 @@
                 type: 'POST',
                 async: false,
                 success: function (data) {
+                    console.log(data)
                     for(var i=0; i<data.length; i++){
                         xData.push("["+data[i].levelName+"]"+data[i].name);
                         sData.push(data[i].integral);

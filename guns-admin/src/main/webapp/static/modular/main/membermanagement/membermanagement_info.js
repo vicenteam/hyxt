@@ -108,7 +108,10 @@ MembermanagementInfoDlg.collectData = function() {
  * 提交添加
  */
 MembermanagementInfoDlg.addSubmit = function() {
-
+if($("#readDeviceCard").val().length==0){
+    Feng.error("请先进行写卡操作!" );
+    return;
+}
     this.clearData();
     this.collectData();
     if (!this.validate()) {
@@ -136,6 +139,8 @@ MembermanagementInfoDlg.addSubmit = function() {
         $("#address").val("")
         $("#medicalHistory").val("")
         $("#birthday").val("")
+        $("#readDeviceCard").val("")
+
     },function(data){
         Feng.error("添加失败!" + data.responseJSON.message + "!");
     });
