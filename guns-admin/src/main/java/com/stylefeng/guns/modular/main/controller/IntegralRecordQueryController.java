@@ -14,6 +14,7 @@ import com.stylefeng.guns.modular.system.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -54,16 +55,17 @@ public class IntegralRecordQueryController extends BaseController {
     @ResponseBody
     public Object list(String condition, String operator, String memberName, String cadId
                         , String integralType, String begindate, String enddate) {
-//        System.out.println(" ------*****------ "+operator+": "+memberName+": "+cadId+": "+integralType+": "+begindate+": "+enddate);
+
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
-        if(! cadId.equals("")) mWrapper.eq("cadID",cadId);
-        if(! memberName.equals("")) mWrapper.like("name",memberName);
+        if(! StringUtils.isEmpty(cadId)) mWrapper.like("cadID",cadId);
+        if(! StringUtils.isEmpty(memberName)) mWrapper.like("name",memberName);
         //会员 memberName、cadId 条件筛选
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
         Integer[] mIdArray = new Integer[membermanagements.size()];
         for(int i=0; i<mIdArray.length; i++){
             mIdArray[i] = membermanagements.get(i).getId();
         }
+
         //操作人 operator 条件筛选
         BaseEntityWrapper<User> uWrapper = new BaseEntityWrapper<>();
         if(! operator.equals("-1")) uWrapper.eq("id",operator);
@@ -72,30 +74,31 @@ public class IntegralRecordQueryController extends BaseController {
         for(int i=0; i<uIdArray.length; i++){
             uIdArray[i] = users.get(i).getId();
         }
+
         //把 membermanagement 与 user 条件放入 积分记录表实现条件分页查询
         Page<Integralrecord> page = new PageFactory<Integralrecord>().defaultPage();
         BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
         if(! integralType.equals("-1")) iWrapper.like("type",integralType);
+        if(mIdArray.length <= 0) mIdArray = new Integer[]{-1}; //判断数组 <=0 赋予初始值 方便查询
         iWrapper.in("memberid",mIdArray);
+        if(uIdArray.length <= 0) uIdArray = new Integer[]{-1}; //判断数组 <=0 赋予初始值 方便查询
         iWrapper.in("staffid",uIdArray);
-        if(! begindate.equals("") && ! enddate.equals("")){
+        if(! StringUtils.isEmpty(begindate) || ! StringUtils.isEmpty(enddate)){
             iWrapper.between("createTime",begindate,enddate);
-        }else if(! begindate.equals("")){
-            iWrapper.between("createTime",begindate,"9999-08-16 11:03:35");
-        }else if (! enddate.equals("")){
-            iWrapper.between("createTime","0001-08-16 11:03:35",enddate);
         }
         iWrapper.orderBy("createTime",false);
         Page<Map<String, Object>> serverPage = integralrecordService.selectMapsPage(page, iWrapper);
-        for(Map<String, Object> map : serverPage.getRecords()){
-            if(map.get("memberid") != null){
-                Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());
-                map.put("memberName",membermanagement.getName());
-                map.put("memberPhone",membermanagement.getPhone());
-                map.put("membercadid",membermanagement.getCadID());
-            }
-            if(map.get("staffid") != null){
-                map.put("staffName",userService.selectById(map.get("staffid").toString()).getName());
+        if (serverPage.getRecords().size() >= 0){
+            for(Map<String, Object> map : serverPage.getRecords()){
+                if(map.get("memberid") != null){
+                    Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());
+                    map.put("memberName",membermanagement.getName());
+                    map.put("memberPhone",membermanagement.getPhone());
+                    map.put("membercadid",membermanagement.getCadID());
+                }
+                if(map.get("staffid") != null){
+                    map.put("staffName",userService.selectById(map.get("staffid").toString()).getName());
+                }
             }
         }
         return super.packForBT(serverPage);
