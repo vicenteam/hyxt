@@ -124,7 +124,8 @@ public class CheckInApiController extends BaseController {
                 //进行复签
 //                qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
 //                qiandaoCheckinService.updateById(qiandaoCheckin);
-                qiandaoCheckinController.update(dataCollection.getMemberId()+"",qiandaoCheckin.getId()+"");
+                qiandaoCheckinController.update(dataCollection.getMemberId()+"",screeningId+"");
+                System.out.println("____________");
             }else {
                 //不能进行操作
                 throw new Exception("该场次用户已经复签不能重复操作!");

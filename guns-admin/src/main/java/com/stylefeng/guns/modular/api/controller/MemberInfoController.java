@@ -77,6 +77,7 @@ public class MemberInfoController extends BaseController {
             Membershipcardtype tName = membershipcardtypeService.selectById(Integer.parseInt(mInfo.getLevelID())); //获取会员等级
             Dept dName = deptService.selectById(mInfo.getDeptId()); // 获取门店名称
             User uName = userService.selectById(mInfo.getStaffID()); //获取服务员工
+            System.out.println(uName==null);
             // 获取签到、复签次数
             Map<String, Object> maps = this.signInCount(mInfo.getId(),mInfo.getDeptId(),"","");
             //result info
@@ -184,7 +185,7 @@ public class MemberInfoController extends BaseController {
                 if (membershipcardtype != null && membershipcardtype.getUpamount() == 0) {
                     //获取总签到场次次数
                     EntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new EntityWrapper<>();
-                    qiandaoCheckinBaseEntityWrapper.eq("memberid", modelInfo.getMemberId());
+                    qiandaoCheckinBaseEntityWrapper.eq("memberid", mRInfos.get(i).getId());
                     qiandaoCheckinBaseEntityWrapper.eq("deptid", requstData.getDeptId());
                     qiandaoCheckinBaseEntityWrapper.isNotNull("updatetime");
                     int count = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
