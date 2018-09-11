@@ -122,7 +122,7 @@ public class QiandaoCheckinController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object update(String memberId,String chechId) {
-        BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
+        EntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new EntityWrapper<>();
         qiandaoCheckinBaseEntityWrapper.eq("memberid",memberId);
         qiandaoCheckinBaseEntityWrapper.eq("checkinid",chechId);
         QiandaoCheckin qiandaoCheckin = qiandaoCheckinService.selectOne(qiandaoCheckinBaseEntityWrapper);
@@ -130,14 +130,14 @@ public class QiandaoCheckinController extends BaseController {
             qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
             qiandaoCheckinService.updateById(qiandaoCheckin);
             //如果当前用户复签次数累计>=10次更新为普通会员卡
-            BaseEntityWrapper<QiandaoCheckin> qiandaoc = new BaseEntityWrapper<>();
+            EntityWrapper<QiandaoCheckin> qiandaoc = new EntityWrapper<>();
             qiandaoc.eq("memberid", memberId);
             qiandaoc.isNotNull("updatetime");
             int count = qiandaoCheckinService.selectCount(qiandaoc);
             if(count>=10){
                 Membermanagement membermanagement = membermanagementService.selectById(memberId);
                 if(membermanagement.getLevelID().equals("1")){//零时卡更新普通会员卡
-                    List<Membershipcardtype> list = membershipcardtypeService.selectList(new BaseEntityWrapper<Membershipcardtype>());
+                    List<Membershipcardtype> list = membershipcardtypeService.selectList(new EntityWrapper<Membershipcardtype>());
                     if(list.size()>=2){
                         membermanagement.setLevelID(list.get(1).getId()+"");
                     }

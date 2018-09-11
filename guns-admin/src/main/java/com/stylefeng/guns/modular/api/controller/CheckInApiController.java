@@ -10,6 +10,7 @@ import com.stylefeng.guns.modular.api.model.checkin.CheckInTimeModel;
 import com.stylefeng.guns.modular.api.model.checkin.CountersigningInfoMode;
 import com.stylefeng.guns.modular.api.model.memerber.MemberModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
+import com.stylefeng.guns.modular.main.controller.QiandaoCheckinController;
 import com.stylefeng.guns.modular.main.service.ICheckinService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
@@ -42,6 +43,8 @@ public class CheckInApiController extends BaseController {
     private ICheckinService checkinService;
     @Autowired
     private MemberApiController memberApiController;
+    @Autowired
+    private QiandaoCheckinController qiandaoCheckinController;
 
     @RequestMapping(value = "/getCheckInRecord", method = RequestMethod.POST)
     @ApiOperation("获取签到详情数据")
@@ -119,13 +122,15 @@ public class CheckInApiController extends BaseController {
         }else {
             if(StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())){
                 //进行复签
-                qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-                qiandaoCheckinService.updateById(qiandaoCheckin);
+//                qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+//                qiandaoCheckinService.updateById(qiandaoCheckin);
+                qiandaoCheckinController.update(dataCollection.getMemberId()+"",qiandaoCheckin.getId()+"");
             }else {
                 //不能进行操作
                 throw new Exception("该场次用户已经复签不能重复操作!");
             }
         }
+
         checkInModelResponseData.setResultMessage("复签成功!");
         return checkInModelResponseData;
     }
