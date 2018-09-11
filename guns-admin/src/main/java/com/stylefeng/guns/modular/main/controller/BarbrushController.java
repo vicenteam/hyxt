@@ -169,15 +169,17 @@ public class BarbrushController extends BaseController {
         Membermanagement membermanagement;
         for(QiandaoCheckin list: qLists){
             membermanagement = membermanagementService.selectById(list.getMemberid());
-            Map<String,Object> map = new LinkedHashMap<>();
-            map.put("name",membermanagement.getName());
-            map.put("cadID",membermanagement.getCadID());
-            map.put("level",membershipcardtypeService.selectById(membermanagement.getLevelID()).getCardname());
-            map.put("createtime",list.getCreatetime());
-            map.put("updatetime",list.getUpdatetime());
-            map.put("check",checkinService.selectById(list.getCheckinid()).getScreenings());
-            map.put("dept",deptService.selectById(list.getDeptid()).getFullname());
-            signInExcels.add(map);
+           if(membermanagement!=null){
+               Map<String,Object> map = new LinkedHashMap<>();
+               map.put("name",membermanagement.getName());
+               map.put("cadID",membermanagement.getCadID());
+               map.put("level",membershipcardtypeService.selectById(membermanagement.getLevelID()).getCardname());
+               map.put("createtime",list.getCreatetime());
+               map.put("updatetime",list.getUpdatetime());
+               map.put("check",checkinService.selectById(list.getCheckinid()).getScreenings());
+               map.put("dept",deptService.selectById(list.getDeptid()).getFullname());
+               signInExcels.add(map);
+           }
         }
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
         SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
