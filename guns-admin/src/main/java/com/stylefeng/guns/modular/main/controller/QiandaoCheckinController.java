@@ -73,7 +73,7 @@ public class QiandaoCheckinController extends BaseController {
     @RequestMapping("/qiandaoCheckin_update/{qiandaoCheckinId}")
     public String qiandaoCheckinUpdate(@PathVariable Integer qiandaoCheckinId, Model model) {
         QiandaoCheckin qiandaoCheckin = qiandaoCheckinService.selectById(qiandaoCheckinId);
-        model.addAttribute("item",qiandaoCheckin);
+        model.addAttribute("item", qiandaoCheckin);
         LogObjectHolder.me().set(qiandaoCheckin);
         return PREFIX + "qiandaoCheckin_edit.html";
     }
@@ -95,10 +95,10 @@ public class QiandaoCheckinController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(String memberId,String chechId) {
+    public Object add(String memberId, String chechId) {
         QiandaoCheckin qiandaoCheckin = new QiandaoCheckin();
         qiandaoCheckin.setCheckinid(Integer.parseInt(chechId));
-        qiandaoCheckin.setCreatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        qiandaoCheckin.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         qiandaoCheckin.setDeptid(ShiroKit.getUser().getDeptId());
         qiandaoCheckin.setMemberid(Integer.parseInt(memberId));
         qiandaoCheckinService.insert(qiandaoCheckin);
@@ -121,36 +121,41 @@ public class QiandaoCheckinController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object update(String memberId,String chechId) {
+    public Object update(String memberId, String chechId) {
         EntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new EntityWrapper<>();
-        qiandaoCheckinBaseEntityWrapper.eq("memberid",memberId);
-        qiandaoCheckinBaseEntityWrapper.eq("checkinid",chechId);
+        qiandaoCheckinBaseEntityWrapper.eq("memberid", memberId);
+        qiandaoCheckinBaseEntityWrapper.eq("checkinid", chechId);
         QiandaoCheckin qiandaoCheckin = qiandaoCheckinService.selectOne(qiandaoCheckinBaseEntityWrapper);
-        if(qiandaoCheckin!=null&&StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())){
-            qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        if (qiandaoCheckin != null && StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())) {
+            qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
             qiandaoCheckinService.updateById(qiandaoCheckin);
             //如果当前用户复签次数累计>=10次更新为普通会员卡
             EntityWrapper<QiandaoCheckin> qiandaoc = new EntityWrapper<>();
             qiandaoc.eq("memberid", memberId);
             qiandaoc.isNotNull("updatetime");
             int count = qiandaoCheckinService.selectCount(qiandaoc);
-            if(count>=10){
-                Membermanagement membermanagement = membermanagementService.selectById(memberId);
-                if(membermanagement.getLevelID().equals("1")){//零时卡更新普通会员卡
-                    List<Membershipcardtype> list = membershipcardtypeService.selectList(new EntityWrapper<Membershipcardtype>());
-                    if(list.size()>=2){
-                        membermanagement.setLevelID(list.get(1).getId()+"");
+            Membermanagement membermanagement1 = membermanagementService.selectById(memberId);
+            if (membermanagement1 != null && membermanagement1.getLevelID().equals("1")) {
+                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(1);
+                if (membershipcardtype != null && count >= membershipcardtype.getCheckleavenum()) {
+                    Membermanagement membermanagement = membermanagementService.selectById(memberId);
+                    if (membermanagement.getLevelID().equals("1")) {//零时卡更新普通会员卡
+                        List<Membershipcardtype> list = membershipcardtypeService.selectList(new EntityWrapper<Membershipcardtype>());
+                        if (list.size() >= 2) {
+                            membermanagement.setLevelID(list.get(1).getId() + "");
+                        }
                     }
+                    membermanagementService.updateById(membermanagement);
                 }
-                membermanagementService.updateById(membermanagement);
             }
+
             //复签成功后统计当前场次完整签到人数
             Checkin checkin = checkinService.selectById(chechId);
-            if(checkin!=null){
-                if(checkin.getMemberCount()==null){
+            if (checkin != null) {
+                if (checkin.getMemberCount() == null) {
                     checkin.setMemberCount(1);
-                }else {
-                    checkin.setMemberCount((checkin.getMemberCount()+1));
+                } else {
+                    checkin.setMemberCount((checkin.getMemberCount() + 1));
                 }
             }
             checkinService.updateById(checkin);
