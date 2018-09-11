@@ -1,6 +1,6 @@
 <div id="page-wrapper" class="gray-bg dashbard-1">
             <div class="row border-bottom">
-                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0;height: 60px">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0;height: 60px; background: url('static/img/logo.jpg') no-repeat 0 2px;background-color: #F3F3F4;background-size:220px 57px;">
                     <div class="form-group" style="float: right;margin-top: 27px;">你好: ${shiro.getUser().account} 欢迎登录系统!   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                     </div>
@@ -50,7 +50,27 @@
         <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${ctxPath}/blackboard" frameborder="0" data-id="${ctxPath}/blackboard" seamless></iframe>
     </div>
     <div class="footer">
-        <div class="pull-right">&copy; 2016-2017 <a href="http://git.oschina.net/naan1993/guns" target="_blank">guns</a>
+        <!--<div class="pull-right">&copy; 2016-2017 <a href="http://git.oschina.net/naan1993/guns" target="_blank">guns</a>-->
         </div>
     </div>
 </div>
+<script>
+    function submits(dom) {
+        var tem=document.getElementById("form_"+dom);
+        tem.submit();
+    }
+
+    function selectOpt() {
+        var options = document.getElementById('orgSwitch').children;
+        for (var i=0;i<options.length;i++){
+            if( options[i].text==document.getElementById("myOrgName").value){
+                options[i].selected=true;
+            }
+        }
+    }
+    function btnChange(val){
+        var tem=document.getElementById("form_"+val);
+        tem.submit();
+    }
+    selectOpt()
+</script>

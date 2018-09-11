@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -186,10 +187,24 @@ public class MembermanagementController extends BaseController {
         List<Map<String, Object>> records = mapPage.getRecords();
         for (Map<String, Object> map : records) {
             String s = (String) map.get("levelID");
+           Integer id=(int) map.get("id");
             Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(s);
             if(membershipcardtype!=null){
                 map.put("levelID",membershipcardtype.getCardname());
             }
+            BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
+            qiandaoCheckinBaseEntityWrapper.eq("memberid",id);
+            String format = DateUtil.format(new Date(), "yyyy-MM-dd");
+            qiandaoCheckinBaseEntityWrapper.like("createtime",format,SqlLike.RIGHT);
+            QiandaoCheckin qiandaoCheckin = qiandaoCheckinService.selectOne(qiandaoCheckinBaseEntityWrapper);
+            if(qiandaoCheckin!=null){
+                if(qiandaoCheckin.getUpdatetime()!=null){
+                    map.put("today",qiandaoCheckin.getUpdatetime());
+                }else {
+                    map.put("today",qiandaoCheckin.getCreatetime());
+                }
+            }
+
         }
         return super.packForBT(mapPage);
     }
