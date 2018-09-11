@@ -237,7 +237,7 @@ public class MembermanagementController extends BaseController {
                     Double jifen = activity.getJifen();//
                     //积分操作
                     List<Membermanagement> membermanagements = new ArrayList<>();
-                    membermanagements.add(membermanagement);
+                    membermanagements.add(membermanagement1);
                     //调用积分变动方法
                     integralrecordController.insertIntegral(jifen, 1, membermanagements);
                 }
