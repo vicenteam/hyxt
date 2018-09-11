@@ -26,7 +26,9 @@ Membermanagement.initColumn = function () {
             {title: '联系方式', field: 'phone', visible: true, align: 'center', valign: 'middle'},
             {title: '当前积分', field: 'integral', visible: true, align: 'center', valign: 'middle'},
             {title: '会员等级', field: 'levelID', visible: true, align: 'center', valign: 'middle'},
-            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
+            {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                    return '<span style="font-size: 10px">'+value+'</span>';
+                }},
             {title: '老年协会会员', field: 'isoldsociety', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
                 if(value==1){
                     return '是';
@@ -34,7 +36,9 @@ Membermanagement.initColumn = function () {
                     return '否';
                 }
                 }},
-            {title: '家庭地址', field: 'address', visible: true, align: 'center', valign: 'middle'},
+            {title: '家庭地址', field: 'address', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                    return '<span style="font-size: 10px">'+value+'</span>';
+                }},
             {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
             {title: '操作', field: 'id', visible: true, align: 'center', width:'440px', valign: 'middle',formatter: function (value, row, index) {
 
