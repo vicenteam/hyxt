@@ -135,7 +135,8 @@ public class QiandaoCheckinController extends BaseController {
             qiandaoc.isNotNull("updatetime");
             int count = qiandaoCheckinService.selectCount(qiandaoc);
             Membermanagement membermanagement1 = membermanagementService.selectById(memberId);
-            if (membermanagement1 != null && membermanagement1.getLevelID().equals("1")) {
+//            if (membermanagement1 != null && membermanagement1.getLevelID().equals("1")) {
+            if (membermanagement1 != null) {
                 String levelID = membermanagement1.getLevelID();
                 Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(levelID);
                 if(membershipcardtype!=null&&membershipcardtype.getLeaves()==0){
