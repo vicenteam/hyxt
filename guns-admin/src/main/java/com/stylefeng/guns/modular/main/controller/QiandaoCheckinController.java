@@ -143,7 +143,9 @@ public class QiandaoCheckinController extends BaseController {
                     if (membershipcardtype != null && count >= membershipcardtype.getCheckleavenum()) {
                         Membermanagement membermanagement = membermanagementService.selectById(memberId);
 //                        if (membermanagement.getLevelID().equals("1")) {//零时卡更新普通会员卡
-                            List<Membershipcardtype> list = membershipcardtypeService.selectList(new EntityWrapper<Membershipcardtype>());
+                        EntityWrapper<Membershipcardtype> membershipcardtypeEntityWrapper = new EntityWrapper<>();
+                        membershipcardtypeEntityWrapper.eq("deptid",qiandaoCheckin.getDeptid());
+                        List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeEntityWrapper);
                             if (list.size() >= 2) {
                                 membermanagement.setLevelID(list.get(1).getId() + "");
                             }
