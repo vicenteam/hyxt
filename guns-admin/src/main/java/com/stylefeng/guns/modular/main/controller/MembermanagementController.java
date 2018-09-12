@@ -220,6 +220,7 @@ public class MembermanagementController extends BaseController {
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
         membermanagement.setTownshipid("0");
+        if(membermanagement!=null&&StringUtils.isEmpty(membermanagement.getAvatar()))membermanagement.setAvatar("-");
         membermanagementService.insert(membermanagement);
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
 //        memberCardBaseEntityWrapper.eq("code", cardCode);
