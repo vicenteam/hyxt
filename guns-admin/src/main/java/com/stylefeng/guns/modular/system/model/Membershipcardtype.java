@@ -64,6 +64,15 @@ public class Membershipcardtype extends Model<Membershipcardtype> {
     private String createdt;
     private String updatedt;
     private Integer checkleavenum;
+    private Integer leaves;
+
+    public Integer getLeaves() {
+        return leaves;
+    }
+
+    public void setLeaves(Integer leaves) {
+        this.leaves = leaves;
+    }
 
     public Integer getCheckleavenum() {
         return checkleavenum;

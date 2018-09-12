@@ -11,6 +11,7 @@
                             <!--<#input id="shopping" name="购物积分" value="${item.shopping}" underline="true"/>-->
                             <!--<#input id="newpoints" name="带新人奖励积分" value="${item.newpoints}" underline="true"/>-->
                     <#input id="tips" name="备注" value="${item.tips}" underline="true"/>
+                    <#input id="leaves" name="排序序号" underline="true" value="${item.leaves}" disabled="disabled"/>
                     <div id="checkleavenumDiv"></div>
                 </div>
 
@@ -37,7 +38,7 @@
 </div>
 <script src="${ctxPath}/static/modular/main/membershipcardtype/membershipcardtype_info.js"></script>
 <script>
-    if($("#id").val()==1){
+    if($("#leaves").val()==0){
         var dom='<div class="form-group">\n' +
             '    <label class="col-sm-3 control-label">签到升级次数</label>\n' +
             '    <div class="col-sm-9">\n' +

@@ -136,17 +136,21 @@ public class QiandaoCheckinController extends BaseController {
             int count = qiandaoCheckinService.selectCount(qiandaoc);
             Membermanagement membermanagement1 = membermanagementService.selectById(memberId);
             if (membermanagement1 != null && membermanagement1.getLevelID().equals("1")) {
-                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(1);
-                if (membershipcardtype != null && count >= membershipcardtype.getCheckleavenum()) {
-                    Membermanagement membermanagement = membermanagementService.selectById(memberId);
-                    if (membermanagement.getLevelID().equals("1")) {//零时卡更新普通会员卡
-                        List<Membershipcardtype> list = membershipcardtypeService.selectList(new EntityWrapper<Membershipcardtype>());
-                        if (list.size() >= 2) {
-                            membermanagement.setLevelID(list.get(1).getId() + "");
-                        }
+                String levelID = membermanagement1.getLevelID();
+                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(levelID);
+                if(membershipcardtype!=null&&membershipcardtype.getLeaves()==0){
+                    if (membershipcardtype != null && count >= membershipcardtype.getCheckleavenum()) {
+                        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+//                        if (membermanagement.getLevelID().equals("1")) {//零时卡更新普通会员卡
+                            List<Membershipcardtype> list = membershipcardtypeService.selectList(new EntityWrapper<Membershipcardtype>());
+                            if (list.size() >= 2) {
+                                membermanagement.setLevelID(list.get(1).getId() + "");
+                            }
+//                        }
+                        membermanagementService.updateById(membermanagement);
                     }
-                    membermanagementService.updateById(membermanagement);
                 }
+
             }
 
             //复签成功后统计当前场次完整签到人数

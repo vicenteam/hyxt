@@ -3,6 +3,7 @@ package com.stylefeng.guns.modular.main.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -52,6 +53,15 @@ public class MembershipcardtypeController extends BaseController {
     @RequestMapping("/membershipcardtype_add")
     public String membershipcardtypeAdd(Model model) {
         Dept dept = deptService.selectById(ShiroKit.getUser().getDeptId());
+        //获取会员排序等级
+        BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
+        membershipcardtypeBaseEntityWrapper.orderBy("leaves",false);
+        Membershipcardtype membershipcardtype = membershipcardtypeService.selectOne(membershipcardtypeBaseEntityWrapper);
+        if(membershipcardtype!=null){
+            dept.setVersion((membershipcardtype.getLeaves()+1));
+        }else {
+            dept.setVersion(0);
+        }
         model.addAttribute("dept",dept);
         return PREFIX + "membershipcardtype_add.html";
     }
