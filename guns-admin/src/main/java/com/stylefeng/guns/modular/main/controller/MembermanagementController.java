@@ -389,6 +389,8 @@ public class MembermanagementController extends BaseController {
     @RequestMapping("/openintroducer/{membermanagementId}")
     public String openintroducerdata(@PathVariable Integer membermanagementId, Model model) {
         model.addAttribute("memberId", membermanagementId);
+        Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
+        model.addAttribute("memberName", membermanagement.getName());
         return PREFIX + "openintroducer.html";
     }
 

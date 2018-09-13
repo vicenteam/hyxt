@@ -16,7 +16,7 @@ Membermanagement.initColumn = function () {
         {field: 'selectItem', radio: true},
             {title: '', field: 'id', visible: false, align: 'center', valign: 'middle'},
             {title: '姓名', field: 'name', visible: true, align: 'center', valign: 'middle'},
-            {title: '性别', field: 'sex', visible: true, align: 'center', valign: 'middle',width:'40px',formatter: function (value, row, index) {
+            {title: '性别', field: 'sex', visible: true, align: 'center', valign: 'middle',width:'44px',formatter: function (value, row, index) {
                 if(value==1){
                     return '男';
                 }else {
@@ -45,12 +45,12 @@ Membermanagement.initColumn = function () {
                     return '<span style="font-size: 10px">'+value+'</span>';
                 }},
             {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
-            {title: '操作', field: 'id', visible: true, align: 'center', width:'440px', valign: 'middle',formatter: function (value, row, index) {
+            {title: '操作', field: 'id', visible: true, align: 'center', width:'380px', valign: 'middle',formatter: function (value, row, index) {
 
-                    return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
-                        '<button type="button" class="btn btn-danger button-margin" onclick="Membermanagement.delete(' + row.id + ')" id=""><i class="fa fa-trash-o fa-lg"></i>&nbsp;删除</button>'+
-                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-group"></i>&nbsp;推荐人</button>' +
-                    '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
+                    return '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
+                        '<button type="button" class=" btn-danger button-margin" onclick="Membermanagement.delete(' + row.id + ')" id=""><i class="fa fa-trash-o fa-lg"></i>&nbsp;删除</button>'+
+                    '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openintroducer(' + row.id + ')" id=""><i class="fa fa-group"></i>&nbsp;推荐人</button>' +
+                    '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>' ;
                 }},
     ];
 };
