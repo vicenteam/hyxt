@@ -492,6 +492,7 @@ public class MembermanagementController extends BaseController {
             mMap.put("isoldsociety",m.getIsoldsociety());
             mMap.put("level",membershipcardtypeService.selectById(m.getLevelID()).getCardname());
             mMap.put("createDt",m.getCreateTime());
+            mMap.put("deptName",deptService.selectById(m.getDeptId()).getFullname());
             memberExcels.add(mMap);
         }
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
@@ -519,6 +520,8 @@ public class MembermanagementController extends BaseController {
                 CellUtil.createCell(rowTitle,j,"卡片等级");
             }else if (entry.getKey().equals("createDt")){
                 CellUtil.createCell(rowTitle,j,"开卡时间");
+            }else if (entry.getKey().equals("deptName")){
+                CellUtil.createCell(rowTitle,j,"门店名称");
             }
             j++;
         }
