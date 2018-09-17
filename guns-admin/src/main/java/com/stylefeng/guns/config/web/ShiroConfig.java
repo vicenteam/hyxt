@@ -171,6 +171,7 @@ public class ShiroConfig {
         hashMap.put("/swagger-ui.html", "anon");
         //
         hashMap.put("/login", "anon");
+        hashMap.put("/listen", "anon");
         hashMap.put("/global/sessionError", "anon");
         hashMap.put("/kaptcha", "anon");
         hashMap.put("/**", "user");

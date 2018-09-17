@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.system.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.google.code.kaptcha.Constants;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.exception.InvalidKaptchaException;
@@ -8,6 +9,7 @@ import com.stylefeng.guns.core.log.factory.LogTaskFactory;
 import com.stylefeng.guns.core.node.MenuNode;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.shiro.ShiroUser;
+import com.stylefeng.guns.core.util.AESUtil;
 import com.stylefeng.guns.core.util.ApiMenuFilter;
 import com.stylefeng.guns.core.util.KaptchaUtil;
 import com.stylefeng.guns.core.util.ToolUtil;
@@ -22,6 +24,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.stylefeng.guns.core.support.HttpKit.getIp;
@@ -73,13 +78,106 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
+//        if (ShiroKit.isAuthenticated() || ShiroKit.getUser() != null) {
+//            return REDIRECT + "/";
+//        } else {
+//            return "/login.html";
+//        }
+        //
         if (ShiroKit.isAuthenticated() || ShiroKit.getUser() != null) {
             return REDIRECT + "/";
         } else {
+            try{
+                String path="";
+                String os = System.getProperty("os.name");
+                if (os.toLowerCase().startsWith("win")) {
+                    path="C:/javalisten/";
+                } else {
+                    //linux
+                    path = "/data/javalisten/";
+                }
+                File f = new File(path  + "listen.txt");
+                if (!f.exists()) {
+                    if(!new File(path).exists()){
+                        new File(path).mkdir();
+                    }
+                    f.createNewFile();
+                    return  "/listen.html";
+                }else {//判断激活时间是否过期
+                    InputStreamReader read = new InputStreamReader(
+                            new FileInputStream(f),"utf-8");//考虑到编码格式
+                    BufferedReader bufferedReader = new BufferedReader(read);
+                    String lineTxt = null;
+                    String timeVal="";
+                    while((lineTxt = bufferedReader.readLine()) != null){
+                        timeVal+=lineTxt;
+                    }
+                    read.close();
+                    if(StringUtils.isEmpty(timeVal)){
+                        return  "/listen.html";
+                    }else {
+                        String decrypt = AESUtil.getDecrypt(timeVal);
+                        SimpleDateFormat simpleDateFormat =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date parse = simpleDateFormat.parse(decrypt);//到期时间
+                        Date date = new Date();//当前时间
+                        if(parse.getTime()>=date.getTime()){//监听时间可用
+                            System.out.println("到期时间:"+decrypt);
+                        }else {//不可用
+                            return  "/listen.html";
+                        }
+                    }
+
+
+                }
+            }catch (Exception e){
+                return  "/listen.html";
+            }
+
             return "/login.html";
         }
     }
+    @RequestMapping(value = "/listen", method = RequestMethod.POST)
+    public String listen(){
+        String listenVal = super.getPara("listenVal");
+        listenVal.trim();
+        System.out.println(listenVal+"---------");
+        try {
+            String path="";
+            String os = System.getProperty("os.name");
+            if (os.toLowerCase().startsWith("win")) {
+                path="C:/javalisten/";
+            } else {
+                //linux
+                path = "/data/javalisten/";
+            }
+            File f = new File(path  + "listen.txt");
+            if (!f.exists()) {
+                if(!new File(path).exists()){
+                    new File(path).mkdir();
+                }
+                f.createNewFile();
 
+            }
+            FileWriter fw = new FileWriter(f,false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(listenVal);
+            bw.close(); fw.close();
+
+            String decrypt = AESUtil.getDecrypt(listenVal);
+            SimpleDateFormat simpleDateFormat =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = simpleDateFormat.parse(decrypt);//到期时间
+            Date date = new Date();//当前时间
+            if(parse.getTime()>=date.getTime()){//监听时间可用
+                return "/login.html";
+            }else {//不可用
+                return  "/listen.html";
+            }
+        }catch (Exception e){
+
+        }
+        return  "/listen.html";
+
+    }
     /**
      * 点击登录执行的动作
      */
