@@ -56,7 +56,7 @@ public class MemberApiController extends BaseController {
                 if(membermanagement!=null&&membermanagement.getTownshipid().equals("0")){
                     MemberModel change = new ReflectionObject<MemberModel>().change(membermanagement, new MemberModel());
                     change.setMemberId(membermanagement.getId());
-                    change.setAvatar("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
+                    change.setAvatar("http://47.104.252.44:8081/kaptcha/"+ change.getAvatar());//上线更改地址
                     memberModelResponseData.setDataCollection(change);
                 }else {
                     throw new Exception("该会员已挂失无法执行操作!");
@@ -79,7 +79,7 @@ public class MemberApiController extends BaseController {
             if(membermanagement!=null&&membermanagement.getTownshipid().equals("0")){
                 MemberModel change = new ReflectionObject<MemberModel>().change(membermanagement, new MemberModel());
                 change.setMemberId(membermanagement.getId());
-                change.setAvatar("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
+                change.setAvatar("http://47.104.252.44:8081/kaptcha/"+ change.getAvatar());//上线更改地址
                 memberModelResponseData.setDataCollection(change);
             }else {
                 throw new Exception("该会员已挂失无法执行操作!");
@@ -89,7 +89,7 @@ public class MemberApiController extends BaseController {
             if(membermanagement!=null&&membermanagement.getTownshipid().equals("0")){
                 MemberModel change = new ReflectionObject<MemberModel>().change(membermanagement, new MemberModel());
                 change.setMemberId(membermanagement.getId());
-                change.setAvatar("http://127.0.0.1:8081/kaptcha/"+ change.getAvatar());//上线更改地址
+                change.setAvatar("http://47.104.252.44:8081/kaptcha/"+ change.getAvatar());//上线更改地址
                 memberModelResponseData.setDataCollection(change);
             }else {
                 throw new Exception("该会员已挂失无法执行操作!");

@@ -4,6 +4,7 @@ server:
 guns:
   swagger-open: true              #是否开启swagger (true/false)
   kaptcha-open: false             #是否开启登录时验证码 (true/false)
+  file-upload-path: /hyxt/img       #文件上传目录(不配置的话为java.io.tmpdir目录)
 #  file-upload-path: d:/tmp       #文件上传目录(不配置的话为java.io.tmpdir目录)
   spring-session-open: false      #是否开启spring session,如果是多机环境需要开启(true/false)
   session-invalidate-time: 1800     #session失效时间(只在单机环境下生效，多机环境在SpringSessionConfig类中配置) 单位：秒
@@ -37,11 +38,11 @@ log:
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://192.168.0.101:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
-#    url: jdbc:mysql://119.23.226.213:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+#    url: jdbc:mysql://192.168.0.101:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://47.104.252.44:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
     username: root
-    password: root
-#    password: .Pa44w0Rd?
+#    password: root
+    password: Cdxxkj@123
     db-name: guns4_0 #用来搜集数据库的所有表
     filters: wall,mergeStat
 
@@ -49,11 +50,11 @@ spring:
 guns:
   muti-datasource:
     open: false
-    url: jdbc:mysql://192.168.0.101:3306/guns_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
-#    url: jdbc:mysql://119.23.226.213:3306/guns_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+#    url: jdbc:mysql://192.168.0.101:3306/guns_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://47.104.252.44:3306/guns_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
     username: root
-    password: root
-#    password: .Pa44w0Rd?
+#    password: root
+    password: Cdxxkj@123
     dataSourceNames:
       - dataSourceGuns
       - dataSourceBiz
@@ -77,6 +78,7 @@ spring:
     url: jdbc:mysql://192.168.0.101:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
     username: root
     password: root
+
     filters: wall,mergeStat
 
 ---
@@ -88,4 +90,8 @@ spring:
       username: root
       password: root
       filters: wall,mergeStat
+
+     # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  mina.jar > catalina.out  2>&1 &
+     # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  xx.jar > catalina.out  2>&1 &
+     # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  xx.jar   2>&1 &     netstat -tunlp|grep 8086
 

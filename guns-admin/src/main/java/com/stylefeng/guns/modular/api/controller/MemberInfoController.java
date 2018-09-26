@@ -82,7 +82,7 @@ public class MemberInfoController extends BaseController {
             Map<String, Object> maps = this.signInCount(mInfo.getId(),mInfo.getDeptId(),"","");
             //result info
             MemberInfoModel infoModel = new ReflectionObject<MemberInfoModel>().change(mInfo, new MemberInfoModel());
-            infoModel.setAvatar("http://127.0.0.1:8081/kaptcha/"+mInfo.getAvatar());
+            infoModel.setAvatar("http://47.104.252.44:8081/kaptcha/"+mInfo.getAvatar());
             infoModel.setCadID(mInfo.getCadID());
             infoModel.setCreateDt(mInfo.getCreateTime());
             infoModel.setDeptName(dName.getFullname());
