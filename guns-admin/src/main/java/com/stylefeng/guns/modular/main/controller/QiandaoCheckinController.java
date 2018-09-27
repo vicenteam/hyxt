@@ -95,7 +95,16 @@ public class QiandaoCheckinController extends BaseController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Object add(String memberId, String chechId) {
+    public Object add(String memberId, String chechId) throws Exception {
+        //判断签到场次是否被结束
+        if(!StringUtils.isEmpty(chechId)){
+            Checkin checkin1 = checkinService.selectById(chechId);
+            if(checkin1!=null){
+                if(checkin1.getStatus()==2){
+                    throw new Exception("该场次已经结束无法进行该操作!");
+                }
+            }
+        }
         QiandaoCheckin qiandaoCheckin = new QiandaoCheckin();
         qiandaoCheckin.setCheckinid(Integer.parseInt(chechId));
         qiandaoCheckin.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -121,7 +130,16 @@ public class QiandaoCheckinController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object update(String memberId, String chechId) {
+    public Object update(String memberId, String chechId) throws Exception {
+        //判断签到场次是否被结束
+        if(!StringUtils.isEmpty(chechId)){
+            Checkin checkin1 = checkinService.selectById(chechId);
+            if(checkin1!=null){
+                if(checkin1.getStatus()==2){
+                    throw new Exception("该场次已经结束无法进行该操作!");
+                }
+            }
+        }
         EntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new EntityWrapper<>();
         qiandaoCheckinBaseEntityWrapper.eq("memberid", memberId);
         qiandaoCheckinBaseEntityWrapper.eq("checkinid", chechId);
