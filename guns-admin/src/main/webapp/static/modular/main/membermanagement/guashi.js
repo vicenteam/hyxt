@@ -36,9 +36,9 @@ Membermanagement.initColumn = function () {
                 }},
             {title: '家庭地址', field: 'address', visible: true, align: 'center', valign: 'middle'},
             {title: '总获得积分', field: 'countPrice', visible: true, align: 'center', valign: 'middle'},
-            {title: '操作', field: 'id', visible: true, align: 'center',  valign: 'middle',formatter: function (value, row, index) {
+            {title: '操作', field: 'id', visible: true, align: 'center', width:'220px', valign: 'middle',formatter: function (value, row, index) {
                     if(row.townshipid==1){
-                       return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.guashiData1(' + row.id + ')" id=""><i class="fa fa-unlock"></i>解除挂失</button>';
+                       return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.guashiData1(' + row.id + ')" id=""><i class="fa fa-unlock"></i>解除挂失</button>'+'<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.guashiDataBuKa(' + row.id + ')" id=""><i class="fa fa-cloud-upload"></i>补卡</button>';
                     }else {
                         return '<button type="button" class="btn btn-primary button-margin" onclick="Membermanagement.guashiData(' + row.id + ')" id=""><i class="fa fa-unlock-alt"></i>挂失</button>'
 
@@ -114,6 +114,22 @@ Membermanagement.guashiData1 = function (id) {
     ajax.set("memberId",id);
     ajax.start();
 };
+/**
+ * 挂失补卡
+ */
+Membermanagement.guashiDataBuKa = function (id) {
+    var index = layer.open({
+        type: 2,
+        title: '挂失补卡',
+        area: ['850px', '500px'], //宽高
+        fix: false, //不固定
+        maxmin: true,
+        content: Feng.ctxPath + '/membermanagement/guashiDataBuKa/' + id
+    });
+    this.layerIndex = index;
+};
+
+
 /**
  * 介绍人查询
  * @param id

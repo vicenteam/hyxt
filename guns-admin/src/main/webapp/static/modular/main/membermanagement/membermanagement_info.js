@@ -173,7 +173,25 @@ MembermanagementInfoDlg.editSubmit = function() {
     ajax.set("baMedicals",baMedicals);
     ajax.start();
 }
+/**
+ * 补卡
+ */
+MembermanagementInfoDlg.buka = function() {
 
+    this.clearData();
+    this.collectData();
+    //提交信息
+    var ajax = new $ax(Feng.ctxPath + "/membermanagement/buka", function(data){
+        Feng.success("补卡成功!");
+        window.parent.Membermanagement.table.refresh();
+        MembermanagementInfoDlg.close();
+    },function(data){
+        Feng.error("补卡失败!" + data.responseJSON.message + "!");
+    });
+    ajax.set("memberId",$("#id").val());
+    ajax.set("cardID",$("#cardID").val());
+    ajax.start();
+}
 $(function() {
     Feng.initValidator("membermanagementInfoTable", MembermanagementInfoDlg.validateFields);
 });

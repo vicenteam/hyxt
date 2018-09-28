@@ -449,6 +449,48 @@ function getXieKaVal() {
 }
 
 /**
+ * 补卡获取卡片uuid
+ */
+function getBuKaUUID() {
+    readDeviceCard();
+    var carduuid= document.getElementById("readDeviceCard").value;
+    if(carduuid.length==0){
+        Feng.error("请重试!");
+        return;
+    }
+//校验密码
+    RfAuthenticationKey();
+    var ret = CZx_32Ctrl.RfRead(DeviceHandle.value,BlockM1.value);
+    if(CZx_32Ctrl.lErrorCode == 0)
+    {
+        if(ret.length>0){
+            $.ajax({
+                url: '/membermanagement/getUserInfo',
+                // data: {value:ret},
+                data: {value:carduuid},
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+                async: false,
+                success: function (data) {
+                    if(data.id!=undefined){
+                        Feng.error("该卡以及绑定用户请换张卡试试!");
+                        return
+                    }else {
+                        if(data=="202"){
+                            Feng.error("该卡已挂失无法执行该操作!");
+                        }else {
+                            //绑定uuid
+                            $("#cardID").val(carduuid)
+                        }
+
+                    }
+                }
+            });
+        }
+    }
+}
+
+    /**
  * 根据卡片数据获取用户信息
  */
 function getUserInfo() {
