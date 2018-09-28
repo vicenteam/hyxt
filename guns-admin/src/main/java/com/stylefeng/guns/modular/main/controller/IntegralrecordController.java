@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
@@ -86,6 +87,7 @@ public class IntegralrecordController extends BaseController {
     /**
      * 新增新增积分
      */
+    @BussinessLog(value = "新增会员积分", key = "xzhyjf")
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)

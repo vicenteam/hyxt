@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.shiro.ShiroUser;
@@ -74,6 +75,7 @@ public class IntegralRecordClearZeroController extends BaseController {
     /**
      * 积分清零
      */
+    @BussinessLog(value = "积分清零", key = "jfql")
     @RequestMapping(value = "/clear")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -111,6 +113,7 @@ public class IntegralRecordClearZeroController extends BaseController {
     /**
      * 积分恢复
      */
+    @BussinessLog(value = "积分恢复", key = "jfhf")
     @RequestMapping(value = "/rollBack")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)

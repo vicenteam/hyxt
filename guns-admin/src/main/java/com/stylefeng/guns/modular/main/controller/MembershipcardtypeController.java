@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.shiro.ShiroKit;
@@ -115,6 +116,7 @@ public class MembershipcardtypeController extends BaseController {
     /**
      * 新增会员配置
      */
+    @BussinessLog(value = "新增会员配置", key = "xzhypz")
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Membershipcardtype membershipcardtype) {
@@ -126,6 +128,7 @@ public class MembershipcardtypeController extends BaseController {
     /**
      * 删除会员配置
      */
+    @BussinessLog(value = "删除会员配置", key = "schypz")
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer membershipcardtypeId) {
@@ -136,6 +139,7 @@ public class MembershipcardtypeController extends BaseController {
     /**
      * 修改会员配置
      */
+    @BussinessLog(value = "修改会员配置", key = "xghypz")
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Membershipcardtype membershipcardtype) {

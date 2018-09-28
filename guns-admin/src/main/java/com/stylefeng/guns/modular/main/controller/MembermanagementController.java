@@ -3,6 +3,8 @@ package com.stylefeng.guns.modular.main.controller;
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.common.annotion.BussinessLog;
+import com.stylefeng.guns.core.common.constant.dictmap.DeptDict;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
@@ -229,6 +231,7 @@ public class MembermanagementController extends BaseController {
     /**
      * 新增会员管理
      */
+    @BussinessLog(value = "新增会员管理", key = "addMember")
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -291,6 +294,7 @@ public class MembermanagementController extends BaseController {
     /**
      * 删除会员管理
      */
+    @BussinessLog(value = "删除会员管理", key = "deleteMember")
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer membermanagementId) {
@@ -307,6 +311,7 @@ public class MembermanagementController extends BaseController {
      * @param cardID
      * @return
      */
+    @BussinessLog(value = "补卡操作", key = "bukaMember")
     @RequestMapping(value = "/buka")
     @ResponseBody
     public Object buka(String memberId, String cardID) {
@@ -323,6 +328,7 @@ public class MembermanagementController extends BaseController {
     /**
      * 修改会员管理
      */
+    @BussinessLog(value = "修改会员信息", key = "updateMember")
     @RequestMapping(value = "/update")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
@@ -471,6 +477,7 @@ public class MembermanagementController extends BaseController {
      * @param model
      * @return
      */
+
     @RequestMapping("/guashi")
     public String guashi(Model model) {
         BaseEntityWrapper<User> deptBaseEntityWrapper = new BaseEntityWrapper<>();
@@ -481,7 +488,7 @@ public class MembermanagementController extends BaseController {
         model.addAttribute("depts", depts);
         return PREFIX + "guashi.html";
     }
-
+    @BussinessLog(value = "进行挂失", key = "guashiData")
     @RequestMapping("/guashiData")
     @ResponseBody
     public Object guashiData(String memberId) {
@@ -490,7 +497,7 @@ public class MembermanagementController extends BaseController {
         membermanagementService.updateById(m);
         return SUCCESS_TIP;
     }
-
+    @BussinessLog(value = "解除挂失", key = "guashiData1")
     @RequestMapping("/guashiData1")
     @ResponseBody
     public Object guashiData1(String memberId) {
@@ -519,7 +526,7 @@ public class MembermanagementController extends BaseController {
             }
         }
     }
-
+    @BussinessLog(value = "会员资料导出", key = "export_excel")
     @RequestMapping("export_excel")
     public void export(HttpServletResponse response, HttpServletRequest request) throws Exception {
         List<Map<String, Object>> memberExcels = new ArrayList<>();

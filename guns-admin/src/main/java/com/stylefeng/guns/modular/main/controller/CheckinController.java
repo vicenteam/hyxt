@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.main.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
@@ -103,6 +104,7 @@ public class CheckinController extends BaseController {
     /**
      * 新增签到场次
      */
+    @BussinessLog(value = "新增签到场次", key = "xzqdcc")
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Checkin checkin) {
@@ -172,6 +174,7 @@ public class CheckinController extends BaseController {
             return checkin;
         }
     }
+    @BussinessLog(value = "结束签到场次", key = "jsqdcc")
     @RequestMapping(value = "/updatecheck")
     @ResponseBody
     public Object updatecheck(String checkid) {

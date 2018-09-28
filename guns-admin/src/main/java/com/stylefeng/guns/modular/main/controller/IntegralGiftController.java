@@ -3,6 +3,7 @@ package com.stylefeng.guns.modular.main.controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -58,6 +59,7 @@ public class IntegralGiftController extends BaseController {
     /**
      * 添加赠送积分
      */
+    @BussinessLog(value = "添加赠送积分", key = "tjjfzs")
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)

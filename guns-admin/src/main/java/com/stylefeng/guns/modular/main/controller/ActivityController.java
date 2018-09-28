@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.main.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
@@ -112,6 +113,7 @@ public class ActivityController extends BaseController {
     /**
      * 新增活动管理
      */
+    @BussinessLog(value = "新增活动管理", key = "xzhdgl")
     @RequestMapping(value = "/add")
     @ResponseBody
     public Object add(Activity activity) {
@@ -134,6 +136,7 @@ public class ActivityController extends BaseController {
     /**
      * 删除活动管理
      */
+    @BussinessLog(value = "删除活动管理", key = "schdgl")
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer activityId) {
@@ -144,6 +147,7 @@ public class ActivityController extends BaseController {
     /**
      * 修改活动管理
      */
+    @BussinessLog(value = "修改活动管理", key = "xghdgl")
     @RequestMapping(value = "/update")
     @ResponseBody
     public Object update(Activity activity) {
