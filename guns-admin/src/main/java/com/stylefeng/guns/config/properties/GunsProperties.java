@@ -1,5 +1,6 @@
 package com.stylefeng.guns.config.properties;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class GunsProperties {
 
     private Boolean swaggerOpen = false;
 
-    private String fileUploadPath;
+    private String fileUploadPath="/hyxt/img";
 
     private Boolean haveCreatePath = false;
 
@@ -40,6 +41,7 @@ public class GunsProperties {
      */
     private Integer sessionValidationInterval = 15 * 60;
 
+    @Value("${guns.file-upload-path}")
     public String getFileUploadPath() {
         //如果没有写文件上传路径,保存到临时目录
         if (isEmpty(fileUploadPath)) {
