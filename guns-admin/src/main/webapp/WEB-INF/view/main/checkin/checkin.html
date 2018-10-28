@@ -261,6 +261,7 @@
         $("#mamberStaffId").val(data.staffID);
         $("#manmberid").val(data.id);
         $("#avatar").attr('src','/kaptcha/'+data.avatar);
+        $("#avatar").css({"width":"300px","height":"300px"});
         if(data.qiandao==0){
             $('#check1').removeAttr("disabled");
             $("#check2").attr("disabled","disabled")
