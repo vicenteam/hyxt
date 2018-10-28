@@ -92,7 +92,12 @@ public class CheckInApiController extends BaseController {
         ResponseData<List<CountersigningInfoMode>> checkInModelResponseData = new ResponseData<>();
         EntityWrapper<Checkin> checkinEntityWrapper = new EntityWrapper<>();
         checkinEntityWrapper.eq("deptid", requstData.getDeptId());
-        checkinEntityWrapper.eq("status", 1);
+//        checkinEntityWrapper.eq("status", 1);
+        //获取当天时间范围
+        String date=DateUtil.formatDate(new Date(),"yyyy-MM-dd");
+        String start=date+" 00:00:00";
+        String end=date+" 23:59:59";
+        checkinEntityWrapper.between("startDate",start,end);
         checkinEntityWrapper.orderBy("createDate", false);
         List<Checkin> checkins = checkinService.selectList(checkinEntityWrapper);
         List<CountersigningInfoMode> countersigningInfoModes = new ReflectionObject<CountersigningInfoMode>().changeList(checkins, new CountersigningInfoMode());
