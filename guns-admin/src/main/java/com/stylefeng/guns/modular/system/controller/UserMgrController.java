@@ -31,10 +31,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 
 import javax.naming.NoPermissionException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -350,6 +355,41 @@ public class UserMgrController extends BaseController {
         try {
             String fileSavePath = gunsProperties.getFileUploadPath();
             picture.transferTo(new File(fileSavePath + pictureName));
+        } catch (Exception e) {
+            throw new GunsException(BizExceptionEnum.UPLOAD_ERROR);
+        }
+        return pictureName;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/upload1")
+    @ResponseBody
+    public String upload1(HttpServletRequest request) {
+        String imgStr;//接收经过base64编 之后的字符串
+        imgStr = request.getParameter("file");
+        String pictureName = "qq";//UUID.randomUUID().toString() + "." + ToolUtil.getFileSuffix(picture.getOriginalFilename());
+        try {
+            String fileSavePath = gunsProperties.getFileUploadPath().substring(0,gunsProperties.getFileUploadPath().length()-1);
+            BASE64Decoder decoder = new BASE64Decoder();                // Base64解码
+            byte[] b = decoder.decodeBuffer(imgStr);
+            for (int i = 0; i < b.length; ++i) {
+                if (b[i] < 0) {// 调整异常数据
+                    b[i] += 256;
+                }
+            }                // 生成jpeg图片
+            String imgFilePath = "";
+            pictureName = imgFilePath = UUID.randomUUID().toString() + "." + "jpg";
+            OutputStream out = null;
+            try {
+                out = new FileOutputStream(fileSavePath+"/"+imgFilePath);
+                log.info("保存文件地址-》"+fileSavePath);
+                log.info("保存文件地址-》"+fileSavePath+"/"+imgFilePath);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            out.write(b);
+            out.flush();
+            out.close();
         } catch (Exception e) {
             throw new GunsException(BizExceptionEnum.UPLOAD_ERROR);
         }
