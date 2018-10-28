@@ -18,7 +18,8 @@ var MembermanagementInfoDlg = {
                 }
             }
         }
-    }
+    },
+    layerIndex: -1
 };
 
 /**
@@ -192,6 +193,35 @@ MembermanagementInfoDlg.buka = function() {
     ajax.set("cardID",$("#cardID").val());
     ajax.start();
 }
+/**
+ * 打卡摄像头
+ */
+var imgData;
+MembermanagementInfoDlg.eaa = function() {
+    $("#avatars").attr("src","data:image/png;base64,"+imgData);
+    //执行文件上传
+    var data=imgData;
+
+    var ajax = new $ax(Feng.ctxPath + "/mgr/upload1", function(data){
+        $("#avatar").val(data);
+    },function(data){
+        Feng.error("操作失败!" + data.responseJSON.message + "!");
+    });
+    ajax.set({"file":data});
+    ajax.start();
+
+}
+$("#getUserPhoto").click(function () {
+    var index = layer.open({
+        type: 2,
+        title: '图片采集',
+        area: ['800px', '420px'], //宽高
+        fix: false, //不固定
+        maxmin: true,
+        content: Feng.ctxPath + '/membermanagement/membermanagement_userPhotoPage'
+    });
+    this.layerIndex = index;
+})
 $(function() {
     Feng.initValidator("membermanagementInfoTable", MembermanagementInfoDlg.validateFields);
 });

@@ -111,6 +111,11 @@ public class MembermanagementController extends BaseController {
         model.addAttribute("baMedicals", map);
         return PREFIX + "membermanagement_add.html";
     }
+ @RequestMapping("/membermanagement_userPhotoPage")
+    public String membermanagement_userPhotoPage(Model model) {
+
+        return PREFIX + "membermanagement_userPhotoPage1.html";
+    }
 
     /**
      * 跳转到修改会员管理

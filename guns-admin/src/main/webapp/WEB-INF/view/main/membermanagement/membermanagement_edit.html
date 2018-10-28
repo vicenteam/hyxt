@@ -4,6 +4,8 @@
 
         <div class="form-horizontal">
                 <input type="hidden" id="id"  name="id" value="${item.id}">
+            <input id="avatar" type="hidden" value="">
+            <input id="sss" type="hidden" value="${item.avatar}">
             <div class="row">
                 <div class="col-sm-6 b-r">
                     <#select id="staffID" name="服务员工" underline="true">
@@ -13,7 +15,13 @@
                     @}
                 </#select>
                 <#input id="name" name="姓名" underline="true" value="${item.name}"/>
-                <#avatar id="avatar" name="头像" underline="true" avatarImg="${item.avatar}"/>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">头像</label>
+                    <div class="col-sm-9">
+                        <img  id="avatars" width="150px" height="150px" src="/kaptcha/${item.avatar}">
+                        <button class="btn btn-primary button-margin" id="getUserPhoto" type="button" >&nbsp;获取头像</button>
+                    </div>
+                </div>
                 <#select id="sex" name="性别" underline="true">
                 <option value="">请选择</option>
                 <option value="1">男</option>
