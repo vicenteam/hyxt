@@ -54,11 +54,12 @@ public class IntegralRecordQueryController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(String condition, String operator, String memberName, String cadId
-                        , String integralType, String begindate, String enddate) {
+                        , String integralType, String begindate, String enddate, Integer memberId) {
 
         BaseEntityWrapper<Membermanagement> mWrapper = new BaseEntityWrapper<>();
         if(! StringUtils.isEmpty(cadId)) mWrapper.like("cadID",cadId);
         if(! StringUtils.isEmpty(memberName)) mWrapper.like("name",memberName);
+        if(memberId != null) mWrapper.eq("id",memberId);
         //会员 memberName、cadId 条件筛选
         List<Membermanagement> membermanagements = membermanagementService.selectList(mWrapper);
         Integer[] mIdArray = new Integer[membermanagements.size()];
