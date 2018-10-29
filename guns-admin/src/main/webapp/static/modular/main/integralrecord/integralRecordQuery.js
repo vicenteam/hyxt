@@ -72,6 +72,7 @@ Integralrecord.search = function () {
     queryData['integralType'] = $("#integralType").val();
     queryData['begindate'] = $("#begindate").val();
     queryData['enddate'] = $("#enddate").val();
+    queryData['memberId'] = "";
     Integralrecord.table.refresh({query: queryData});
 };
 
@@ -127,6 +128,7 @@ Integralrecord.form = function () {
     queryData['integralType'] = $("#integralType").val();
     queryData['begindate'] = $("#begindate").val();
     queryData['enddate'] = $("#enddate").val();
+    queryData['memberId'] = -1;
     return queryData;
 };
 
