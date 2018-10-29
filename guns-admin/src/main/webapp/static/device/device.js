@@ -423,7 +423,7 @@ function getXieKaVal() {
                 async: false,
                 success: function (data) {
                     if(data.id!=undefined){
-                        Feng.error("该卡以及绑定用户请换张卡试试!");
+                        Feng.error("该卡已经绑定用户请换张卡试试!");
                         return
                     }else {
                         if(data=="202"){
