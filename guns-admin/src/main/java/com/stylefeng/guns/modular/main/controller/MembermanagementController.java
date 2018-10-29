@@ -200,7 +200,11 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(idcard)) baseEntityWrapper.eq("idcard", idcard);
         if (!StringUtils.isEmpty(phone)) baseEntityWrapper.like("phone", phone);
         if (!StringUtils.isEmpty(stafff)) baseEntityWrapper.eq("staffid", stafff);
-        if (!StringUtils.isEmpty(deptid)) baseEntityWrapper.eq("deptid", deptid);
+        if (!StringUtils.isEmpty(deptid)){
+            baseEntityWrapper.eq("deptid", deptid);
+        }else {
+            baseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
+        }
         if (!StringUtils.isEmpty(province)) baseEntityWrapper.eq("province", province);
         if (!StringUtils.isEmpty(city)) baseEntityWrapper.eq("city", city);
         if (!StringUtils.isEmpty(district)) baseEntityWrapper.eq("district", district);
