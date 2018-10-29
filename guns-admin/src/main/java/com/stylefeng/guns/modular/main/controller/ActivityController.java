@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
@@ -56,6 +57,8 @@ public class ActivityController extends BaseController {
     private IntegralrecordController integralrecordController;
     @Autowired
     private ActivityTask activityTask;
+    @Autowired
+    private MembermanagementController membermanagementController;
 
     /**
      * 跳转到活动管理首页
@@ -279,5 +282,84 @@ public class ActivityController extends BaseController {
         activityMember.setMemberid(Integer.parseInt(memberId));
         activityMember.setDeptid(deptId);
         activityMemberService.insert(activityMember);
+    }
+
+    /**
+     * 活动领取查询页面跳转
+     * @return
+     */
+    @RequestMapping("/activitygetpage")
+    public String activitygetpage() {
+        return PREFIX + "activitygetpage.html";
+    }
+    /**
+     * 获取活动管理列表
+     */
+    @RequestMapping(value = "/activitygetpagelist")
+    @ResponseBody
+    public Object activitygetpagelist(String condition,Integer type) throws ParseException {
+        Membermanagement membermanagement=null;
+        //获取用户信息
+        if(type==0){
+            BaseEntityWrapper<Membermanagement> baseEntityWrapper=new BaseEntityWrapper<Membermanagement>();
+            baseEntityWrapper.eq("cadID",condition);
+            membermanagement=membermanagementService.selectOne(baseEntityWrapper);
+        }else if(type==1){
+
+
+        }else if(type==2){
+            membermanagement=membermanagementService.selectById(condition);
+        }
+        //查询用户已领取活动时间排序
+        Page<ActivityMember> page = new PageFactory<ActivityMember>().defaultPage();
+        if(membermanagement!=null){
+            BaseEntityWrapper<ActivityMember> baseEntityWrapper = new BaseEntityWrapper<>();
+            baseEntityWrapper.eq("memberid",membermanagement.getId());
+            baseEntityWrapper.orderBy("createtime",false);
+            Page<ActivityMember> result =activityMemberService.selectPage(page,baseEntityWrapper);
+            Page<Map<String,Object>> page2 = new PageFactory<Map<String,Object>>().defaultPage();
+            page2.setRecords(new ArrayList<>());
+           List<ActivityMember> list= result.getRecords();
+           list.forEach(a->{
+              Activity activity= activityService.selectById(a.getActivityid());
+              Map<String,Object> map=new HashMap<>();
+              map.put("id",activity.getId());
+              map.put("name",activity.getName());
+              map.put("createtime",a.getCreatetime());
+               page2.getRecords().add(map);
+           });
+            page2.setTotal(result.getTotal());
+            return super.packForBT(page2);
+        }
+        return super.packForBT(page);
+    }
+    /**
+     * 获取活动管理列表
+     */
+    @RequestMapping(value = "/activitygetpagelist2")
+    @ResponseBody
+    public Object activitygetpagelist2(String condition,Integer type) throws ParseException {
+        Membermanagement membermanagement=null;
+        //获取用户信息
+        if(type==0){
+            BaseEntityWrapper<Membermanagement> baseEntityWrapper=new BaseEntityWrapper<Membermanagement>();
+            baseEntityWrapper.eq("cadID",condition);
+            membermanagement=membermanagementService.selectOne(baseEntityWrapper);
+        }else if(type==1){
+        Object obj=membermanagementController.getUserInfo(condition);
+        if(!obj.equals("202")){
+            membermanagement=(Membermanagement)obj;
+        }
+        }
+        Page<ActivityMember> result =null;
+        System.out.println(membermanagement!=null);
+        if(membermanagement!=null){
+
+            BaseEntityWrapper<Membermanagement> baseEntityWrapper=new BaseEntityWrapper<Membermanagement>();
+            baseEntityWrapper.eq("introducerId",membermanagement.getId());
+            Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
+           result =membermanagementService.selectPage(page,baseEntityWrapper);
+        }
+        return super.packForBT(result);
     }
 }

@@ -1,0 +1,82 @@
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>活动领取查询</h5>
+            </div>
+            <div>
+                <div style="width: 500px;height: 800px">
+                    <div class="ibox-content">
+                        <div class="row row-lg">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-7">
+                                        <#NameCon id="condition" name="身份证" />
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <#button name="搜索" icon="fa-search" clickFun="Activity.search()"/>
+                                        <#button name="读卡查询" icon="fa-search" clickFun="Activity.search()"/>
+
+                                    </div>
+                                </div>
+                                <div class="hidden-xs" id="managerTableToolbar" role="group">
+                                </div>
+                                <#table id="ActivityTable"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 500px;height: 800px;margin-top: -800px;margin-left: 580px">
+                    <div class="ibox-content">
+                        <div class="row row-lg">
+                            <div class="col-sm-13">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">我推荐的人
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                </div>
+                                <div class="hidden-xs" id="managerTableToolbar1" role="group">
+                                </div>
+                                <#table id="ActivityTable2"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 500px;height: 800px;margin-top: -800px;margin-left: 1154px">
+                    <div class="ibox-content">
+                        <div class="row row-lg">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">领取信息
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+
+                                    </div>
+                                </div>
+                                <div class="hidden-xs" id="managerTableToolbar3" role="group">
+                                </div>
+                                <#table id="ActivityTable3"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/main/activity/activitygetpage.js"></script>
+@}
