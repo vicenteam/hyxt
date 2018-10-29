@@ -100,3 +100,6 @@ $(function () {
     table.setPaginationType("client");
     MemberCard.table = table.init();
 });
+
+
+

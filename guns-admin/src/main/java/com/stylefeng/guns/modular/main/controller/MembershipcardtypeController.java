@@ -132,7 +132,9 @@ public class MembershipcardtypeController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer membershipcardtypeId) {
-        membershipcardtypeService.deleteById(membershipcardtypeId);
+        Membershipcardtype type = membershipcardtypeService.selectById(membershipcardtypeId);
+        type.setStatus(1);
+        membershipcardtypeService.updateById(type);
         return SUCCESS_TIP;
     }
 
