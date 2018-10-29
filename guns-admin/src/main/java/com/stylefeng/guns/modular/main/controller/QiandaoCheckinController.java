@@ -97,13 +97,22 @@ public class QiandaoCheckinController extends BaseController {
     @ResponseBody
     public Object add(String memberId, String chechId) throws Exception {
         //判断签到场次是否被结束
-        if(!StringUtils.isEmpty(chechId)){
+        if (!StringUtils.isEmpty(chechId)) {
             Checkin checkin1 = checkinService.selectById(chechId);
-            if(checkin1!=null){
-                if(checkin1.getStatus()==2){
+            if (checkin1 != null) {
+                if (checkin1.getStatus() == 2) {
                     throw new Exception("该场次已经结束无法进行该操作!");
                 }
             }
+        }
+        //查询当天是否签到
+        BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
+        qiandaoCheckinBaseEntityWrapper.eq("memberid", memberId);
+        qiandaoCheckinBaseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
+        qiandaoCheckinBaseEntityWrapper.like("createtime", DateUtil.formatDate(new Date(), "yyyy-MM-dd"));
+        int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
+        if (i != 0) {
+            throw new Exception("该用户当天已首签无法进行该操作!");
         }
         QiandaoCheckin qiandaoCheckin = new QiandaoCheckin();
         qiandaoCheckin.setCheckinid(Integer.parseInt(chechId));
@@ -132,10 +141,10 @@ public class QiandaoCheckinController extends BaseController {
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object update(String memberId, String chechId) throws Exception {
         //判断签到场次是否被结束
-        if(!StringUtils.isEmpty(chechId)){
+        if (!StringUtils.isEmpty(chechId)) {
             Checkin checkin1 = checkinService.selectById(chechId);
-            if(checkin1!=null){
-                if(checkin1.getStatus()==2){
+            if (checkin1 != null) {
+                if (checkin1.getStatus() == 2) {
 //                    throw new Exception("该场次已经结束无法进行该操作!");
                 }
             }
@@ -157,16 +166,16 @@ public class QiandaoCheckinController extends BaseController {
             if (membermanagement1 != null) {
                 String levelID = membermanagement1.getLevelID();
                 Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(levelID);
-                if(membershipcardtype!=null&&membershipcardtype.getLeaves()==0){
+                if (membershipcardtype != null && membershipcardtype.getLeaves() == 0) {
                     if (membershipcardtype != null && count >= membershipcardtype.getCheckleavenum()) {
                         Membermanagement membermanagement = membermanagementService.selectById(memberId);
 //                        if (membermanagement.getLevelID().equals("1")) {//零时卡更新普通会员卡
                         EntityWrapper<Membershipcardtype> membershipcardtypeEntityWrapper = new EntityWrapper<>();
-                        membershipcardtypeEntityWrapper.eq("deptid",qiandaoCheckin.getDeptid());
+                        membershipcardtypeEntityWrapper.eq("deptid", qiandaoCheckin.getDeptid());
                         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeEntityWrapper);
-                            if (list.size() >= 2) {
-                                membermanagement.setLevelID(list.get(1).getId() + "");
-                            }
+                        if (list.size() >= 2) {
+                            membermanagement.setLevelID(list.get(1).getId() + "");
+                        }
 //                        }
                         membermanagementService.updateById(membermanagement);
                     }
