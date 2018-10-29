@@ -136,7 +136,7 @@ public class QiandaoCheckinController extends BaseController {
             Checkin checkin1 = checkinService.selectById(chechId);
             if(checkin1!=null){
                 if(checkin1.getStatus()==2){
-                    throw new Exception("该场次已经结束无法进行该操作!");
+//                    throw new Exception("该场次已经结束无法进行该操作!");
                 }
             }
         }

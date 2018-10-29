@@ -137,7 +137,8 @@ public class CheckInApiController extends BaseController {
                 //进行复签
 //                qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
 //                qiandaoCheckinService.updateById(qiandaoCheckin);
-                qiandaoCheckinController.update(dataCollection.getMemberId() + "", screeningId + "");
+//                qiandaoCheckinController.update(dataCollection.getMemberId() + "", screeningId + "");
+                qiandaoCheckinController.update(dataCollection.getMemberId() + "", qiandaoCheckin.getCheckinid() + "");
                 System.out.println("____________");
             } else {
                 //不能进行操作
