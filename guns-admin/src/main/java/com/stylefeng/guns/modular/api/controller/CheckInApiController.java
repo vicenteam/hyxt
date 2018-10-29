@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -94,13 +95,18 @@ public class CheckInApiController extends BaseController {
         checkinEntityWrapper.eq("deptid", requstData.getDeptId());
 //        checkinEntityWrapper.eq("status", 1);
         //获取当天时间范围
-        String date=DateUtil.formatDate(new Date(),"yyyy-MM-dd");
-        String start=date+" 00:00:00";
-        String end=date+" 23:59:59";
-        checkinEntityWrapper.between("startDate",start,end);
+        String date = DateUtil.formatDate(new Date(), "yyyy-MM-dd");
+        String start = date + " 00:00:00";
+        String end = date + " 23:59:59";
+        checkinEntityWrapper.between("startDate", start, end);
         checkinEntityWrapper.orderBy("createDate", false);
         List<Checkin> checkins = checkinService.selectList(checkinEntityWrapper);
-        List<CountersigningInfoMode> countersigningInfoModes = new ReflectionObject<CountersigningInfoMode>().changeList(checkins, new CountersigningInfoMode());
+        List<Checkin> checkins2 = new ArrayList<>();
+        if(checkins.size()>0){
+            checkins2.add(checkins.get(0));
+        }
+//        List<CountersigningInfoMode> countersigningInfoModes = new ReflectionObject<CountersigningInfoMode>().changeList(checkins, new CountersigningInfoMode());
+        List<CountersigningInfoMode> countersigningInfoModes = new ReflectionObject<CountersigningInfoMode>().changeList(checkins2, new CountersigningInfoMode());
         checkInModelResponseData.setDataCollection(countersigningInfoModes);
         return checkInModelResponseData;
     }
@@ -117,21 +123,23 @@ public class CheckInApiController extends BaseController {
         ResponseData<MemberModel> memberInfo = memberApiController.getMemberInfo(requstData, selectId, selectType);
         MemberModel dataCollection = memberInfo.getDataCollection();
         EntityWrapper<QiandaoCheckin> qiandaoCheckinEntityWrapper = new EntityWrapper<>();
-        qiandaoCheckinEntityWrapper.eq("deptid",requstData.getDeptId());
-        qiandaoCheckinEntityWrapper.eq("memberid",dataCollection.getMemberId());
-        qiandaoCheckinEntityWrapper.eq("checkinid",screeningId);
+        qiandaoCheckinEntityWrapper.eq("deptid", requstData.getDeptId());
+        qiandaoCheckinEntityWrapper.eq("memberid", dataCollection.getMemberId());
+//        qiandaoCheckinEntityWrapper.eq("checkinid",screeningId);
+        //复签当天信息
+        qiandaoCheckinEntityWrapper.like("createtime", DateUtil.formatDate(new Date(), "yyyy-MM-dd"));
         QiandaoCheckin qiandaoCheckin = qiandaoCheckinService.selectOne(qiandaoCheckinEntityWrapper);
-        if(qiandaoCheckin==null){
+        if (qiandaoCheckin == null) {
             //进行首签
             throw new Exception("该场次用户未首签,不能进行复签操作!");
-        }else {
-            if(StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())){
+        } else {
+            if (StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())) {
                 //进行复签
 //                qiandaoCheckin.setUpdatetime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
 //                qiandaoCheckinService.updateById(qiandaoCheckin);
-                qiandaoCheckinController.update(dataCollection.getMemberId()+"",screeningId+"");
+                qiandaoCheckinController.update(dataCollection.getMemberId() + "", screeningId + "");
                 System.out.println("____________");
-            }else {
+            } else {
                 //不能进行操作
                 throw new Exception("该场次用户已经复签不能重复操作!");
             }
@@ -140,6 +148,7 @@ public class CheckInApiController extends BaseController {
         checkInModelResponseData.setResultMessage("复签成功!");
         return checkInModelResponseData;
     }
+
     @RequestMapping(value = "/closecountersigning", method = RequestMethod.POST)
     @ApiOperation("结束复签")
     @ApiImplicitParams({
@@ -148,7 +157,7 @@ public class CheckInApiController extends BaseController {
     public ResponseData closecountersigning(RequstData requstData, String screeningId) throws Exception {
         ResponseData checkInModelResponseData = new ResponseData<>();
         Checkin checkin = checkinService.selectById(screeningId);
-        checkin.setEndDate(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        checkin.setEndDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         checkin.setStatus(2);
         checkinService.updateById(checkin);
 //        checkInModelResponseData.setDataCollection("操作成功!");
