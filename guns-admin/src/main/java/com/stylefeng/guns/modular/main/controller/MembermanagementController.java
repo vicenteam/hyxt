@@ -82,7 +82,10 @@ public class MembermanagementController extends BaseController {
         List list = userService.selectList(deptBaseEntityWrapper);
         model.addAttribute("staffs", list);
         EntityWrapper<Dept> deptBaseEntityWrapper1 = new EntityWrapper<>();
-        deptBaseEntityWrapper1.eq("id",ShiroKit.getUser().getDeptId());
+        if(ShiroKit.getUser().getAccount().equals("admin")){
+        }else {
+            deptBaseEntityWrapper1.eq("id",ShiroKit.getUser().getDeptId());
+        }
         List depts = deptService.selectList(deptBaseEntityWrapper1);
         model.addAttribute("depts", depts);
         return PREFIX + "membermanagement.html";
@@ -494,7 +497,10 @@ public class MembermanagementController extends BaseController {
         List list = userService.selectList(deptBaseEntityWrapper);
         model.addAttribute("staffs", list);
         EntityWrapper<Dept> deptBaseEntityWrapper1 = new EntityWrapper<>();
-        deptBaseEntityWrapper1.eq("id",ShiroKit.getUser().getDeptId());
+        if(ShiroKit.getUser().getAccount().equals("admin")){
+        }else {
+            deptBaseEntityWrapper1.eq("id",ShiroKit.getUser().getDeptId());
+        }
         List depts = deptService.selectList(deptBaseEntityWrapper1);
         model.addAttribute("depts", depts);
         return PREFIX + "guashi.html";
