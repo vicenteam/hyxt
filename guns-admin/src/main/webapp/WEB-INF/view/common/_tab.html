@@ -16,7 +16,7 @@
                         </a>
                     </li>
                 @}else{
-                    <li>
+                    <li onclick="bodyClass()">
                         <a href="#">
                             <i class="fa ${title.icon}"></i>
                             <span class="nav-label">${title.name}</span>
@@ -49,3 +49,13 @@
         </ul>
     </div>
 </nav>
+<script>
+    function bodyClass() {
+        var body = document.getElementById("bodyClass");
+        var classList=body.classList;
+        console.log(classList)
+        if(classList.length==6){
+            body.classList.remove("mini-navbar");
+        }
+    }
+</script>
