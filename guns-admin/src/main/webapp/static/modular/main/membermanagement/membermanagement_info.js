@@ -118,6 +118,10 @@ if($("#readDeviceCard").val().length==0){
     if (!this.validate()) {
         return;
     }
+    if( $("#staffID").val().length==0){
+        Feng.error("请选择服务员工!");
+        return;
+    }
     var baMedicals="";
     baMedicals = $("input:checkbox[name='baMedicals']:checked").map(function(index,elem) {
         return $(elem).val();
@@ -215,7 +219,7 @@ $("#getUserPhoto").click(function () {
     var index = layer.open({
         type: 2,
         title: '图片采集',
-        area: ['800px', '420px'], //宽高
+        area: ['800px', '400px'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/membermanagement/membermanagement_userPhotoPage'
