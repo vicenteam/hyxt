@@ -301,7 +301,7 @@
             $("#check1").attr("disabled","disabled")
         }, function (data) {
             console.log(data)
-            Feng.error("首签失败!");
+            Feng.error("首签失败!"+ data.responseJSON.message);
         });
         ajax.setData({memberId:$("#manmberid").val(),chechId:$("#checkid").val()})
         ajax.start();
