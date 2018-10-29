@@ -3,16 +3,6 @@
  */
 var MemberRepair = {
     memberRepair : {}
-    ,validateFields: {
-        screenings: {
-            validators: {
-                notEmpty: {
-                    message: '签到场次不能为空'
-                },
-                numeric: {message: '签到场次只是数字'}
-            }
-        }
-    }
 };
 
 /**
@@ -68,42 +58,17 @@ MemberRepair.validate = function () {
 };
 
 /**
- * 提交补首签
+ * 提交补签
  */
-MemberRepair.addSubmit1 = function() {
-    this.clearData();
-    this.collectData();
-
-    if (!this.validate()) {
-        return;
-    }
+MemberRepair.addSubmit = function() {
     var datas = {};
     datas['memberId'] = $("#introducerId").val();
-    datas['screenings']= $("#screenings").val();
-    datas['b1'] = 1;
+    datas['time'] = $("#time").val();
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/memberRepair/repair", function(data){
-        Feng.success(data.responseJSON.message);
+        Feng.success("补签成功");
     },function(data){
-        Feng.error("添加失败!" + data.responseJSON.message + "!");
-    });
-    ajax.set(datas);
-    ajax.start();
-}
-
-/**
- * 提交补复签
- */
-MemberRepair.addSubmit2 = function() {
-    var datas = {};
-    datas['memberId'] = $("#introducerId").val();
-    datas['screenings']= $("#screenings").val();
-    datas['b2'] = 2;
-    //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/memberRepair/repair", function(data){
-        Feng.success(data.responseJSON.message);
-    },function(data){
-        Feng.error("添加失败!" + data.responseJSON.message + "!");
+        Feng.error("补签失败!" + data.responseJSON.message + "!");
     });
     ajax.set(datas);
     ajax.start();
