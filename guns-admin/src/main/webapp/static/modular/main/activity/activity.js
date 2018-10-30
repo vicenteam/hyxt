@@ -34,6 +34,8 @@ Activity.initColumn = function () {
                     return '积分兑换';
                 } else if (value == 3) {
                     return '推荐奖励';
+                }else if (value == 4) {
+                    return '被推荐奖励';
                 }
             }
         },
@@ -67,10 +69,10 @@ Activity.initColumn = function () {
             valign: 'middle',
             formatter: function (value, row, index) {
                 var doma = '<button type="button" class="btn btn-primary button-margin" onclick="Activity.lingqu(' + row.id + ')" id="" '
-                if (row.status != 2&& row.ruleexpression != 3) {
+                if (row.status != 2) {
                     doma += ' disabled="disabled"'
                 }else if (row.ruleexpression == 3) {
-                    doma += ' disabled="disabled"'
+                    // doma += ' disabled="disabled"'
                 }
                 doma += '><i class="fa fa-edit"></i>领取</button>'
                 doma += '<button type="button" class="btn btn-primary button-margin" onclick="Activity.openActivityDetail(' + row.id + ')" id=""'

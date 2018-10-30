@@ -72,6 +72,8 @@ public class MembermanagementController extends BaseController {
     private IntegralrecordController integralrecordController;
     @Autowired
     private ActivityController activityController;
+    @Autowired
+    private IMemberInactivityService memberInactivityService;
 
     /**
      * 跳转到会员管理首页
@@ -290,21 +292,48 @@ public class MembermanagementController extends BaseController {
         String introducerId = membermanagement.getIntroducerId();
         if (!StringUtils.isEmpty(introducerId)) {
             Membermanagement membermanagement1 = membermanagementService.selectById(introducerId);
-            BaseEntityWrapper<Activity> activityBaseEntityWrapper = new BaseEntityWrapper<>();
-            activityBaseEntityWrapper.eq("ruleexpression", 3);
-            Activity activity = activityService.selectOne(activityBaseEntityWrapper);
-            if (membermanagement1 != null) {
-                Integer ruleexpression = activity.getRuleexpression();
-                if (ruleexpression == 3) {//积分操作
-                    Double jifen = activity.getJifen();//
-                    //积分操作
-                    List<Membermanagement> membermanagements = new ArrayList<>();
-                    membermanagements.add(membermanagement1);
-                    //调用积分变动方法
-                    integralrecordController.insertIntegral(jifen, 9, membermanagements);
-                }
-                activityController.insertAcitvityMember(activity.getId() + "", membermanagement.getId() + "", ShiroKit.getUser().getDeptId());
-            }
+//            BaseEntityWrapper<Activity> activityBaseEntityWrapper = new BaseEntityWrapper<>();
+//            activityBaseEntityWrapper.eq("ruleexpression", 3);
+//            Activity activity = activityService.selectOne(activityBaseEntityWrapper);
+//            if (membermanagement1 != null) {
+//                Integer ruleexpression = activity.getRuleexpression();
+//                if (ruleexpression == 3) {//积分操作
+//                    Double jifen = activity.getJifen();//
+//                    //积分操作
+//                    List<Membermanagement> membermanagements = new ArrayList<>();
+//                    membermanagements.add(membermanagement1);
+//                    //调用积分变动方法
+//                    integralrecordController.insertIntegral(jifen, 9, membermanagements);
+//                }
+//                activityController.insertAcitvityMember(activity.getId() + "", membermanagement.getId() + "", ShiroKit.getUser().getDeptId());
+//            }
+            //获取推荐活动 被推荐活动
+            BaseEntityWrapper<Activity> baseEntityWrapper=new BaseEntityWrapper<Activity>();
+            baseEntityWrapper.eq("ruleexpression",3);
+            List<Activity> list1=activityService.selectList(baseEntityWrapper);//推荐人活动
+            baseEntityWrapper=new BaseEntityWrapper<Activity>();
+            baseEntityWrapper.eq("ruleexpression",4);
+            List<Activity> list2=activityService.selectList(baseEntityWrapper);//被推荐人活动
+            //分组推荐人与被推荐人
+
+            //推荐人写入推荐人活动领取次数
+            list1.forEach(a->{
+                MemberInactivity memberInactivity= new MemberInactivity();
+                memberInactivity.setActivityId(a.getId());
+                memberInactivity.setMemberId(membermanagement1.getId());
+                memberInactivity.setDeptId(ShiroKit.getUser().getDeptId());
+                memberInactivity.setCreateDt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                memberInactivityService.insert(memberInactivity);
+            });
+            //被推荐人写入被推荐人活动领取次数
+            list2.forEach(a->{
+                MemberInactivity memberInactivity= new MemberInactivity();
+                memberInactivity.setActivityId(a.getId());
+                memberInactivity.setMemberId(membermanagement.getId());
+                memberInactivity.setCreateDt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                memberInactivity.setDeptId(ShiroKit.getUser().getDeptId());
+                memberInactivityService.insert(memberInactivity);
+            });
         }
         return SUCCESS_TIP;
     }

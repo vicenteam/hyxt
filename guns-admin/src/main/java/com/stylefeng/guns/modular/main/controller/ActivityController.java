@@ -4,6 +4,8 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
+import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
@@ -59,6 +61,8 @@ public class ActivityController extends BaseController {
     private ActivityTask activityTask;
     @Autowired
     private MembermanagementController membermanagementController;
+    @Autowired
+    private IMemberInactivityService memberInactivityService;
 
     /**
      * 跳转到活动管理首页
@@ -270,8 +274,20 @@ public class ActivityController extends BaseController {
             membermanagements.add(membermanagement);
             //调用积分变动方法
             integralrecordController.insertIntegral(jifen, 13, membermanagements);
+        }else if (ruleexpression == 3||ruleexpression == 4){
+            //清除一条待领取活动信息
+            BaseEntityWrapper<MemberInactivity> baseEntityWrapper=new BaseEntityWrapper<MemberInactivity>();
+            baseEntityWrapper.eq("memberId",memberId);
+            baseEntityWrapper.eq("activityId",activityId);
+            List<MemberInactivity> list=memberInactivityService.selectList(baseEntityWrapper);
+            if(list.size()>=1){
+                MemberInactivity memberInactivity=list.get(0);
+                memberInactivityService.deleteById(memberInactivity.getId());
+            }else {
+                throw new GunsException(BizExceptionEnum.NO_PERMITION1);
+            }
         }
-        insertAcitvityMember(activityId, memberId,Integer.parseInt(activity.getDeptid()));
+            insertAcitvityMember(activityId, memberId,Integer.parseInt(activity.getDeptid()));
         return SUCCESS_TIP;
     }
 
