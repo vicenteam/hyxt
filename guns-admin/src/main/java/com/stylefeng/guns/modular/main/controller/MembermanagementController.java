@@ -301,7 +301,7 @@ public class MembermanagementController extends BaseController {
                     List<Membermanagement> membermanagements = new ArrayList<>();
                     membermanagements.add(membermanagement1);
                     //调用积分变动方法
-                    integralrecordController.insertIntegral(jifen, 1, membermanagements);
+                    integralrecordController.insertIntegral(jifen, 9, membermanagements);
                 }
                 activityController.insertAcitvityMember(activity.getId() + "", membermanagement.getId() + "", ShiroKit.getUser().getDeptId());
             }

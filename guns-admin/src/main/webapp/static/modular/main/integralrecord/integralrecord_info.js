@@ -59,12 +59,9 @@ IntegralrecordInfoDlg.close = function() {
  */
 IntegralrecordInfoDlg.collectData = function() {
     this
-    .set('id')
     .set('integral')
-    .set('target')
-    .set('type')
-    .set('memberid')
-    .set('createTime');
+    .set('typeId')
+    .set('memberId');
 }
 
 
@@ -93,7 +90,7 @@ IntegralrecordInfoDlg.addSubmit = function() {
         Feng.success("添加成功!");
         $("#introducerName").val("");
         $("#name").val("");
-        $("#memberid").val("");
+        $("#memberId").val("");
         $("#tel").val("");
         $("#address").val("");
         $("#integralSum").val("");

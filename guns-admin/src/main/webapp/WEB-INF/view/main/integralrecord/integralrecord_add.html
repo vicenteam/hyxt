@@ -4,7 +4,6 @@
         <div class="form-horizontal" id="integralrecordInfoTable">
             <input type="hidden" id="introducerId" name="introducerId"/>
             <input type="hidden" id="cardCode" name="cardCode"/>
-            <input type="hidden" id="memberid" name="memberid"/>
             <div class="row">
                 <div class="col-sm-4 b-r">
                     <#input id="introducerName" name="身份证号" underline="true" button="读卡" buttonId="read" disabled="disabled"/>
@@ -14,8 +13,14 @@
                     <#input id="address" name="联系地址" underline="true" disabled="disabled"/>
                     <#input id="integralSum" name="总共积分" underline="true" disabled="disabled"/>
                     <#input id="countPrice" name="可用积分" underline="true" disabled="disabled"/>
+                    <#Select name="积分类型" id="typeId" underline="true">
+                        @for(item in type){
+                            <option value="${item.id}" >${item.names}</option>
+                        @}
+                    </#Select>
                     <#input id="integral" name="获得积分的值"/>
                 </div>
+                <input type="hidden" id="memberId">
             </div>
 
             <div class="row btn-group-m-t">
@@ -162,7 +167,6 @@
     $("#read").click(function () {
         getUserInfo();
         var memberId = $("#introducerId").val();
-        // var memberId = $("#readDeviceCard").val();
         $.ajax({
             url: '/membermanagement/getMemberInfo',
             data: { memberId: memberId },
@@ -171,8 +175,8 @@
             success: function (data) {
                 $("#introducerName").val(data.cadID);
                 $("#name").val(data.name);
-                $("#memberid").val(data.id);
                 $("#tel").val(data.phone);
+                $("#memberId").val(data.id);
                 $("#address").val(data.address);
                 $("#integralSum").val(data.integral);
                 $("#countPrice").val(data.countPrice);
@@ -180,25 +184,5 @@
             }
         });
     });
-
-    // $(function () {
-    //     var memberId = 13;
-    //     $.ajax({
-    //         url: '/membermanagement/getMemberInfo',
-    //         data: { memberId: memberId },
-    //         type: 'POST',
-    //         async: false,
-    //         success: function (data) {
-    //             $("#introducerName").val(data.cadID);
-    //             $("#name").val(data.name);
-    //             $("#memberid").val(data.id);
-    //             $("#tel").val(data.phone);
-    //             $("#address").val(data.address);
-    //             $("#integralSum").val(data.integral);
-    //             $("#countPrice").val(data.countPrice);
-    //             $("#levelID").val(data.levelID);
-    //         }
-    //     });
-    // })
 </script>
 @}

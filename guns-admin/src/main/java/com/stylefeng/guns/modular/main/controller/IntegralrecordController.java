@@ -1,10 +1,13 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.annotion.BussinessLog;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -44,6 +47,8 @@ public class IntegralrecordController extends BaseController {
     private IMembermanagementService membermanagementService;
     @Autowired
     private MembermanagementController membermanagementController;
+    @Autowired
+    private IIntegralrecordtypeService integralrecordtypeService;
 
     /**
      * 跳转到新增积分首页
@@ -57,7 +62,11 @@ public class IntegralrecordController extends BaseController {
      * 跳转到添加新增积分
      */
     @RequestMapping("/integralrecord_add")
-    public String integralrecordAdd() {
+    public String integralrecordAdd(Model model) {
+        EntityWrapper tWrapper = new EntityWrapper();
+        tWrapper.like("names","xf");
+        List<Integralrecordtype> types = integralrecordtypeService.selectList(tWrapper);
+        model.addAttribute("type",types);
         return PREFIX + "integralrecord_add.html";
     }
 
@@ -91,13 +100,14 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Integralrecord integralrecord) {
+    public Object add(Double integral, Integer typeId, Integer memberId) {
+        System.out.println(integral+"     "+typeId+"     "+memberId);
         List<Membermanagement> membermanagements = new ArrayList<>();
         Membermanagement membermanagement = new Membermanagement();
-        membermanagement.setId(integralrecord.getMemberid());
+        membermanagement.setId(memberId);
         membermanagements.add(membermanagement);
         //积分添加操作
-        insertIntegral(integralrecord.getIntegral(),0,membermanagements);
+        insertIntegral(integral,typeId,membermanagements);
         return SUCCESS_TIP;
     }
 
@@ -113,7 +123,6 @@ public class IntegralrecordController extends BaseController {
         double nowIntegral = 0;
         double nowCountPrice = 0;
         for(Membermanagement memberId : mList){  //循环当前门店会员列表为
-//            System.out.println(" -------****------ "+memberId.getIntegral());
             if(memberId.getIntegral() != null && memberId.getCountPrice() != null){
                 nowIntegral = memberId.getIntegral();
                 nowCountPrice = memberId.getCountPrice();
@@ -123,7 +132,7 @@ public class IntegralrecordController extends BaseController {
                 nowCountPrice = mInfo.getCountPrice();
             }
             membermanagement.setId(memberId.getId());
-            if(type != 5){ // 判断是否为兑换
+            if(type != 13){ // 判断是否为兑换
                 membermanagement.setIntegral(nowIntegral+integral); //可用积分数 + 新增积分数
                 membermanagement.setCountPrice(nowCountPrice+integral); //总积分数 + 新增积分数
             }else {  //扣除积分
@@ -134,7 +143,7 @@ public class IntegralrecordController extends BaseController {
             membermanagementController.updateMemberLeave(memberId.getId()+"");
             //添加积分记录
             integralrecord.setIntegral(integral);
-            integralrecord.setType(type);
+            integralrecord.setTypeId(type);
             integralrecord.setCreateTime(DateUtil.getTime());
             integralrecord.setMemberid(memberId.getId());
             integralrecord.setDeptid(ShiroKit.getUser().getDeptId());

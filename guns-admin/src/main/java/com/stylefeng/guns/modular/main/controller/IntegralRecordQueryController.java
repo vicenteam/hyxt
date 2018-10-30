@@ -6,8 +6,10 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
+import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.system.model.Integralrecord;
+import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.model.User;
 import com.stylefeng.guns.modular.system.service.IUserService;
@@ -40,9 +42,13 @@ public class IntegralRecordQueryController extends BaseController {
     private IMembermanagementService membermanagementService;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IIntegralrecordtypeService integralrecordtypeService;
 
     @RequestMapping("")
     public String index(Model model){
+        List<Integralrecordtype> types = integralrecordtypeService.selectList(new EntityWrapper<Integralrecordtype>());
+        model.addAttribute("type",types);
         BaseEntityWrapper<User> wrapper = new BaseEntityWrapper<>();
         model.addAttribute("users",userService.selectList(wrapper));
         return PREFIX + "integralRecordQuery.html";
@@ -82,7 +88,7 @@ public class IntegralRecordQueryController extends BaseController {
         //把 membermanagement 与 user 条件放入 积分记录表实现条件分页查询
         Page<Integralrecord> page = new PageFactory<Integralrecord>().defaultPage();
         BaseEntityWrapper<Integralrecord> iWrapper = new BaseEntityWrapper<>();
-        if(! integralType.equals("-1")) iWrapper.like("type",integralType);
+        if(! integralType.equals("-1")) iWrapper.eq("typeId",integralType);
         if(mIdArray.length <= 0) mIdArray = new Integer[]{-1}; //判断数组 <=0 赋予初始值 方便查询
         iWrapper.in("memberid",mIdArray);
         if(uIdArray.length <= 0) uIdArray = new Integer[]{-1}; //判断数组 <=0 赋予初始值 方便查询
@@ -94,6 +100,7 @@ public class IntegralRecordQueryController extends BaseController {
         Page<Map<String, Object>> serverPage = integralrecordService.selectMapsPage(page, iWrapper);
         if (serverPage.getRecords().size() >= 0){
             for(Map<String, Object> map : serverPage.getRecords()){
+                map.put("typeName",integralrecordtypeService.selectById(map.get("typeId").toString()).getNames()); //获取积分类型名称
                 if(map.get("memberid") != null){
                     Membermanagement membermanagement = membermanagementService.selectById(map.get("memberid").toString());
                     map.put("memberName",membermanagement.getName());

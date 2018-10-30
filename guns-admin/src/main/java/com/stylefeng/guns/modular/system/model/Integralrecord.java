@@ -35,7 +35,7 @@ public class Integralrecord extends Model<Integralrecord> {
     /**
      * 积分类型(0购买新增 1推荐新人 2兑换)
      */
-    private Integer type;
+    private Integer typeId;
     /**
      * 会员id
      */
@@ -74,12 +74,12 @@ public class Integralrecord extends Model<Integralrecord> {
         this.target = target;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getTypeId() {
+        return typeId;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 
     public Integer getMemberid() {
@@ -133,7 +133,7 @@ public class Integralrecord extends Model<Integralrecord> {
         "id=" + id +
         ", integral=" + integral +
         ", target=" + target +
-        ", type=" + type +
+        ", typeId=" + typeId +
         ", memberid=" + memberid +
         ", createTime=" + createTime +
         ", deptid=" + deptid +

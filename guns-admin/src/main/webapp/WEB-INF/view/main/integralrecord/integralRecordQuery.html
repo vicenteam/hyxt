@@ -16,14 +16,11 @@
                                 <#NameCon id="cadId" name="身份证号" />
                             </div>
                             <div class="col-sm-2">
-                                <#SelectCon name="积分类型" id="integralType" underline="true">
+                                <#SelectCon name="积分类型" id="typeId" underline="true">
                                     <option value="-1">全部</option>
-                                    <option value="0">XF</option>
-                                    <option value="1">TJXR</option>
-                                    <option value="2">ZS</option>
-                                    <option value="3">JFQL</option>
-                                    <option value="4">JFHF</option>
-                                    <option value="5">DH</option>
+                                    @for(item in type){
+                                    <option value="${item.id}" >${item.names}</option>
+                                    @}
                                 </#SelectCon>
                             </div>
                             <div class="col-sm-2">

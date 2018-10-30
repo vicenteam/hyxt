@@ -269,7 +269,7 @@ public class ActivityController extends BaseController {
             membermanagement.setId(Integer.parseInt(memberId));
             membermanagements.add(membermanagement);
             //调用积分变动方法
-            integralrecordController.insertIntegral(jifen, 5, membermanagements);
+            integralrecordController.insertIntegral(jifen, 13, membermanagements);
         }
         insertAcitvityMember(activityId, memberId,Integer.parseInt(activity.getDeptid()));
         return SUCCESS_TIP;

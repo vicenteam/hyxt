@@ -95,7 +95,7 @@ public class IntegralRecordClearZeroController extends BaseController {
         Integralrecord clearM = new Integralrecord();
         for(Membermanagement m : mList){  //循环门店会员列表 并插入积分记录表
             clearM.setIntegral(m.getIntegral()); // 清零会员可用积分
-            clearM.setType(3);
+            clearM.setTypeId(11);
             clearM.setMemberid(m.getId());
             clearM.setDeptid(deptId);
             clearM.setStaffid(staffId);
@@ -129,7 +129,7 @@ public class IntegralRecordClearZeroController extends BaseController {
             i.setStaffid(integral.getStaffid());
             i.setMemberid(integral.getMemberid());
             i.setDeptid(integral.getDeptid());
-            i.setType(4);
+            i.setTypeId(12);
             i.setIntegral(integral.getIntegral());
             integralrecordService.insert(i);
         }

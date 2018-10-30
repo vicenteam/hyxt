@@ -7,7 +7,7 @@
         <id column="id" property="id" />
         <result column="integral" property="integral" />
         <result column="target" property="target" />
-        <result column="type" property="type" />
+        <result column="typeId" property="typeId" />
         <result column="memberid" property="memberid" />
         <result column="createTime" property="createTime" />
         <result column="deptid" property="deptid" />
@@ -17,7 +17,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, integral, target, type, memberid, createTime
+        id, integral, target, typeId, memberid, createTime
     </sql>
 
 

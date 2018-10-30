@@ -26,21 +26,7 @@ Integralrecord.initColumn = function () {
                      }
                 }},
             {title: '附加参数，如果是本人或新人购物获得积分，则该列的值是该购物记录的ID，如果是带新人或新人签到获得积分，则是所带新人的ID', field: 'target', visible: false, align: 'center', valign: 'middle'},
-            {title: '积分类型', field: 'type', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
-            if(value==0){
-                return 'XF';
-            }else if (value == 1) {
-                return 'TJXR';
-            }else if (value == 2){
-                return "ZS";
-            }else if (value == 3){
-                return "QLJF";
-            }else if (value == 4){
-                return "HFJF";
-            }else if (value == 5){
-                return "DH";
-            }
-            }},
+            {title: '积分类型', field: 'typeName', visible: true, align: 'center', valign: 'middle'},
             {title: '操作人', field: 'staffName', visible: true, align: 'center', valign: 'middle'},
             {title: '会员id', field: 'memberid', visible: false, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'}
@@ -69,7 +55,7 @@ Integralrecord.search = function () {
     queryData['operator'] = $("#operator").val();
     queryData['memberName'] = $("#memberName").val();
     queryData['cadId'] = $("#cadId").val();
-    queryData['integralType'] = $("#integralType").val();
+    queryData['integralType'] = $("#typeId").val();
     queryData['begindate'] = $("#begindate").val();
     queryData['enddate'] = $("#enddate").val();
     queryData['memberId'] = "";
@@ -96,7 +82,7 @@ Integralrecord.aaa = function () {
                     queryData['operator'] = $("#operator").val();
                     queryData['memberName'] = $("#memberName").val();
                     queryData['cadId'] = $("#cadId").val();
-                    queryData['integralType'] = $("#integralType").val();
+                    queryData['integralType'] = $("#typeId").val();
                     queryData['begindate'] = $("#begindate").val();
                     queryData['enddate'] = $("#enddate").val();
                     queryData['memberId'] = data.memberid;
@@ -107,7 +93,7 @@ Integralrecord.aaa = function () {
                         queryData['operator'] = $("#operator").val();
                         queryData['memberName'] = $("#memberName").val();
                         queryData['cadId'] = $("#cadId").val();
-                        queryData['integralType'] = $("#integralType").val();
+                        queryData['integralType'] = $("#typeId").val();
                         queryData['begindate'] = $("#begindate").val();
                         queryData['enddate'] = $("#enddate").val();
                         queryData['memberId'] = -1;
@@ -125,7 +111,7 @@ Integralrecord.form = function () {
     queryData['operator'] = $("#operator").val();
     queryData['memberName'] = $("#memberName").val();
     queryData['cadId'] = $("#cadId").val();
-    queryData['integralType'] = $("#integralType").val();
+    queryData['integralType'] = $("#typeId").val();
     queryData['begindate'] = $("#begindate").val();
     queryData['enddate'] = $("#enddate").val();
     queryData['memberId'] = -1;
