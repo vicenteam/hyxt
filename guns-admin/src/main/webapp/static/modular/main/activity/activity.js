@@ -76,7 +76,16 @@ Activity.initColumn = function () {
                 }
                 doma += '><i class="fa fa-edit"></i>领取</button>'
                 doma += '<button type="button" class="btn btn-primary button-margin" onclick="Activity.openActivityDetail(' + row.id + ')" id=""'
-                if (row.status != 0 && row.ruleexpression != 3) {
+                if (row.status != 1) {
+                    if( row.ruleexpression==3){
+
+                    }else if( row.ruleexpression==4){
+
+                    }else {
+                        doma += ' disabled="disabled"'
+
+                    }
+                }else {
                     doma += ' disabled="disabled"'
                 }
                 doma += '><i class="fa fa-arrows-alt"></i>修改</button>';
