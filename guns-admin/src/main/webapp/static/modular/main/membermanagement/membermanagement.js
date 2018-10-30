@@ -91,7 +91,7 @@ Membermanagement.openMembermanagementDetail = function (id) {
         var index = layer.open({
             type: 2,
             title: '会员基础信息详情',
-            area: ['800px', '420px'], //宽高
+            area: ['800px', '800px'], //宽高
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/membermanagement/membermanagement_update/' + id

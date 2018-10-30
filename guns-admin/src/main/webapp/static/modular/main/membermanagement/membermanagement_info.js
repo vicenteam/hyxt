@@ -221,7 +221,7 @@ $("#getUserPhoto").click(function () {
     var index = layer.open({
         type: 2,
         title: '图片采集',
-        area: ['800px', '400px'], //宽高
+        area: ['800px', '700px'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/membermanagement/membermanagement_userPhotoPage'
