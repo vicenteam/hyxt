@@ -276,7 +276,7 @@ public class ActivityController extends BaseController {
             integralrecordController.insertIntegral(jifen, 13, membermanagements);
         }else if (ruleexpression == 3||ruleexpression == 4){
             //清除一条待领取活动信息
-            BaseEntityWrapper<MemberInactivity> baseEntityWrapper=new BaseEntityWrapper<MemberInactivity>();
+            EntityWrapper<MemberInactivity> baseEntityWrapper=new EntityWrapper<MemberInactivity>();
             baseEntityWrapper.eq("memberId",memberId);
             baseEntityWrapper.eq("activityId",activityId);
             List<MemberInactivity> list=memberInactivityService.selectList(baseEntityWrapper);
