@@ -3,6 +3,7 @@
     <div class="ibox-content">
         <div class="form-horizontal" id="membermanagementInfoTable">
                  <input type="hidden" id="introducerId" name="introducerId"/>
+                <input type="hidden" id="introducerId2" name="introducerId2"/>
                  <input type="hidden" id="cardCode" name="cardCode"/>
             <input id="avatar" type="hidden" value="">
             <div class="row">
@@ -25,26 +26,27 @@
                         </#select>
                             <#input id="name" name="姓名" underline="true"/>
                     <#select id="sex" name="性别" underline="true">
-                    <option value="">请选择</option>
-                    <option value="1">男</option>
-                    <option value="2">女</option>
-                </#select>
+                        <option value="">请选择</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                    </#select>
                             <#input id="email" name="邮箱地址" underline="true"/>
                             <#input id="phone" name="联系方式" underline="true"/>
-                <#select id="isoldsociety" name="是否老年协会会员" underline="true">
-                <option value="">请选择</option>
-                <option value="1">是</option>
-                <option value="2">否</option>
-            </#select>
+                    <#input id="anotherName" name="关联卡片会员名称" underline="true" button="读卡" buttonId="read2" disabled="disabled"/>
+                    <#select id="isoldsociety" name="是否老年协会会员" underline="true">
+                        <option value="">请选择</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </#select>
                              <#input id="birthday" name="生日" underline="true"/>
                             <#AddressSelect id="province" province="province" name="所属地区"/>
                             <#AddressSelect id="city" city="city" name="所属区域"/>
                             <#AddressSelect id="district" district="district" name="所属区县"/>
                               <#input id="address" name="详细地址" underline="true"/>
                         <#select id="familyStatusID" name="家庭状态" underline="true">
-                        <option value="1">有子女</option>
-                        <option value="2">无子女</option>
-                    </#select>
+                            <option value="1">有子女</option>
+                            <option value="2">无子女</option>
+                        </#select>
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label">病史</label>
@@ -200,10 +202,13 @@
 <script>
     $("#write").click(function () {
         getXieKaVal();
-    })
+    });
     $("#read").click(function () {
         getUserInfo2();
-    })
+    });
+    $("#read2").click(function () { //关联卡会员信息读取
+        getUserInfo3();
+    });
 </script>
 <script>
     $(function () {

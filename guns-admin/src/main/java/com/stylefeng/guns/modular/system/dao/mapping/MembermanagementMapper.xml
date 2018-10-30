@@ -34,6 +34,7 @@
         <result column="recommendMember" property="recommendMember" />
         <result column="address" property="address" />
         <result column="countPrice" property="countPrice" />
+        <result column="relation" property="relation"/>
         <result column="avatar" property="avatar" />
         <result column="deptId" property="deptId" />
         <result column="token" property="token" />
@@ -41,7 +42,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, cadID, NAME, telphone, sex, email, phone, state, integral, levelID, cardID, createTime, isoldsociety, birthday, deptName, introducerId, province, city, district, medicalHistory, familyStatusID, staffID, countyID, townshipid, healthStatus, CheckINTime1, CheckINTime2, recommendMember, address, countPrice, avatar, deptId, token
+        id, cadID, NAME, telphone, sex, email, phone, state, integral, levelID, cardID, createTime, isoldsociety, birthday, deptName, introducerId, province, city, district, medicalHistory, familyStatusID, staffID, countyID, townshipid, healthStatus, CheckINTime1, CheckINTime2, recommendMember, address, countPrice, relation, avatar, deptId, token
     </sql>
 
     <update id="updateIntegralRollBack" parameterType="com.stylefeng.guns.modular.system.model.Integralrecord">

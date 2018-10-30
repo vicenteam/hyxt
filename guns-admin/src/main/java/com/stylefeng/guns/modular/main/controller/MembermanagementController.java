@@ -250,12 +250,21 @@ public class MembermanagementController extends BaseController {
 
     /**
      * 新增会员管理
+     * @param membermanagement
+     * @param cardCode
+     * @param baMedicals
+     * @param code
+     * @param introducerId2 //关联卡片memberid
+     * @return
+     * @throws Exception
      */
     @BussinessLog(value = "新增会员管理", key = "addMember")
     @RequestMapping(value = "/add")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Membermanagement membermanagement, String cardCode, String baMedicals, String code) throws Exception {
+    public Object add(Membermanagement membermanagement, String cardCode, String baMedicals, String code
+                    ,String introducerId2) throws Exception {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");//生成关联字符串
         if (StringUtils.isEmpty(code)) throw new Exception("请进行读卡操作！");
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         membermanagement.setDeptId("" + ShiroKit.getUser().getDeptId());
@@ -269,7 +278,12 @@ public class MembermanagementController extends BaseController {
 
         if (membermanagement != null && StringUtils.isEmpty(membermanagement.getAvatar()))
             membermanagement.setAvatar("-");
+        membermanagement.setRelation(uuid); //存入关联字符串
         membermanagementService.insert(membermanagement);
+        Membermanagement otherMember = membermanagementService.selectById(introducerId2);
+        otherMember.setRelation(uuid); //存入关联字符串
+        membermanagementService.updateById(otherMember);
+
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
 //        memberCardBaseEntityWrapper.eq("code", cardCode);
         memberCardBaseEntityWrapper.eq("code", code);

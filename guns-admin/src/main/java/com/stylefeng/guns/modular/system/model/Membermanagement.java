@@ -116,6 +116,7 @@ public class Membermanagement extends Model<Membermanagement> {
      * 总消费金额
      */
     private Double countPrice;
+    private String relation;
     /**
      * 用户图片名称
      */
@@ -365,6 +366,14 @@ public class Membermanagement extends Model<Membermanagement> {
 
     public void setCountPrice(Double countPrice) {
         this.countPrice = countPrice;
+    }
+
+    public String getRelation() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation = relation;
     }
 
     public String getAvatar() {

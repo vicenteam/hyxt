@@ -505,16 +505,27 @@ function getUserInfo() {
     ajax.setData({value:$("#readDeviceCard").val()})
     ajax.start();
 }
-    function getUserInfo2() {
-        var uuid=readData2();
-        var ajax = new $ax(Feng.ctxPath + "/membermanagement/getUserInfo", function (data) {
-            $("#introducerId").val(data.memberid);
-            $("#introducerName").val(data.name);
-        }, function (data) {
-            Feng.error("获取数据失败!" + data.responseJSON.message + "!");
-        });
-        // ajax.setData({value:$("#readData").val()})
-        ajax.setData({value:$("#otherCardUUID").val()})
-        ajax.start();
-    }
-
+function getUserInfo2() {
+    var uuid=readData2();
+    var ajax = new $ax(Feng.ctxPath + "/membermanagement/getUserInfo", function (data) {
+        $("#introducerId").val(data.memberid);
+        $("#introducerName").val(data.name);
+    }, function (data) {
+        Feng.error("获取数据失败!" + data.responseJSON.message + "!");
+    });
+    // ajax.setData({value:$("#readData").val()})
+    ajax.setData({value:$("#otherCardUUID").val()})
+    ajax.start();
+}
+function getUserInfo3() {
+    readData();
+    var ajax = new $ax(Feng.ctxPath + "/membermanagement/getUserInfo", function (data) {
+        $("#introducerId2").val(data.memberid);
+        $("#anotherName").val(data.name);
+    }, function (data) {
+        Feng.error("获取数据失败!" + data.responseJSON.message + "!");
+    });
+    // ajax.setData({value:$("#readData").val()})
+    ajax.setData({value:$("#readDeviceCard").val()})
+    ajax.start();
+}

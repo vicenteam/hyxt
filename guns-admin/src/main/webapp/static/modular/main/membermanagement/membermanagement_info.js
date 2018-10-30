@@ -102,6 +102,8 @@ MembermanagementInfoDlg.collectData = function() {
     .set('deptId')
     .set('cardCode')
     .set('avatar')
+    .set("introducerId2")
+    .set("anotherName")
     .set('token');
 }
 
