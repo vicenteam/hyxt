@@ -13,11 +13,11 @@
                     <#input id="address" name="联系地址" underline="true" disabled="disabled"/>
                     <#input id="integralSum" name="总共积分" underline="true" disabled="disabled"/>
                     <#input id="countPrice" name="可用积分" underline="true" disabled="disabled"/>
-                    <#Select name="积分类型" id="typeId" underline="true">
+                    <#select name="积分类型" id="typeId" underline="true">
                         @for(item in type){
                             <option value="${item.id}" >${item.names}</option>
                         @}
-                    </#Select>
+                    </#select>
                     <#input id="integral" name="获得积分的值"/>
                 </div>
                 <input type="hidden" id="memberId">
