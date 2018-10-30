@@ -220,7 +220,7 @@ MembermanagementInfoDlg.eaa = function() {
 $("#getUserPhoto").click(function () {
     var index = layer.open({
         type: 2,
-        title: '图片采集',
+        title: '拍照',
         area: ['800px', '700px'], //宽高
         fix: false, //不固定
         maxmin: true,
