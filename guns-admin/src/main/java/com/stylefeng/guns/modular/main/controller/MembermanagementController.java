@@ -278,11 +278,13 @@ public class MembermanagementController extends BaseController {
 
         if (membermanagement != null && StringUtils.isEmpty(membermanagement.getAvatar()))
             membermanagement.setAvatar("-");
-        membermanagement.setRelation(uuid); //存入关联字符串
+        if(! StringUtils.isEmpty(introducerId2)){
+            membermanagement.setRelation(uuid); //存入关联字符串
+            Membermanagement otherMember = membermanagementService.selectById(introducerId2);
+            otherMember.setRelation(uuid); //存入关联字符串
+            membermanagementService.updateById(otherMember);
+        }
         membermanagementService.insert(membermanagement);
-        Membermanagement otherMember = membermanagementService.selectById(introducerId2);
-        otherMember.setRelation(uuid); //存入关联字符串
-        membermanagementService.updateById(otherMember);
 
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
 //        memberCardBaseEntityWrapper.eq("code", cardCode);
