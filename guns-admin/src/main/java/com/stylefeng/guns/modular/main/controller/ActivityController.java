@@ -305,8 +305,10 @@ public class ActivityController extends BaseController {
             baseEntityWrapper.eq("cadID",condition);
             membermanagement=membermanagementService.selectOne(baseEntityWrapper);
         }else if(type==1){
-
-
+            Object obj=membermanagementController.getUserInfo(condition);
+            if(!obj.equals("202")){
+                membermanagement=(Membermanagement)obj;
+            }
         }else if(type==2){
             membermanagement=membermanagementService.selectById(condition);
         }
@@ -349,7 +351,8 @@ public class ActivityController extends BaseController {
         Object obj=membermanagementController.getUserInfo(condition);
         if(!obj.equals("202")){
             membermanagement=(Membermanagement)obj;
-        }
+
+          }
         }
         Page<ActivityMember> result =null;
         System.out.println(membermanagement!=null);
