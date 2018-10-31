@@ -147,6 +147,8 @@ if($("#readDeviceCard").val().length==0){
         $("#medicalHistory").val("")
         $("#birthday").val("")
         $("#readDeviceCard").val("")
+        $("#introducerId2").val("")
+        $("#anotherName").val("")
 
     },function(data){
         Feng.error("添加失败!" + data.responseJSON.message + "!");

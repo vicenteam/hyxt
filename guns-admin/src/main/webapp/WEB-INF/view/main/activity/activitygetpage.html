@@ -201,6 +201,8 @@
     </br>
 
     <div>
+        <input type="hidden" id="introducerId">
+        <input type="hidden" id="introducerName">
         <button onclick="readDeviceCard()">读取卡片</button>:<input type="text" id="readDeviceCard">
         <button onclick="readData()">读取数据</button>:<input id="readData" type="text" maxlength="3000" size="60">
         <button onclick="writeData()">写入数据</button>:<input id="writeData" type="text" maxlength="3000" size="60" placeholder="长度为32位 字符规则(0-9|a-f)">
@@ -210,8 +212,9 @@
 <script src="${ctxPath}/static/device/device.js"></script>
 <script>
     function readCard(){
-        getUserInfo();
-        var memberId = $("#introducerId").val();
+        readDeviceCard();
+        DevBeep();
+        var memberId = $("#readDeviceCard").val();
 
         var queryData = {};
         queryData['condition'] = memberId;

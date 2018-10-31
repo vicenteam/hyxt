@@ -335,8 +335,24 @@ function readDeviceCard() {
         }
         else if(CZx_32Ctrl.lErrorCode == -22)
         {
-            document.getElementById("readDeviceCard").value = "";
             readDeviceCard2();
+            // alert("读取卡片UID，错误码为：" + CZx_32Ctrl.lErrorCode);
+        }else {
+            OpenDevice();
+        }
+        return ret;
+
+    }
+    function readDeviceCard3() {
+        var ret = CZx_32Ctrl.RfCard(DeviceHandle.value,0);
+        if(CZx_32Ctrl.lErrorCode == 0)
+        {
+            //UidM1.value = CZx_32Ctrl.HexAsc(ret,4);
+            $("#otherCardUUID2").val(ret)
+        }
+        else if(CZx_32Ctrl.lErrorCode == -22)
+        {
+            readDeviceCard3();
             // alert("读取卡片UID，错误码为：" + CZx_32Ctrl.lErrorCode);
         }else {
             OpenDevice();
@@ -364,6 +380,24 @@ function readData() {
 }
     function readData2() {
        var uuid= readDeviceCard2();
+        //校验密码
+        RfAuthenticationKey();
+        var ret = CZx_32Ctrl.RfRead(DeviceHandle.value,BlockM1.value);
+        if(CZx_32Ctrl.lErrorCode == 0)
+        {
+            document.getElementById("readData").value = ret;//CZx_32Ctrl.HexAsc(ret,17)
+            // alert("读数据成功");
+            DevBeep();
+        }
+        else
+        {
+            document.getElementById("readData").value = "";
+            alert("读数据失败，错误码为：" + CZx_32Ctrl.lErrorCode);
+        }
+        return uuid;
+    }
+    function readData3() {
+        var uuid= readDeviceCard3();
         //校验密码
         RfAuthenticationKey();
         var ret = CZx_32Ctrl.RfRead(DeviceHandle.value,BlockM1.value);
@@ -494,7 +528,7 @@ function getBuKaUUID() {
  * 根据卡片数据获取用户信息
  */
 function getUserInfo() {
-    readData();
+        readData();
     var ajax = new $ax(Feng.ctxPath + "/membermanagement/getUserInfo", function (data) {
         $("#introducerId").val(data.memberid);
         $("#introducerName").val(data.name);
@@ -518,7 +552,7 @@ function getUserInfo2() {
     ajax.start();
 }
 function getUserInfo3() {
-    readData();
+    readData3();
     var ajax = new $ax(Feng.ctxPath + "/membermanagement/getUserInfo", function (data) {
         $("#introducerId2").val(data.memberid);
         $("#anotherName").val(data.name);
@@ -526,6 +560,6 @@ function getUserInfo3() {
         Feng.error("获取数据失败!" + data.responseJSON.message + "!");
     });
     // ajax.setData({value:$("#readData").val()})
-    ajax.setData({value:$("#readDeviceCard").val()})
+    ajax.setData({value:$("#otherCardUUID2").val()})
     ajax.start();
 }

@@ -322,8 +322,9 @@ public class ActivityController extends BaseController {
             membermanagement=membermanagementService.selectOne(baseEntityWrapper);
         }else if(type==1){
             Object obj=membermanagementController.getUserInfo(condition);
-            if(!obj.equals("202")){
-                membermanagement=(Membermanagement)obj;
+            if(!(obj).equals("202")){
+                MemberCard memberCard=(MemberCard)obj;
+                membermanagement=membermanagementService.selectById(memberCard.getMemberid());
             }
         }else if(type==2){
             membermanagement=membermanagementService.selectById(condition);
@@ -365,9 +366,10 @@ public class ActivityController extends BaseController {
             membermanagement=membermanagementService.selectOne(baseEntityWrapper);
         }else if(type==1){
         Object obj=membermanagementController.getUserInfo(condition);
-        if(!obj.equals("202")){
-            membermanagement=(Membermanagement)obj;
+        if(!(obj).equals("202")){
 
+            MemberCard memberCard=(MemberCard)obj;
+            membermanagement=membermanagementService.selectById(memberCard.getMemberid());
           }
         }
         Page<ActivityMember> result =null;
