@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -110,7 +112,7 @@ public class UserMgrController extends BaseController {
         model.addAttribute(user);
         model.addAttribute("roleName", ConstantFactory.me().getRoleName(user.getRoleid()));
         model.addAttribute("deptName", ConstantFactory.me().getDeptName(user.getDeptid()));
-        LogObjectHolder.me().set(user);
+//        LogObjectHolder.me().set(user);
         return PREFIX + "user_edit.html";
     }
 
@@ -214,6 +216,7 @@ public class UserMgrController extends BaseController {
     @RequestMapping("/edit")
     @BussinessLog(value = "修改管理员", key = "account", dict = UserDict.class)
     @ResponseBody
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Tip edit(@Valid UserDto user, BindingResult result) throws NoPermissionException {
         if (result.hasErrors()) {
             throw new GunsException(BizExceptionEnum.REQUEST_NULL);
@@ -223,12 +226,30 @@ public class UserMgrController extends BaseController {
 
         if (ShiroKit.hasRole(Const.ADMIN_NAME)) {
             this.userService.updateById(UserFactory.editUser(user, oldUser));
+            //更改密码
+            if(user.getPassword()!=null){
+                if(!user.getPassword().equals(oldUser.getPassword())){
+                    User userPass = this.userService.selectById(user.getId());
+                    userPass.setSalt(oldUser.getSalt());
+                    userPass.setPassword(ShiroKit.md5(user.getPassword(),oldUser.getSalt()));
+                    this.userService.updateById(userPass);
+                }
+            }
             return SUCCESS_TIP;
         } else {
             assertAuth(user.getId());
             ShiroUser shiroUser = ShiroKit.getUser();
             if (shiroUser.getId().equals(user.getId())) {
                 this.userService.updateById(UserFactory.editUser(user, oldUser));
+                //更改密码
+                if(user.getPassword()!=null){
+                    if(!user.getPassword().equals(oldUser.getPassword())){
+                        User userPass = this.userService.selectById(user.getId());
+                        userPass.setSalt(oldUser.getSalt());
+                        userPass.setPassword(ShiroKit.md5(user.getPassword(),oldUser.getSalt()));
+                        this.userService.updateById(userPass);
+                    }
+                }
                 return SUCCESS_TIP;
             } else {
                 throw new GunsException(BizExceptionEnum.NO_PERMITION);

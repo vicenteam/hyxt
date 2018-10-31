@@ -15,9 +15,12 @@
                <span style="font-size: 25px;width: 300px" >会议场次:</span> <span id="checkName" style="font-size: 25px;"></span>  <button type="submit" class="btn btn-primary " style="width: 20%;margin-top: -10px" id="chuangjianbtn">创建签到</button>
            </div>
        </div><br>
-        <div style="width: 850px;height: 300px;">
-            <div style="height: 100%;width: 45%;border:1px solid lavender">
+        <div style="width: 950px;height: 300px;">
+            <div style="height: 100%;width: 45%;border:1px solid lavender" >
                 <img src="/s.jpg" id="avatar"/>
+            </div>
+            <div style="height: 100%;width: 45%;border:1px solid lavender;float: left;display: none" id="display1">
+                <img src="/s.jpg" id="avatar2"/>
             </div>
             <div style="height: 100%;width: 52%;float: right;margin-top: -300px">
                 <div style="clear:both;">
@@ -55,7 +58,43 @@
                         <label class="col-sm-3 control-label" style="text-align: right">可用积分:</label><label class="col-sm-5 control-label" style="text-align: left" id="integral"></label>
                     </div>
                 </div>
+<!---->
 
+                <div style="clear:both;margin-top: 41px;display: none"  id="display2"><span><strong>关联卡信息</strong> </span>
+                    <div style="width: 100%;height: 30px">
+                        <label class="col-sm-3 control-label" style="text-align: right">姓名:</label><label class="col-sm-5 control-label" style="text-align: left" id="memberName2"></label>
+                    </div><br>
+                    <div style="width: 100%;height: 30px">
+                        <label class="col-sm-3 control-label" style="text-align: right">身份证号:</label><label class="col-sm-5 control-label" style="text-align: left" id="memberCardId2"></label>
+                    </div><br>
+                    <div style="width: 100%;height: 30px">
+                        <label class="col-sm-3 control-label" style="text-align: right">性别:</label><label class="col-sm-5 control-label" style="text-align: left" id="sex2"></label>
+                    </div><br>
+                    <div style="width: 100%;height: 30px">
+                        <label class="col-sm-3 control-label" style="text-align: right">会员卡等级:</label><label class="col-sm-5 control-label" style="text-align: left" >
+                        <select disabled="disabled" id="memberlevelId2">
+                            <option value=""></option>
+                            @for(item in leave){
+                            <option value="${item.id}">${item.cardname}</option>
+                            @}
+                        </select>
+
+                    </label>
+                    </div><br>
+                    <div style="width: 100%;height: 30px">
+                        <label class="col-sm-3 control-label" style="text-align: right">服务员工:</label><label class="col-sm-5 control-label" style="text-align: left">
+                        <select disabled="disabled" id="mamberStaffId2">
+                            <option value=""></option>
+                            @for(item in staffs){
+                            <option value="${item.id}">${item.name}</option>
+                            @}
+                        </select>
+                    </label>
+                    </div><br>
+                    <div style="width: 100%;height: 30px">
+                        <label class="col-sm-3 control-label" style="text-align: right">可用积分:</label><label class="col-sm-5 control-label" style="text-align: left" id="integral2"></label>
+                    </div>
+                </div>
 
 
             </div>
@@ -65,7 +104,7 @@
             <button type="submit" class="btn btn-primary" style="width: 50%" onclick="readCardbtn()">读 卡</button>
         </div>
         <div style="height: 100%;width: 45%;float: right;margin-top: -60px">
-            <button type="submit" class="btn btn-primary " style="width: 30%" id="check1" onclick="check1()">首签</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary " style="width: 30%;" id="check1" onclick="check1()">首签</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <!--<button type="submit" class="btn btn-primary " style="width: 30%" id="check2" onclick="check2()">复签</button>-->
         </div>
     </div>
@@ -252,6 +291,15 @@
         $("#mamberStaffId").val("");
         $("#manmberid").val("");
     }
+    function cleninfo2() {
+        $("#memberName2").html("");
+        $("#memberCardId2").html("");
+        $("#sex2").html("");
+        $("#integral2").html("");
+        $("#memberlevelId2").val("");
+        $("#mamberStaffId2").val("");
+        $("#manmberid2").val("");
+    }
     function bangding(data) {
         $("#memberName").html(data.name);
         $("#memberCardId").html(data.cadID);
@@ -274,6 +322,17 @@
             $("#check2").attr("disabled","disabled")
         }
     }
+    function bangding2(data) {
+        $("#memberName2").html(data.name);
+        $("#memberCardId2").html(data.cadID);
+        $("#sex2").html(data.sex==1?"男":"女");
+        $("#integral2").html(data.integral);
+        $("#memberlevelId2").val(data.levelID);
+        $("#mamberStaffId2").val(data.staffID);
+        $("#manmberid2").val(data.id);
+        $("#avatar2").attr('src','/kaptcha/'+data.avatar);
+        $("#avatar2").css({"width":"300px","height":"300px"});
+    }
     //读卡按钮
     function readCardbtn() {
         var checkid=$("#checkid").val();
@@ -282,6 +341,25 @@
             var ajax = new $ax(Feng.ctxPath + "/checkin/getUserInfo", function (data) {
                console.log(data)
                 bangding(data)
+                //判断是否存在关联卡
+                if(data.relation.length!=0){
+                   //查询关联卡信息 并绑定值
+                    showDisplay()
+                    addButtionClass()
+                    var ajax = new $ax(Feng.ctxPath + "/checkin/getRelationUserInfo", function (data) {
+                        console.log(data)
+                        bangding2(data)
+                    }, function (data) {
+                        cleninfo2()
+                        hiddenDisplay();
+                        cleanButtionClass()
+                    });
+                    ajax.setData({delId:data.id,relation:data.relation})
+                    ajax.start();
+                }else {
+                    hiddenDisplay();
+                    cleanButtionClass()
+                }
             }, function (data) {
                 console.log(data)
                 Feng.error("此卡信息为空 获取数据失败!!");
@@ -319,6 +397,23 @@
             ajax.start();
     }
 
+</script>
+<script>
+    function addButtionClass() {
+        $("#check1").css("margin-top","281px");
+    }
+    function cleanButtionClass() {
+        $("#check1").css("margin-top","");
+    }
+
+    function showDisplay() {
+        $("#display1").css("display","block")
+        $("#display2").css("display","block")
+    }
+    function hiddenDisplay() {
+        $("#display1").css("display","none")
+        $("#display2").css("display","none")
+    }
 </script>
 <script src="${ctxPath}/static/device/device.js"></script>
 @}

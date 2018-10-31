@@ -54,20 +54,22 @@ public class CheckinController extends BaseController {
      * 跳转到签到场次首页
      */
     @RequestMapping("")
-    public String index( Model model) {
+    public String index(Model model) {
         List list = membershipcardtypeService.selectList(new BaseEntityWrapper<>());
-        model.addAttribute("leave",list);
+        model.addAttribute("leave", list);
         List list1 = userService.selectList(new BaseEntityWrapper<>());
-        model.addAttribute("staffs",list1);
+        model.addAttribute("staffs", list1);
         Dept dept = deptService.selectById(ShiroKit.getUser().getDeptId());
-        model.addAttribute("dept",dept);
+        model.addAttribute("dept", dept);
         return PREFIX + "checkin.html";
     }
+
     //签到场次
     @RequestMapping("checkinIndex")
-    public String checkinIndex( Model model) {
+    public String checkinIndex(Model model) {
         return PREFIX + "checkinIndex.html";
     }
+
     /**
      * 跳转到添加签到场次
      */
@@ -82,7 +84,7 @@ public class CheckinController extends BaseController {
     @RequestMapping("/checkin_update/{checkinId}")
     public String checkinUpdate(@PathVariable Integer checkinId, Model model) {
         Checkin checkin = checkinService.selectById(checkinId);
-        model.addAttribute("item",checkin);
+        model.addAttribute("item", checkin);
         LogObjectHolder.me().set(checkin);
         return PREFIX + "checkin_edit.html";
     }
@@ -95,8 +97,8 @@ public class CheckinController extends BaseController {
     public Object list(String condition) {
         Page<Checkin> page = new PageFactory<Checkin>().defaultPage();
         BaseEntityWrapper<Checkin> baseEntityWrapper = new BaseEntityWrapper<>();
-        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("screenings",condition);
-        baseEntityWrapper.orderBy("startDate",false);
+        if (!StringUtils.isEmpty(condition)) baseEntityWrapper.like("screenings", condition);
+        baseEntityWrapper.orderBy("startDate", false);
         Page<Checkin> result = checkinService.selectPage(page, baseEntityWrapper);
         return super.packForBT(result);
     }
@@ -143,128 +145,146 @@ public class CheckinController extends BaseController {
 
     /**
      * 获取签到场次信息
+     *
      * @return
      */
     @RequestMapping(value = "/getcheck")
     @ResponseBody
     public Object getcheck() {
         BaseEntityWrapper<Checkin> checkinBaseEntityWrapper = new BaseEntityWrapper<>();
-        checkinBaseEntityWrapper.ge("startDate",DateUtil.formatDate(new Date(),"yyyy-MM-dd")+" 00:00:00");
+        checkinBaseEntityWrapper.ge("startDate", DateUtil.formatDate(new Date(), "yyyy-MM-dd") + " 00:00:00");
         List<Checkin> list = checkinService.selectList(checkinBaseEntityWrapper);
-        if(list.size()==0){
-            Checkin checkin=new Checkin();
-            checkin.setCreateDate(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-            checkin.setStartDate(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-            checkin.setDeptId(ShiroKit.getUser().getDeptId()+"");
+        if (list.size() == 0) {
+            Checkin checkin = new Checkin();
+            checkin.setCreateDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            checkin.setStartDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            checkin.setDeptId(ShiroKit.getUser().getDeptId() + "");
             checkin.setStatus(1);
-            String s = DateUtil.formatDate(new Date(), "yyyyMMdd")+"01";
+            String s = DateUtil.formatDate(new Date(), "yyyyMMdd") + "01";
             checkin.setScreenings(Integer.parseInt(s));
             checkinService.insert(checkin);
             return checkin;
-        }else {
+        } else {
             Checkin checkinold = list.get(list.size() - 1);
-            Checkin checkin=new Checkin();
-            checkin.setCreateDate(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-            checkin.setStartDate(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-            checkin.setDeptId(ShiroKit.getUser().getDeptId()+"");
+            Checkin checkin = new Checkin();
+            checkin.setCreateDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            checkin.setStartDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            checkin.setDeptId(ShiroKit.getUser().getDeptId() + "");
             checkin.setStatus(1);
-            int v=(checkinold.getScreenings()+1);
+            int v = (checkinold.getScreenings() + 1);
             checkin.setScreenings(v);
             checkinService.insert(checkin);
             return checkin;
         }
     }
+
     @BussinessLog(value = "结束签到场次", key = "jsqdcc")
     @RequestMapping(value = "/updatecheck")
     @ResponseBody
     public Object updatecheck(String checkid) {
         Checkin checkin = checkinService.selectById(checkid);
         checkin.setStatus(2);
-        checkin.setEndDate(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        checkin.setEndDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         checkinService.updateById(checkin);
         return SUCCESS_TIP;
     }
+
     @RequestMapping(value = "/getUserInfo")
     @ResponseBody
-    public Object getUserInfo(String value,String checkid) {
+    public Object getUserInfo(String value, String checkid) {
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
-        memberCardBaseEntityWrapper.eq("code",value);
+        memberCardBaseEntityWrapper.eq("code", value);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
-        if(memberCard!=null&&memberCard.getMemberid()!=null){
+        if (memberCard != null && memberCard.getMemberid() != null) {
             BaseEntityWrapper<Membermanagement> membermanagementBaseEntityWrapper = new BaseEntityWrapper<>();
-            membermanagementBaseEntityWrapper.eq("id",memberCard.getMemberid());
-            Map<String,Object> map = membermanagementService.selectMap(membermanagementBaseEntityWrapper);
+            membermanagementBaseEntityWrapper.eq("id", memberCard.getMemberid());
+            Map<String, Object> map = membermanagementService.selectMap(membermanagementBaseEntityWrapper);
             //获取当前签到场次签到信息
             BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
-            qiandaoCheckinBaseEntityWrapper.eq("memberid",memberCard.getMemberid());
-            qiandaoCheckinBaseEntityWrapper.eq("checkinid",checkid);
+            qiandaoCheckinBaseEntityWrapper.eq("memberid", memberCard.getMemberid());
+            qiandaoCheckinBaseEntityWrapper.eq("checkinid", checkid);
             QiandaoCheckin qiandaoCheckin = qiandaoCheckinService.selectOne(qiandaoCheckinBaseEntityWrapper);
-            if(qiandaoCheckin==null){
-                    //进行首签
-                map.put("qiandao",0);
-            }else {
-               if(StringUtils.isEmpty( qiandaoCheckin.getUpdatetime())){
-                   //进行复签
-                   map.put("qiandao",1);
-               }else {
-                   //不能进行操作
-                   map.put("qiandao",2);
-               }
+            if (qiandaoCheckin == null) {
+                //进行首签
+                map.put("qiandao", 0);
+            } else {
+                if (StringUtils.isEmpty(qiandaoCheckin.getUpdatetime())) {
+                    //进行复签
+                    map.put("qiandao", 1);
+                } else {
+                    //不能进行操作
+                    map.put("qiandao", 2);
+                }
             }
             return map;
         }
         return null;
     }
+
+    //
+    @RequestMapping(value = "/getRelationUserInfo")
+    @ResponseBody
+    public Object getRelationUserInfo(String delId, String relation) {
+        BaseEntityWrapper<Membermanagement> membermanagementBaseEntityWrapper = new BaseEntityWrapper<>();
+        membermanagementBaseEntityWrapper.eq("relation", relation);
+        membermanagementBaseEntityWrapper.notIn("id", delId);
+        Membermanagement membermanagement = membermanagementService.selectOne(membermanagementBaseEntityWrapper);
+        if (membermanagement != null) {
+            return membermanagement;
+        }
+        return null;
+    }
+
     @RequestMapping(value = "/findUserCheckInfoByMonth")
     @ResponseBody
-    public Object findUserCheckInfoByMonth(String memberId,String valMonth,String valYear) {
-        Map<String,Object> result=new HashMap<>();
+    public Object findUserCheckInfoByMonth(String memberId, String valMonth, String valYear) {
+        Map<String, Object> result = new HashMap<>();
         BaseEntityWrapper<QiandaoCheckin> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
-        memberCardBaseEntityWrapper.eq("memberid",memberId);
-        String starTime=valYear+"-";
-        if(valMonth.length()==1){
-            starTime+="0"+valMonth+"-01 00:00:01";
-        }else {
-            starTime+=valMonth+"-01 00:00:01";
+        memberCardBaseEntityWrapper.eq("memberid", memberId);
+        String starTime = valYear + "-";
+        if (valMonth.length() == 1) {
+            starTime += "0" + valMonth + "-01 00:00:01";
+        } else {
+            starTime += valMonth + "-01 00:00:01";
         }
-        String endTime=valYear+"-";
-        if(valMonth.length()==1){
-            endTime+="0"+valMonth+"-31 23:59:59";
-        }else {
-            endTime+=valMonth+"-31 23:59:59";
+        String endTime = valYear + "-";
+        if (valMonth.length() == 1) {
+            endTime += "0" + valMonth + "-31 23:59:59";
+        } else {
+            endTime += valMonth + "-31 23:59:59";
         }
-        memberCardBaseEntityWrapper.between("createtime",starTime,endTime);
+        memberCardBaseEntityWrapper.between("createtime", starTime, endTime);
         List<QiandaoCheckin> list = qiandaoCheckinService.selectList(memberCardBaseEntityWrapper);
-        StringBuilder sb=new StringBuilder();
-        List<Map<String,Object>> list1=new ArrayList<>();
-        for(QiandaoCheckin qi:list){
+        StringBuilder sb = new StringBuilder();
+        List<Map<String, Object>> list1 = new ArrayList<>();
+        for (QiandaoCheckin qi : list) {
             String createtime = qi.getCreatetime();
             //日期转化
             Date parse = DateUtil.parse(createtime, "yyyy-MM-dd HH:mm:ss");
             String s = DateUtil.formatDate(parse, "d/M/yyyy");
             String[] split = createtime.split(" ");
-            String time1=split[1];
-            String backgroundcolor="#29b451";
-            if(StringUtils.isEmpty(qi.getUpdatetime())){
-                backgroundcolor="#dbbf22";
+            String time1 = split[1];
+            String backgroundcolor = "#29b451";
+            if (StringUtils.isEmpty(qi.getUpdatetime())) {
+                backgroundcolor = "#dbbf22";
             }
-            sb.append("<div class='added-event' data-date='"+s+"' data-time='"+time1+"' data-title='首签时间' style='background-color:"+backgroundcolor+";'></div>");
-            Map<String,Object> map=new HashMap<>();
-            map.put("time",s);
-            map.put("color",backgroundcolor);
+            sb.append("<div class='added-event' data-date='" + s + "' data-time='" + time1 + "' data-title='首签时间' style='background-color:" + backgroundcolor + ";'></div>");
+            Map<String, Object> map = new HashMap<>();
+            map.put("time", s);
+            map.put("color", backgroundcolor);
             list1.add(map);
-            if(!StringUtils.isEmpty(qi.getUpdatetime())){
+            if (!StringUtils.isEmpty(qi.getUpdatetime())) {
                 //日期转化
                 String updatetime = qi.getUpdatetime();
                 Date parse2 = DateUtil.parse(updatetime, "yyyy-MM-dd HH:mm:ss");
                 String s2 = DateUtil.formatDate(parse2, "d/M/yyyy");
                 String[] split2 = updatetime.split(" ");
-                String time12=split2[1];
-                sb.append("<div class='added-event' data-date='"+s2+"' data-time='"+time12+"' data-title='复签时间' style='background-color:"+backgroundcolor+";'></div>");
+                String time12 = split2[1];
+                sb.append("<div class='added-event' data-date='" + s2 + "' data-time='" + time12 + "' data-title='复签时间' style='background-color:" + backgroundcolor + ";'></div>");
             }
         }
-        result.put("dom",sb.toString());
-        result.put("timeObj",list1);
+        result.put("dom", sb.toString());
+        result.put("timeObj", list1);
         return result;
     }
 }

@@ -17,7 +17,7 @@
 
 					<#input id="roleid" name="角色" underline="true" value="${roleName}" disabled="disabled"/>
 
-					<#input id="email" name="邮箱" type="email" value="${user.email}"/>
+				<#input id="password" name="密码" underline="true" type="password" value="${user.password}"/>
 				<#avatar id="avatar" name="头像" underline="true" avatarImg="${user.avatar}"/>
 				</div>
 				<div class="col-sm-6">
@@ -32,6 +32,7 @@
 						style="background-color: #ffffff !important;"/>
 
 						<#input id="phone" name="电话" value="${user.phone}"/>
+						<#input id="email" name="邮箱" type="email" value="${user.email}"/>
 					</div>
 				</div>
 			</div>
