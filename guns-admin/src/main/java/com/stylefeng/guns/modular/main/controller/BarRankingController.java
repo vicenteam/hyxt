@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
+import com.stylefeng.guns.modular.main.service.IMemberCardService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
+import com.stylefeng.guns.modular.system.model.MemberCard;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
 import com.stylefeng.guns.modular.system.utils.BarRankingExcel;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -22,9 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 积分排名图表controller
@@ -39,6 +40,10 @@ public class BarRankingController extends BaseController {
     private IMembermanagementService membermanagementService;
     @Autowired
     private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IMemberCardService memberCardService;
+
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @RequestMapping("")
     public String index() {
@@ -92,4 +97,28 @@ public class BarRankingController extends BaseController {
         }finally {
         }
     }
+
+    @RequestMapping(value = "/count")
+    public String cardCount(){
+        return PREFIX + "barCardCount.html";
+    }
+
+    @RequestMapping(value = "/countData")
+    @ResponseBody
+    public Object countData(String startDate) throws Exception{
+        Integer[] num = new Integer[7];
+        for (int i=0; i<num.length; i++){
+            Date date = simpleDateFormat.parse(startDate);
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            calendar.add(calendar.DATE, i);//把日期往后增加一天.整数往后推,负数往前移动
+            date = calendar.getTime(); //获得比较前一天时间
+            BaseEntityWrapper<MemberCard> cWrapper = new BaseEntityWrapper<>();
+            cWrapper.like("createtime",simpleDateFormat.format(date));
+            Integer cards = memberCardService.selectCount(cWrapper);
+            num[i] = cards;
+        }
+        return num;
+    }
+
 }
