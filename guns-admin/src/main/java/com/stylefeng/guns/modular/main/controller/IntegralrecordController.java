@@ -64,7 +64,7 @@ public class IntegralrecordController extends BaseController {
     @RequestMapping("/integralrecord_add")
     public String integralrecordAdd(Model model) {
         EntityWrapper tWrapper = new EntityWrapper();
-        tWrapper.like("names","xf");
+        tWrapper.notIn("names","积分清零","积分恢复","积分兑换");
         List<Integralrecordtype> types = integralrecordtypeService.selectList(tWrapper);
         model.addAttribute("type",types);
         return PREFIX + "integralrecord_add.html";
@@ -94,7 +94,7 @@ public class IntegralrecordController extends BaseController {
     }
 
     /**
-     * 新增新增积分
+     * 新增积分
      */
     @BussinessLog(value = "新增会员积分", key = "xzhyjf")
     @RequestMapping(value = "/add")
