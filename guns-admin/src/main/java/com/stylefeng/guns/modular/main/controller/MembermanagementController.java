@@ -279,10 +279,14 @@ public class MembermanagementController extends BaseController {
         if (membermanagement != null && StringUtils.isEmpty(membermanagement.getAvatar()))
             membermanagement.setAvatar("-");
         if(! StringUtils.isEmpty(introducerId2)){
-            membermanagement.setRelation(uuid); //存入关联字符串
             Membermanagement otherMember = membermanagementService.selectById(introducerId2);
-            otherMember.setRelation(uuid); //存入关联字符串
-            membermanagementService.updateById(otherMember);
+            if(StringUtils.isEmpty(otherMember.getRelation())){
+                otherMember.setRelation(uuid); //存入关联字符串
+                membermanagementService.updateById(otherMember);
+                membermanagement.setRelation(uuid); //存入关联字符串
+            }else {
+                throw new Exception("关联卡片已存在关联会员！");
+            }
         }
         membermanagementService.insert(membermanagement);
 
