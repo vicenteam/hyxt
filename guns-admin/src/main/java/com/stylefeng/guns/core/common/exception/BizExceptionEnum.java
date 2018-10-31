@@ -55,6 +55,7 @@ public enum BizExceptionEnum implements ServiceExceptionEnum {
     REQUEST_NULL(400, "请求有错误"),
     SESSION_TIMEOUT(400, "会话超时"),
     SERVER_ERROR(500, "服务器异常"),
+    SERVER_ERROR1(500, "当天无签到场次信息无法进行补签!"),
 
     /**
      * token异常

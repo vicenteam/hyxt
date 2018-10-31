@@ -2,6 +2,8 @@ package com.stylefeng.guns.modular.main.controller;
 
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
+import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.modular.main.service.ICheckinService;
 import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
@@ -34,7 +36,7 @@ public class MemberRepairController extends BaseController {
 
     @RequestMapping(value = "/repair")
     @ResponseBody
-    public Object repair(String memberId,String time){
+    public Object repair(String memberId,String time) throws Exception {
         String[] val1 = time.split(" ");
         String[] val2 = val1[0].split("-");
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -66,12 +68,16 @@ public class MemberRepairController extends BaseController {
             BaseEntityWrapper<Checkin> cWrapper = new BaseEntityWrapper<>();
             cWrapper.eq("screenings",defaultVal);
             Checkin checkin = checkinService.selectOne(cWrapper); //查询签到场次
-            qian.setCreatetime(sdf.format(date));
-            qian.setUpdatetime(sdf.format(date));
-            qian.setStatus(0);
-            qian.setDeptid(ShiroKit.getUser().getDeptId());
-            qian.setMemberid(Integer.parseInt(memberId));
-            qiandaoCheckinService.insert(qian); //如果没有当前场次的记录
+           try {
+               qian.setCreatetime(sdf.format(date));
+               qian.setUpdatetime(sdf.format(date));
+               qian.setStatus(0);
+               qian.setDeptid(ShiroKit.getUser().getDeptId());
+               qian.setMemberid(Integer.parseInt(memberId));
+               qiandaoCheckinService.insert(qian); //如果没有当前场次的记录
+           }catch (Exception e){
+               throw new GunsException(BizExceptionEnum.SERVER_ERROR1);
+           }
         }
         return SUCCESS_TIP;
     }
