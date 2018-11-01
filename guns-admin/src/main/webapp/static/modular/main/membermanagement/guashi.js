@@ -179,6 +179,7 @@ Membermanagement.search = function () {
     queryData['city'] = $("#city").val();
     queryData['district'] = $("#district").val();
     queryData['townshipid'] = $("#townshipid").val();
+    queryData['memberid'] = "";
     Membermanagement.table.refresh({query: queryData});
 };
 Membermanagement.search1 = function () {
