@@ -14,8 +14,10 @@ import com.stylefeng.guns.core.log.LogObjectHolder;
 import com.stylefeng.guns.core.node.ZTreeNode;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.ToolUtil;
+import com.stylefeng.guns.modular.main.service.IActivityService;
 import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.main.service.IProvCityDistService;
+import com.stylefeng.guns.modular.system.model.Activity;
 import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.model.Membershipcardtype;
 import com.stylefeng.guns.modular.system.model.ProvCityDist;
@@ -53,6 +55,8 @@ public class DeptController extends BaseController {
     private IProvCityDistService provCityDistService;
     @Autowired
     private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IActivityService activityService;
 
     /**
      * 跳转到部门管理首页
@@ -102,7 +106,7 @@ public class DeptController extends BaseController {
     @Permission
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object add(Dept dept,String province, String city, String district) {
+    public Object add(Dept dept, String province, String city, String district) {
         if (ToolUtil.isOneEmpty(dept, dept.getSimplename())) {
             throw new GunsException(BizExceptionEnum.REQUEST_NULL);
         }
@@ -116,20 +120,38 @@ public class DeptController extends BaseController {
         //自动初始化会员配置
         BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
-        for(Membershipcardtype membershipcardtype:list){
+        for (Membershipcardtype membershipcardtype : list) {
             Membershipcardtype membershipcardtype1 = new Membershipcardtype();
             membershipcardtype1.setCardname(membershipcardtype.getCardname());
             membershipcardtype1.setUpamount(membershipcardtype.getUpamount());
             membershipcardtype1.setTips(membershipcardtype.getTips());
             membershipcardtype1.setStatus(membershipcardtype.getStatus());
-            membershipcardtype1.setCreatedt(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-            if(membershipcardtype.getCheckleavenum()!=null){
+            membershipcardtype1.setCreatedt(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            if (membershipcardtype.getCheckleavenum() != null) {
                 membershipcardtype1.setCheckleavenum(membershipcardtype.getCheckleavenum());
             }
             membershipcardtype1.setLeaves(membershipcardtype.getLeaves());
-            membershipcardtype1.setDeptid(dept.getId()+"");
+            membershipcardtype1.setDeptid(dept.getId() + "");
             membershipcardtypeService.insert(membershipcardtype1);
         }
+        //初始化admin活动
+        List<Activity> list1 = activityService.selectList(membershipcardtypeBaseEntityWrapper);
+        list1.forEach(a->{
+            Activity activity=new Activity();
+            activity.setStatus(a.getStatus());
+            activity.setJifen(a.getJifen());
+            activity.setCreater(a.getCreater());
+            activity.setDeptid(dept.getId()+"");
+            activity.setCreatetime(a.getCreatetime());
+            activity.setBegindate(a.getBegindate());
+            activity.setContent(a.getContent());
+            activity.setEnddate(a.getEnddate());
+            activity.setMaxgetnum(a.getMaxgetnum());
+            activity.setName(a.getName());
+            activity.setQiandaonum(a.getQiandaonum());
+            activity.setRuleexpression(a.getRuleexpression());
+            activityService.insert(activity);
+        });
 
         return insert;
     }
@@ -163,7 +185,7 @@ public class DeptController extends BaseController {
     @RequestMapping(value = "/update")
     @Permission
     @ResponseBody
-    public Object update(Dept dept,String province, String city, String district) {
+    public Object update(Dept dept, String province, String city, String district) {
         if (ToolUtil.isEmpty(dept) || dept.getId() == null) {
             throw new GunsException(BizExceptionEnum.REQUEST_NULL);
         }
