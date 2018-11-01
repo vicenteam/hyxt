@@ -40,7 +40,25 @@
 
             option = {
                 title: {
-                    text: '门店会员积分前10',
+                    text: '门店积分 Top榜10',
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['最高气温','最低气温']
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: {readOnly: false},
+                        magicType: {type: ['line', 'bar']},
+                        restore: {},
+                        saveAsImage: {}
+                    }
                 },
                 color: ['#3398DB'],
                 tooltip : {
@@ -71,7 +89,7 @@
                 ],
                 series : [
                     {
-                        name:'总积分',
+                        name:'积分',
                         type:'bar',
                         barWidth: '60%',
                         data: sData

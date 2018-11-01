@@ -115,15 +115,38 @@
         title: {
             text: '本周会员开卡数统计',
         },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['最高气温','最低气温']
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: 'none'
+                },
+                dataView: {readOnly: false},
+                magicType: {type: ['line', 'bar']},
+                restore: {},
+                saveAsImage: {}
+            }
+        },
         xAxis: {
             type: 'category',
             data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} 人次'
+            }
         },
         series: [{
             data: sData,
+            name:'开卡人次',
+            barWidth: '60%',
             type: 'line'
         }]
     };
