@@ -15,7 +15,7 @@ Activity.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
         {title: '活动编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
-        {title: '活动名称', field: 'name', visible: true, align: 'center', width: '100px', valign: 'middle'},
+        {title: '活动名称', field: 'name', visible: true, align: 'center', width: '170px', valign: 'middle'},
         {title: '活动内容', field: 'content', visible: true, align: 'center', valign: 'middle'},
         {title: '活动创建者', field: 'creater', visible: true, width: '100px', align: 'center', valign: 'middle'},
         {
@@ -39,9 +39,21 @@ Activity.initColumn = function () {
                 }
             }
         },
-        {title: '签到次数', field: 'qiandaonum', visible: true, align: 'center', width: '100px', valign: 'middle'},
-        {title: '活到开始时间', field: 'begindate', visible: true, align: 'center', width: '160px', valign: 'middle'},
-        {title: '活动结束时间', field: 'enddate', visible: true, align: 'center', width: '160px', valign: 'middle'},
+        {title: '签到次数', field: 'qiandaonum', visible: true, align: 'center', width: '80px', valign: 'middle'},
+        {title: '活到开始时间', field: 'begindate', visible: true, align: 'center', width: '100px', valign: 'middle',formatter: function (value, row, index) {
+                if(value.length>=10){
+                    return value.substring(0,10);
+                }else {
+                    return value;
+                }
+            }},
+        {title: '活动结束时间', field: 'enddate', visible: true, align: 'center', width: '100px', valign: 'middle',formatter: function (value, row, index) {
+                if(value.length>=10){
+                    return value.substring(0,10);
+                }else {
+                    return value;
+                }
+            }},
         {
             title: '活动状态',
             field: 'status',
@@ -67,6 +79,7 @@ Activity.initColumn = function () {
             visible: true,
             align: 'center',
             valign: 'middle',
+         width: '280px',
             formatter: function (value, row, index) {
                 var doma = '<button type="button" class="btn btn-primary button-margin" onclick="Activity.lingqu(' + row.id + ')" id="" '
                 if (row.status != 2) {
