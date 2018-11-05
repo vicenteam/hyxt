@@ -15,8 +15,14 @@ Activity.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
         {title: '活动编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
-        {title: '活动名称', field: 'name', visible: true, align: 'center' , valign: 'middle'},
-        {title: '领取时间', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
+        {title: '活动名称', field: 'name', visible: true, width:"300px",align: 'center' , valign: 'middle'},
+        {title: '领取时间', field: 'createtime', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                if(value.length>=10){
+                    return value.substring(0,10);
+                }else {
+                    return value;
+                }
+            }},
     ];
 };
 
@@ -38,7 +44,13 @@ ActivityMember.initColumn = function () {
         {field: 'selectItem', radio: true},
         {title: '活动编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
         {title: '名称', field: 'name', visible: true, align: 'center' , valign: 'middle'},
-        {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle'},
+        {title: '创建时间', field: 'createTime', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+            if(value.length>=10){
+                return value.substring(0,10);
+            }else {
+                return value;
+            }
+            }},
         {title: '查看活动领取详情', field: 'status', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
                 return '<button type="button" class="btn btn-primary button-margin" onclick="Activity3.search(' + row.id + ')" id="">查看详情</button>'
             }},
@@ -59,8 +71,14 @@ Activity3.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
         {title: '活动编号', field: 'id', visible: false, align: 'center', valign: 'middle'},
-        {title: '活动名称', field: 'name', visible: true, align: 'center' , valign: 'middle'},
-        {title: '领取时间', field: 'createtime', visible: true, align: 'center', valign: 'middle'},
+        {title: '活动名称', field: 'name', visible: true,width:"300px", align: 'center' , valign: 'middle'},
+        {title: '领取时间', field: 'createtime', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) {
+                if(value.length>=10){
+                    return value.substring(0,10);
+                }else {
+                    return value;
+                }
+            }},
     ];
 };
 
