@@ -1,5 +1,8 @@
 package com.stylefeng.guns.core.shiro;
 
+import com.stylefeng.guns.core.support.HttpKit;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,6 +26,14 @@ public class ShiroUser implements Serializable {
 
 
     public Integer getId() {
+        HttpServletRequest request = HttpKit.getRequest();
+        if(id== null){
+            try {
+                id=Integer.parseInt(request.getParameter("userId"));
+            }catch (Exception e){
+
+            }
+        }
         return id;
     }
 
@@ -47,6 +58,14 @@ public class ShiroUser implements Serializable {
     }
 
     public Integer getDeptId() {
+        HttpServletRequest request = HttpKit.getRequest();
+        if(deptId== null){
+            try {
+                deptId=Integer.parseInt(request.getParameter("deptId"));
+            }catch (Exception e){
+
+            }
+        }
         return deptId;
     }
 

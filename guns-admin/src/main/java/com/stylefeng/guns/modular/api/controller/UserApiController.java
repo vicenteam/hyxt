@@ -7,6 +7,7 @@ import com.stylefeng.guns.modular.api.base.BaseController;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.model.user.UserModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
+import com.stylefeng.guns.modular.main.controller.QiandaoCheckinController;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
 import com.stylefeng.guns.modular.system.model.User;
 import io.swagger.annotations.ApiImplicitParam;
@@ -72,4 +73,5 @@ public class UserApiController extends BaseController {
         }
         return userResponseData;
     }
+
 }
