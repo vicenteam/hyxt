@@ -3,6 +3,9 @@ package com.stylefeng.guns.modular.api.model.user;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ApiModel(value = "登录用户model")
 public class UserModel {
     @ApiModelProperty("用户id")
@@ -20,6 +23,9 @@ public class UserModel {
     @ApiModelProperty("性别（1：男 2：女）")
     private Integer sex;
     @ApiModelProperty("状态(1：启用  2：冻结  3：删除）")
+    private Integer status;
+    @ApiModelProperty("角色资源")
+    private List<UserResouceModel> userResouceModels=new ArrayList<>();
 
     private Integer userId;
 
@@ -31,7 +37,14 @@ public class UserModel {
         this.userId = userId;
     }
 
-    private Integer status;
+
+    public List<UserResouceModel> getUserResouceModels() {
+        return userResouceModels;
+    }
+
+    public void setUserResouceModels(List<UserResouceModel> userResouceModels) {
+        this.userResouceModels = userResouceModels;
+    }
 
     public Integer getStatus() {
         return status;

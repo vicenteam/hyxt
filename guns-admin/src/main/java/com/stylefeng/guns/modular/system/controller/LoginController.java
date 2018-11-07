@@ -85,7 +85,12 @@ public class LoginController extends BaseController {
 //        }
         //
         if (ShiroKit.isAuthenticated() || ShiroKit.getUser() != null) {
-            return REDIRECT + "/";
+            if(ShiroKit.getUser().getId()==null){
+                return "/login.html";
+            }else {
+                return REDIRECT + "/";
+            }
+
         } else {
             try{
                 String path="";

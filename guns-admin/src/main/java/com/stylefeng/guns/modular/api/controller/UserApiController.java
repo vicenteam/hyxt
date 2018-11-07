@@ -1,15 +1,19 @@
 package com.stylefeng.guns.modular.api.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.shiro.ShiroUser;
 import com.stylefeng.guns.modular.api.base.BaseController;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.model.user.UserModel;
+import com.stylefeng.guns.modular.api.model.user.UserResouceModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
 import com.stylefeng.guns.modular.main.controller.QiandaoCheckinController;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
+import com.stylefeng.guns.modular.system.model.Relation;
 import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.service.IRelationService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 终端系统用户api
  */
@@ -35,6 +41,8 @@ public class UserApiController extends BaseController {
     private final Logger log = LoggerFactory.getLogger(UserApiController.class);
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private IRelationService relationService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation("登录")
@@ -74,4 +82,93 @@ public class UserApiController extends BaseController {
         return userResponseData;
     }
 
+    public void initUserResouceList(UserModel change){
+        List<UserResouceModel> list=change.getUserResouceModels();
+        //新增会员
+        UserResouceModel userResouceModel1=new UserResouceModel();
+        userResouceModel1.setResouceName("新增会员");
+        EntityWrapper<Relation> relationEntityWrapper1= new EntityWrapper<Relation>();
+        relationEntityWrapper1.eq("roleid",change.getRoleid());
+        relationEntityWrapper1.eq("menuid","173");
+       int i1= relationService.selectCount(relationEntityWrapper1);
+        userResouceModel1.setSecurity(i1==0?false:true);
+        list.add(userResouceModel1);
+        //会员签到
+        UserResouceModel userResouceModel2=new UserResouceModel();
+        userResouceModel2.setResouceName("会员签到");
+        EntityWrapper<Relation> relationEntityWrapper2= new EntityWrapper<Relation>();
+        relationEntityWrapper2.eq("roleid",change.getRoleid());
+        relationEntityWrapper2.eq("menuid","171");
+        int i2= relationService.selectCount(relationEntityWrapper2);
+        userResouceModel2.setSecurity(i2==0?false:true);
+        list.add(userResouceModel2);
+         //积分查询
+        UserResouceModel userResouceModel3=new UserResouceModel();
+        userResouceModel3.setResouceName("积分查询");
+        EntityWrapper<Relation> relationEntityWrapper3= new EntityWrapper<Relation>();
+        relationEntityWrapper3.eq("roleid",change.getRoleid());
+        relationEntityWrapper3.eq("menuid","175");
+        int i3= relationService.selectCount(relationEntityWrapper3);
+        userResouceModel3.setSecurity(i3==0?false:true);
+        list.add(userResouceModel3);
+        //新增积分
+        UserResouceModel userResouceModel4=new UserResouceModel();
+        userResouceModel4.setResouceName("新增积分");
+        EntityWrapper<Relation> relationEntityWrapper4= new EntityWrapper<Relation>();
+        relationEntityWrapper4.eq("roleid",change.getRoleid());
+        relationEntityWrapper4.eq("menuid","176");
+        int i4= relationService.selectCount(relationEntityWrapper4);
+        userResouceModel4.setSecurity(i4==0?false:true);
+        list.add(userResouceModel4);
+        //签到查询
+        UserResouceModel userResouceModel5=new UserResouceModel();
+        userResouceModel5.setResouceName("签到查询");
+        EntityWrapper<Relation> relationEntityWrapper5= new EntityWrapper<Relation>();
+        relationEntityWrapper5.eq("roleid",change.getRoleid());
+        relationEntityWrapper5.eq("menuid","178");
+        int i5= relationService.selectCount(relationEntityWrapper5);
+        userResouceModel5.setSecurity(i5==0?false:true);
+        list.add(userResouceModel5);
+        //挂失补卡
+        UserResouceModel userResouceModel6=new UserResouceModel();
+        userResouceModel6.setResouceName("挂失补卡");
+        EntityWrapper<Relation> relationEntityWrapper6= new EntityWrapper<Relation>();
+        relationEntityWrapper6.eq("roleid",change.getRoleid());
+        relationEntityWrapper6.eq("menuid","179");
+        int i6= relationService.selectCount(relationEntityWrapper6);
+        userResouceModel6.setSecurity(i6==0?false:true);
+        list.add(userResouceModel6);
+        //积分赠送
+        UserResouceModel userResouceModel7=new UserResouceModel();
+        userResouceModel7.setResouceName("积分赠送");
+        EntityWrapper<Relation> relationEntityWrapper7= new EntityWrapper<Relation>();
+        relationEntityWrapper7.eq("roleid",change.getRoleid());
+        relationEntityWrapper7.eq("menuid","181");
+        int i7= relationService.selectCount(relationEntityWrapper7);
+        userResouceModel7.setSecurity(i7==0?false:true);
+        list.add(userResouceModel7);
+        //会员补签
+        UserResouceModel userResouceModel8=new UserResouceModel();
+        userResouceModel8.setResouceName("会员补签");
+        EntityWrapper<Relation> relationEntityWrapper8= new EntityWrapper<Relation>();
+        relationEntityWrapper8.eq("roleid",change.getRoleid());
+        relationEntityWrapper8.eq("menuid","192");
+        int i8= relationService.selectCount(relationEntityWrapper8);
+        userResouceModel8.setSecurity(i8==0?false:true);
+        list.add(userResouceModel8);
+        //数据报表
+        UserResouceModel userResouceModel9=new UserResouceModel();
+        userResouceModel9.setResouceName("数据报表");
+        EntityWrapper<Relation> relationEntityWrapper9= new EntityWrapper<Relation>();
+        relationEntityWrapper9.eq("roleid",change.getRoleid());
+        relationEntityWrapper9.eq("menuid","187");
+        int i9= relationService.selectCount(relationEntityWrapper9);
+        userResouceModel9.setSecurity(i9==0?false:true);
+        list.add(userResouceModel9);
+        //复签
+        UserResouceModel userResouceModel10=new UserResouceModel();
+        userResouceModel10.setResouceName("复签");
+        userResouceModel10.setSecurity(i2==0?false:true);
+        list.add(userResouceModel10);
+    }
 }
