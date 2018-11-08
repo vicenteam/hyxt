@@ -24,10 +24,20 @@ public class UserModel {
     private Integer sex;
     @ApiModelProperty("状态(1：启用  2：冻结  3：删除）")
     private Integer status;
+    @ApiModelProperty("门店名称")
+    private String deptName;
     @ApiModelProperty("角色资源")
     private List<UserResouceModel> userResouceModels=new ArrayList<>();
 
     private Integer userId;
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
 
     public Integer getUserId() {
         return userId;

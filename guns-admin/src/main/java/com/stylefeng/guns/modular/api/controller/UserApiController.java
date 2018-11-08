@@ -11,8 +11,10 @@ import com.stylefeng.guns.modular.api.model.user.UserResouceModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
 import com.stylefeng.guns.modular.main.controller.QiandaoCheckinController;
 import com.stylefeng.guns.modular.system.dao.UserMapper;
+import com.stylefeng.guns.modular.system.model.Dept;
 import com.stylefeng.guns.modular.system.model.Relation;
 import com.stylefeng.guns.modular.system.model.User;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IRelationService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,6 +45,8 @@ public class UserApiController extends BaseController {
     private UserMapper userMapper;
     @Autowired
     private IRelationService relationService;
+    @Autowired
+    private IDeptService deptService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation("登录")
@@ -75,6 +79,10 @@ public class UserApiController extends BaseController {
             UserModel change = new ReflectionObject<UserModel>().change(user, new UserModel());
             change.setUserId(change.getId());
             change.setAvatar("http://47.104.252.44:8081/kaptcha/"+ change.getAvatar());//上线更改地址
+            if(change.getDeptid()!=null){
+                Dept dept = deptService.selectById(change.getDeptid());
+                if(dept!=null) change.setDeptName(dept.getFullname());
+            }
             userResponseData.setDataCollection(change);
         } else {
             throw new Exception("用户名或密码错误!");
