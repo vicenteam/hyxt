@@ -37,8 +37,9 @@ public class FirstCheckinApiController extends BaseController {
     private IMembershipcardtypeService membershipcardtypeService;
     @Autowired
     private IUserService userService;
-@Autowired
-private QiandaoCheckinController qiandaoCheckinController;
+    @Autowired
+    private QiandaoCheckinController qiandaoCheckinController;
+
     @RequestMapping(value = "/getcheck", method = RequestMethod.POST)
     @ApiOperation("创建签到场次信息")
     @ApiImplicitParams({
@@ -102,7 +103,7 @@ private QiandaoCheckinController qiandaoCheckinController;
                         //性别
                         if (userInfo.get("sex").equals("1")) {
                             firstCheckinUserModel.setSex("男");
-                        }else  if (userInfo.get("sex").equals("2")){
+                        } else if (userInfo.get("sex").equals("2")) {
                             firstCheckinUserModel.setSex("女");
                         }
                         firstCheckinUserModelResponseData.setDataCollection(firstCheckinUserModel);
@@ -129,9 +130,9 @@ private QiandaoCheckinController qiandaoCheckinController;
             @ApiImplicitParam(required = true, name = "memberId", value = "卡用户id", paramType = "query"),
             @ApiImplicitParam(required = true, name = "checkid", value = "签到场次id", paramType = "query"),
     })
-    public ResponseData checkIn(RequstData requstData,Integer memberId,String checkid) throws Exception {
-        ResponseData responseData=new ResponseData();
-        qiandaoCheckinController.add(""+memberId,checkid);
+    public ResponseData checkIn(RequstData requstData, Integer memberId, String checkid) throws Exception {
+        ResponseData responseData = new ResponseData();
+        qiandaoCheckinController.add("" + memberId, checkid);
         return responseData;
     }
 }
