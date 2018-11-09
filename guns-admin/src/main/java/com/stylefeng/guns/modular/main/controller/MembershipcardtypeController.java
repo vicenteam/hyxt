@@ -121,6 +121,9 @@ public class MembershipcardtypeController extends BaseController {
     @ResponseBody
     public Object add(Membershipcardtype membershipcardtype) {
         membershipcardtype.setCreatedt(DateUtil.getTime());
+        if(membershipcardtype.getLeaves()==0){
+            membershipcardtype.setCheckleavenum(0);
+        }
         membershipcardtypeService.insert(membershipcardtype);
         return SUCCESS_TIP;
     }
