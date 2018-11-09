@@ -254,7 +254,7 @@ public class MembermanagementController extends BaseController {
      * @param cardCode
      * @param baMedicals
      * @param code
-     * @param introducerId2 //关联卡片memberid
+     * @param otherMemberId //关联卡memberId
      * @return
      * @throws Exception
      */
@@ -263,7 +263,7 @@ public class MembermanagementController extends BaseController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(Membermanagement membermanagement, String cardCode, String baMedicals, String code
-                    ,String introducerId2) throws Exception {
+                    ,String otherMemberId) throws Exception {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");//生成关联字符串
         if (StringUtils.isEmpty(code)) throw new Exception("请进行读卡操作！");
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -278,8 +278,8 @@ public class MembermanagementController extends BaseController {
 
         if (membermanagement != null && StringUtils.isEmpty(membermanagement.getAvatar()))
             membermanagement.setAvatar("-");
-        if(! StringUtils.isEmpty(introducerId2)){
-            Membermanagement otherMember = membermanagementService.selectById(introducerId2);
+        if(! StringUtils.isEmpty(otherMemberId)){
+            Membermanagement otherMember = membermanagementService.selectById(otherMemberId);
             if(StringUtils.isEmpty(otherMember.getRelation())){
                 otherMember.setRelation(uuid); //存入关联字符串
                 membermanagementService.updateById(otherMember);
