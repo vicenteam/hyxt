@@ -7,12 +7,15 @@ import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.base.BaseController;
 import com.stylefeng.guns.modular.api.model.memerber.MemberInfoModel;
 import com.stylefeng.guns.modular.api.model.memerber.MemberModel;
+import com.stylefeng.guns.modular.api.model.memerber.MembermanagementModel;
 import com.stylefeng.guns.modular.api.model.memerber.RecommendModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
+import com.stylefeng.guns.modular.main.controller.MembermanagementController;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
 import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +34,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/memberClientInfo")
+@Api(description = "会员信息")
 public class MemberInfoController extends BaseController {
     private final Logger log = LoggerFactory.getLogger(MemberInfoController.class);
 
@@ -48,6 +52,9 @@ public class MemberInfoController extends BaseController {
     private IQiandaoCheckinService qiandaoCheckinService;
     @Autowired
     private MemberApiController memberApiController;
+    @Autowired
+    private MembermanagementController membermanagementController;
+
 
     @RequestMapping(value = "resultInfo",method = RequestMethod.POST)
     @ApiOperation("会员详情获取")
@@ -201,5 +208,35 @@ public class MemberInfoController extends BaseController {
             throw new Exception("");
         }
         return resultInfo;
+    }
+
+    @RequestMapping(value = "addMember",method = RequestMethod.POST)
+    @ApiOperation("新增会员")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "code", value = "新开卡code", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "baMedicals", value = "健康信息"),
+    })
+    public ResponseData saveMemberInfo(RequstData requstData, MembermanagementModel membermanagementModel, String cardCode, String baMedicals, String code
+            , String otherMemberId) throws Exception{
+        ResponseData responseData = new ResponseData();
+        Membermanagement membermanagement = new Membermanagement(); //将值装入 membermanagement 会员基础信息类
+        membermanagement.setCadID(membermanagementModel.getCadID());
+        membermanagement.setIntroducerId(membermanagementModel.getIntroducerId());
+        membermanagement.setAvatar(membermanagementModel.getAvatar());
+        membermanagement.setStaffID(membermanagementModel.getStaffID());
+        membermanagement.setName(membermanagementModel.getName());
+        membermanagement.setSex(membermanagementModel.getSex());
+        membermanagement.setEmail(membermanagementModel.getEmail());
+        membermanagement.setPhone(membermanagementModel.getTelphone());
+        membermanagement.setRelation(membermanagementModel.getRelation());
+        membermanagement.setIsoldsociety(membermanagementModel.getIsoldsociety());
+        membermanagement.setBirthday(membermanagementModel.getBirthday());
+        membermanagement.setProvince(membermanagementModel.getProvince());
+        membermanagement.setCity(membermanagementModel.getCity());
+        membermanagement.setDistrict(membermanagementModel.getDistrict());
+        membermanagement.setAddress(membermanagementModel.getAddress());
+        membermanagement.setFamilyStatusID(membermanagementModel.getFamilyStatusID());
+        membermanagementController.add(membermanagement,cardCode,baMedicals,code,otherMemberId);
+        return responseData;
     }
 }

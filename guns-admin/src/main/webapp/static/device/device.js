@@ -554,7 +554,7 @@ function getUserInfo2() {
 function getUserInfo3() {
     readData3();
     var ajax = new $ax(Feng.ctxPath + "/membermanagement/getUserInfo", function (data) {
-        $("#introducerId2").val(data.memberid);
+        $("#otherMemberId").val(data.memberid); //关联会员id
         $("#anotherName").val(data.name);
     }, function (data) {
         Feng.error("获取数据失败!" + data.responseJSON.message + "!");
