@@ -186,6 +186,10 @@ MembermanagementInfoDlg.editSubmit = function() {
  * 补卡
  */
 MembermanagementInfoDlg.buka = function() {
+    if($("#cadID").val() == null || $("#cadID").val() == ""){
+        alert("身份证编号不能为空！")
+        return;
+    }
 
     this.clearData();
     this.collectData();
@@ -199,6 +203,7 @@ MembermanagementInfoDlg.buka = function() {
     });
     ajax.set("memberId",$("#id").val());
     ajax.set("cardID",$("#cardID").val());
+    ajax.set("cadID",$("#cadID").val());
     ajax.start();
 }
 /**

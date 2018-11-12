@@ -381,13 +381,18 @@ public class MembermanagementController extends BaseController {
     @BussinessLog(value = "补卡操作", key = "bukaMember")
     @RequestMapping(value = "/buka")
     @ResponseBody
-    public Object buka(String memberId, String cardID) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public Object buka(String memberId, String cardID, String cadID){
         BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
         memberCardBaseEntityWrapper.eq("memberid", memberId);
         MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
         if (memberCard != null) {
             memberCard.setCode(cardID);
             memberCardService.updateById(memberCard);
+            Membermanagement membermanagement = new Membermanagement();
+            membermanagement.setId(Integer.parseInt(memberId));
+            membermanagement.setCadID(cadID); //会员身份证id
+            membermanagementService.updateById(membermanagement);
         }
         return SUCCESS_TIP;
     }
