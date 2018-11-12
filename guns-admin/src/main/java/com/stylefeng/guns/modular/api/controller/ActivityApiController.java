@@ -59,7 +59,7 @@ public class ActivityApiController extends BaseController {
         EntityWrapper<Activity> activityEntityWrapper = new EntityWrapper<>();
         activityEntityWrapper.eq("deptid", requstData.getDeptId());
         activityEntityWrapper.eq("status", 2);
-        activityEntityWrapper.notIn("ruleexpression", 3);
+//        activityEntityWrapper.notIn("ruleexpression", 3);
         Page<Activity> page = new PageFactory<Activity>().defaultPage();
         if (offset != null && limit != null) {
             Page<Activity> activityPage = activityService.selectPage(page, activityEntityWrapper);
