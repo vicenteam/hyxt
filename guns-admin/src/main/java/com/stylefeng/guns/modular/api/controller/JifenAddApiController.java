@@ -45,7 +45,7 @@ public class JifenAddApiController extends BaseController {
     private IIntegralrecordtypeService integralrecordtypeService;
 
     @RequestMapping(value = "/findUserInfo", method = RequestMethod.POST)
-    @ApiOperation("积分分页查询")
+    @ApiOperation("读卡查询用户信息")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
             @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
