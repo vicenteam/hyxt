@@ -4,6 +4,7 @@ import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.modular.api.apiparam.RequstData;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
+import com.stylefeng.guns.modular.api.base.BaseController;
 import com.stylefeng.guns.modular.api.model.ProvCityDistModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
 import com.stylefeng.guns.modular.main.controller.ProvCityDistController;
@@ -24,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/provCityDistApi")
 @Api(description = "省市区")
-public class ProvCityDistApiController {
+public class ProvCityDistApiController extends BaseController {
 
     @Autowired
     private ProvCityDistController provCityDistController;
