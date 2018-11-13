@@ -29,13 +29,15 @@ public class ProvCityDistApiController {
     @Autowired
     private ProvCityDistController provCityDistController;
 
-    @RequestMapping(value = "/info/{type}", method = RequestMethod.POST)
+    @RequestMapping(value = "/info", method = RequestMethod.POST)
     @ApiOperation("省市区获取")
     @ApiImplicitParams({
-//            @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
-//            @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "type", value = "获取类型（0省 1市 2区）", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "parentTreeId", value = "上层地区id(当type=0时可为空)"),
     })
-    public ResponseData<List<ProvCityDistModel>> clientTreeList(RequstData requstData, @PathVariable Integer type, String parentTreeId){
+    public ResponseData<List<ProvCityDistModel>> clientTreeList(RequstData requstData,  Integer type, String parentTreeId){
         ResponseData<List<ProvCityDistModel>> responseData = new ResponseData();
         List<ProvCityDistModel> provCityDistModels = new ArrayList<>();
         try{
@@ -54,7 +56,7 @@ public class ProvCityDistApiController {
                 provCityDists.forEach(provCityDist -> {
                     ProvCityDistModel provCityDistModel = new ProvCityDistModel();
                     provCityDistModel.setId(provCityDist.getId());
-                    provCityDistModel.setName(provCityDist.getProvince());
+                    provCityDistModel.setName(provCityDist.getCity());
                     provCityDistModels.add(provCityDistModel);
                 });
             }else if(type == 2){
@@ -63,7 +65,7 @@ public class ProvCityDistApiController {
                 provCityDists.forEach(provCityDist -> {
                     ProvCityDistModel provCityDistModel = new ProvCityDistModel();
                     provCityDistModel.setId(provCityDist.getId());
-                    provCityDistModel.setName(provCityDist.getProvince());
+                    provCityDistModel.setName(provCityDist.getDistrict());
                     provCityDistModels.add(provCityDistModel);
                 });
             }

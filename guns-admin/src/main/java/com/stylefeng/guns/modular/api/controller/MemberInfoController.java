@@ -196,7 +196,11 @@ public class MemberInfoController extends BaseController {
                     qiandaoCheckinBaseEntityWrapper.eq("deptid", requstData.getDeptId());
                     qiandaoCheckinBaseEntityWrapper.isNotNull("updatetime");
                     int count = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
-                    mI2.setLevelId("还差" + (membershipcardtype.getCheckleavenum() - count) + "次签到成为普通会员");
+                    if((membershipcardtype.getCheckleavenum() - count)==0){
+                        mI2.setLevelId(membershipcardtype.getCardname());
+                    }else {
+                        mI2.setLevelId("还差" + (membershipcardtype.getCheckleavenum() - count) + "次签到成为普通会员");
+                    }
                 } else if (membershipcardtype != null && membershipcardtype.getUpamount() != 0) {
                     mI2.setLevelId(membershipcardtype.getCardname());
                 }

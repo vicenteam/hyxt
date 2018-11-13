@@ -527,7 +527,11 @@ public class MembermanagementController extends BaseController {
                 qiandaoCheckinBaseEntityWrapper.eq("memberid", map.get("id"));
                 qiandaoCheckinBaseEntityWrapper.isNotNull("updatetime");
                 int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
-                map.put("levelID", "<span style='color:red;'>还差" + (membershipcardtype.getCheckleavenum() - i) + "次签到成为普通会员</span>");
+                if((membershipcardtype.getCheckleavenum() - i)==0){
+                    map.put("levelID", membershipcardtype.getCardname());
+                }else {
+                    map.put("levelID", "<span style='color:red;'>还差" + (membershipcardtype.getCheckleavenum() - i) + "次签到成为普通会员</span>");
+                }
                 map.put("count", i);
             } else if (membershipcardtype != null && membershipcardtype.getUpamount() != 0) {
                 map.put("levelID", membershipcardtype.getCardname());
@@ -540,6 +544,37 @@ public class MembermanagementController extends BaseController {
             }
 
         }
+        //设置推荐的人
+        Membermanagement membermanagement= membermanagementService.selectById(id);
+        //获取当前用户介绍人
+        if(membermanagement!=null&&membermanagement.getIntroducerId()!=null&&page.getOffset()==0){
+            //查询相关信息
+            Membermanagement top=membermanagementService.selectById(membermanagement.getIntroducerId());
+            //添加到page结果集中
+            if(top!=null){
+                List<Map<String, Object>> mapList= mapPage.getRecords();
+                Map<String, Object> map=new HashMap<>();
+                map.put("id",top.getId());
+                map.put("name","<span style='color:red;'>推荐我的人-" +top.getName()  + "</span>");
+                //获取会员等级
+                String s = (String)top.getLevelID();
+                Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(s);
+                if(membershipcardtype!=null){
+                    map.put("levelID",membershipcardtype.getCardname());
+
+                }
+                map.put("integral",top.getIntegral());
+                //获取总签到场次次数
+                BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
+                qiandaoCheckinBaseEntityWrapper.eq("memberid", top.getId());
+                qiandaoCheckinBaseEntityWrapper.isNotNull("updatetime");
+                int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
+                map.put("count", i);
+                mapList.add(0,map);
+            }
+        }
+
+
         return super.packForBT(mapPage);
     }
 
