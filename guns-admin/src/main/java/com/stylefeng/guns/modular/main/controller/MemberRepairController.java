@@ -34,6 +34,13 @@ public class MemberRepairController extends BaseController {
         return PREFIX + "memberRepair.html";
     }
 
+    /**
+     *  会员补签
+     * @param memberId
+     * @param time
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/repair")
     @ResponseBody
     public Object repair(String memberId,String time) throws Exception {
