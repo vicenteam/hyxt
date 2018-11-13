@@ -55,7 +55,7 @@ public class GuashiBukaApiController {
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
         BaseEntityWrapper<Membermanagement> membermanagementBaseEntityWrapper = new BaseEntityWrapper<>();
         if(fp.getSearchType()==0){//条件查询
-
+            initFindParm(membermanagementBaseEntityWrapper,fp);
         }else {//读卡查询
             BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
             memberCardBaseEntityWrapper.eq("code",fp.getCardCode());
@@ -105,5 +105,25 @@ public class GuashiBukaApiController {
             throw new Exception("操作失败 请联系管理员!");
         }
         return responseData;
+    }
+
+    /**
+     * 构造查询条件
+     * @param membermanagementBaseEntityWrapper
+     * @param fp
+     */
+    public void initFindParm(BaseEntityWrapper<Membermanagement> membermanagementBaseEntityWrapper,FindPageParModel fp) {
+        if(fp!=null){
+            if(fp.getName()!=null)membermanagementBaseEntityWrapper.like("name",fp.getName());
+            if(fp.getSex()!=null)membermanagementBaseEntityWrapper.eq("sex",fp.getSex());
+            if(fp.getFamilyStatusID()!=null)membermanagementBaseEntityWrapper.eq("familyStatusID",fp.getFamilyStatusID());
+            if(fp.getAddress()!=null)membermanagementBaseEntityWrapper.like("address",fp.getAddress());
+            if(fp.getCadID()!=null)membermanagementBaseEntityWrapper.eq("cadID",fp.getCadID());
+            if(fp.getPhone()!=null)membermanagementBaseEntityWrapper.eq("phone",fp.getPhone());
+            if(fp.getProvinceId()!=null)membermanagementBaseEntityWrapper.eq("provinceId",fp.getProvinceId());
+            if(fp.getCityId()!=null)membermanagementBaseEntityWrapper.eq("cityId",fp.getCityId());
+            if(fp.getDistrictId()!=null)membermanagementBaseEntityWrapper.eq("districtId",fp.getDistrictId());
+            if(fp.getCardStatus()!=null)membermanagementBaseEntityWrapper.eq("state",fp.getCardStatus());
+        }
     }
 }
