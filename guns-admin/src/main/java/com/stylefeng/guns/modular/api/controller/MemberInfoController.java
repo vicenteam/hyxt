@@ -5,10 +5,7 @@ import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.modular.api.apiparam.RequstData;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.base.BaseController;
-import com.stylefeng.guns.modular.api.model.memerber.MemberInfoModel;
-import com.stylefeng.guns.modular.api.model.memerber.MemberModel;
-import com.stylefeng.guns.modular.api.model.memerber.MembermanagementModel;
-import com.stylefeng.guns.modular.api.model.memerber.RecommendModel;
+import com.stylefeng.guns.modular.api.model.memerber.*;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
 import com.stylefeng.guns.modular.main.controller.MembermanagementController;
 import com.stylefeng.guns.modular.main.service.*;
@@ -218,21 +215,23 @@ public class MemberInfoController extends BaseController {
     @ApiOperation("新增会员")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "code", value = "新开卡code", paramType = "query"),
-            @ApiImplicitParam(required = true, name = "baMedicals", value = "健康信息"),
+            @ApiImplicitParam(required = true, name = "cadID", value = "身份证id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "name", value = "姓名", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "telphone", value = "电话", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
     })
-    public ResponseData saveMemberInfo(RequstData requstData, MembermanagementModel membermanagementModel, String cardCode, String baMedicals, String code
-            , String otherMemberId) throws Exception{
+    public ResponseData saveMemberInfo(RequstData requstData, MembermanagementModel membermanagementModel) throws Exception{
         ResponseData responseData = new ResponseData();
         Membermanagement membermanagement = new Membermanagement(); //将值装入 membermanagement 会员基础信息类
         membermanagement.setCadID(membermanagementModel.getCadID());
         membermanagement.setIntroducerId(membermanagementModel.getIntroducerId());
         membermanagement.setAvatar(membermanagementModel.getAvatar());
-        membermanagement.setStaffID(membermanagementModel.getStaffID());
+        membermanagement.setStaffID(requstData.getUserId().toString());
         membermanagement.setName(membermanagementModel.getName());
         membermanagement.setSex(membermanagementModel.getSex());
         membermanagement.setEmail(membermanagementModel.getEmail());
         membermanagement.setPhone(membermanagementModel.getTelphone());
-        membermanagement.setRelation(membermanagementModel.getRelation());
         membermanagement.setIsoldsociety(membermanagementModel.getIsoldsociety());
         membermanagement.setBirthday(membermanagementModel.getBirthday());
         membermanagement.setProvince(membermanagementModel.getProvince());
@@ -240,7 +239,51 @@ public class MemberInfoController extends BaseController {
         membermanagement.setDistrict(membermanagementModel.getDistrict());
         membermanagement.setAddress(membermanagementModel.getAddress());
         membermanagement.setFamilyStatusID(membermanagementModel.getFamilyStatusID());
-        membermanagementController.add(membermanagement,cardCode,baMedicals,code,otherMemberId);
+        membermanagementController.add(membermanagement,membermanagementModel.getCardCode(),membermanagementModel.getBaMedicals()
+                ,membermanagementModel.getCode(),membermanagementModel.getOtherMemberId());
+        return responseData;
+    }
+
+    @RequestMapping(value = "/saveCardInfo", method = RequestMethod.POST)
+    @ApiOperation("写卡")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "cardCode", value = "卡片信息", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
+    })
+    public ResponseData<MemberCardModel> saveCardInfo(RequstData requstData, String cardCode) throws Exception{
+        ResponseData<MemberCardModel> responseData = new ResponseData<>();
+        try{
+            MemberCardModel memberCardModel = new MemberCardModel();
+            String code = (String) membermanagementController.getXieKaVal(cardCode);
+            memberCardModel.setCardCode(code);
+            responseData.setDataCollection(memberCardModel);
+        }catch (Exception e){
+            throw e;
+        }
+        return responseData;
+    }
+
+    @RequestMapping(value = "/selectUserInfo", method = RequestMethod.POST)
+    @ApiOperation("读卡获取会员信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "cardCode", value = "卡片信息", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
+    })
+    public ResponseData<MemberCardModel> selectUserInfo(RequstData requstData, String cardCode) throws Exception{
+        ResponseData<MemberCardModel> responseData = new ResponseData<>();
+        try{
+            MemberCard memberCard = (MemberCard) membermanagementController.getUserInfo(cardCode);
+            Integer memberId = memberCard.getMemberid();
+            Membermanagement membermanagement = membermanagementService.selectById(memberId);
+            MemberCardModel cardModel = new MemberCardModel();
+            cardModel.setMemberId(membermanagement.getId().toString());
+            cardModel.setName(membermanagement.getName());
+            responseData.setDataCollection(cardModel);
+        }catch (Exception e){
+            throw e;
+        }
         return responseData;
     }
 }

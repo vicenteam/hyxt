@@ -46,22 +46,16 @@ public class MemberRepairController extends BaseController {
     public Object repair(String memberId,String time) throws Exception {
         String[] val1 = time.split(" ");
         String[] val2 = val1[0].split("-");
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date=new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        date = calendar.getTime(); //获取当前时间的前一天
         BaseEntityWrapper<QiandaoCheckin> qWrapper = new BaseEntityWrapper<>();
         qWrapper.eq("memberid",memberId);
         qWrapper.like("createtime",val1[0]);
         QiandaoCheckin qian = qiandaoCheckinService.selectOne(qWrapper);
         if(qian != null){
             if(StringUtils.isEmpty(qian.getCreatetime())){ //如果未进行首签
-                qian.setCreatetime(sdf.format(date));
-                qian.setUpdatetime(sdf.format(date));
-            }else if(! StringUtils.isEmpty(qian.getCreatetime())){ //已首签未复签
-                qian.setUpdatetime(qian.getCreatetime()); //如果已经首签 补签复签的时间就为首签时间 与代码行71-72对应
+                qian.setCreatetime(time);
+                qian.setUpdatetime(time);
+            }else if(StringUtils.isEmpty(qian.getUpdatetime())){ //已首签未复签
+                qian.setUpdatetime(qian.getCreatetime()); //如果已经首签 补签复签的时间就为首签时间
             }
             qiandaoCheckinService.updateById(qian); //进行补签
         }else {
@@ -73,18 +67,20 @@ public class MemberRepairController extends BaseController {
                 }
             }
             BaseEntityWrapper<Checkin> cWrapper = new BaseEntityWrapper<>();
-            cWrapper.eq("screenings",defaultVal);
-            Checkin checkin = checkinService.selectOne(cWrapper); //查询签到场次
-           try {
-               qian.setCreatetime(sdf.format(date));
-               qian.setUpdatetime(sdf.format(date));
-               qian.setStatus(0);
-               qian.setDeptid(ShiroKit.getUser().getDeptId());
-               qian.setMemberid(Integer.parseInt(memberId));
-               qiandaoCheckinService.insert(qian); //如果没有当前场次的记录
-           }catch (Exception e){
-               throw new GunsException(BizExceptionEnum.SERVER_ERROR1);
-           }
+            cWrapper.eq("screenings",Integer.parseInt(defaultVal.toString()));
+            Checkin checkin = checkinService.selectOne(cWrapper); //
+            if(checkin != null){ //如果有当前场次的记录
+                QiandaoCheckin qiandaoCheckin = new QiandaoCheckin();
+                qiandaoCheckin.setCreatetime(time);
+                qiandaoCheckin.setUpdatetime(time);
+                qiandaoCheckin.setStatus(0);
+                qiandaoCheckin.setCheckinid(checkin.getId());
+                qiandaoCheckin.setDeptid(ShiroKit.getUser().getDeptId());
+                qiandaoCheckin.setMemberid(Integer.parseInt(memberId));
+                qiandaoCheckinService.insert(qiandaoCheckin);
+            }else {
+                throw new GunsException(BizExceptionEnum.SERVER_ERROR1);
+            }
         }
         return SUCCESS_TIP;
     }

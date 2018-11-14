@@ -6,52 +6,46 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "新增会员基本信息")
 public class MembermanagementModel {
 
-    private Integer id;
+//    private Integer id;
     @ApiModelProperty("身份证id")
     private String cadID;
+    @ApiModelProperty("推荐人id")
+    private String introducerId;
+    @ApiModelProperty("头像")
+    private String avatar;
+
     @ApiModelProperty("姓名")
     private String name;
-    @ApiModelProperty("电话")
-    private String telphone;
-    @ApiModelProperty("性别")
+    @ApiModelProperty("性别（1.男，2.女）")
     private Integer sex;
     @ApiModelProperty("邮箱")
     private String email;
+    @ApiModelProperty("电话")
+    private String telphone;
+
+    @ApiModelProperty("关联会员id")
+    private String otherMemberId;
     @ApiModelProperty("是否老年协会会员 (1是2否)")
     private Integer isoldsociety;
     @ApiModelProperty("生日")
     private String birthday;
-    @ApiModelProperty("介绍人id")
-    private String introducerId;
     @ApiModelProperty("省")
     private String province;
     @ApiModelProperty("市")
     private String city;
     @ApiModelProperty("区")
     private String district;
-    @ApiModelProperty("病史")
-    private String medicalHistory;
-    @ApiModelProperty("家庭状态id")
-    private String familyStatusID;
-    @ApiModelProperty("服务员工id")
-    private String staffID;
-    @ApiModelProperty("健康状态")
-    private String healthStatus;
     @ApiModelProperty("详细地址")
     private String address;
-    @ApiModelProperty("关联卡id")
-    private String relation;
-    @ApiModelProperty("头像")
-    private String avatar;
+    @ApiModelProperty("家庭状态id（1.有子女,2.无子女）")
+    private String familyStatusID;
+    @ApiModelProperty("健康信息")
+    private String baMedicals;
+    @ApiModelProperty("新开卡code")
+    private String code;
 
+    private String cardCode;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getCadID() {
         return cadID;
@@ -61,20 +55,28 @@ public class MembermanagementModel {
         this.cadID = cadID;
     }
 
+    public String getIntroducerId() {
+        return introducerId;
+    }
+
+    public void setIntroducerId(String introducerId) {
+        this.introducerId = introducerId;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTelphone() {
-        return telphone;
-    }
-
-    public void setTelphone(String telphone) {
-        this.telphone = telphone;
     }
 
     public Integer getSex() {
@@ -93,6 +95,22 @@ public class MembermanagementModel {
         this.email = email;
     }
 
+    public String getTelphone() {
+        return telphone;
+    }
+
+    public void setTelphone(String telphone) {
+        this.telphone = telphone;
+    }
+
+    public String getOtherMemberId() {
+        return otherMemberId;
+    }
+
+    public void setOtherMemberId(String otherMemberId) {
+        this.otherMemberId = otherMemberId;
+    }
+
     public Integer getIsoldsociety() {
         return isoldsociety;
     }
@@ -107,14 +125,6 @@ public class MembermanagementModel {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
-    }
-
-    public String getIntroducerId() {
-        return introducerId;
-    }
-
-    public void setIntroducerId(String introducerId) {
-        this.introducerId = introducerId;
     }
 
     public String getProvince() {
@@ -141,12 +151,12 @@ public class MembermanagementModel {
         this.district = district;
     }
 
-    public String getMedicalHistory() {
-        return medicalHistory;
+    public String getAddress() {
+        return address;
     }
 
-    public void setMedicalHistory(String medicalHistory) {
-        this.medicalHistory = medicalHistory;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getFamilyStatusID() {
@@ -157,43 +167,27 @@ public class MembermanagementModel {
         this.familyStatusID = familyStatusID;
     }
 
-    public String getStaffID() {
-        return staffID;
+    public String getBaMedicals() {
+        return baMedicals;
     }
 
-    public void setStaffID(String staffID) {
-        this.staffID = staffID;
+    public void setBaMedicals(String baMedicals) {
+        this.baMedicals = baMedicals;
     }
 
-    public String getHealthStatus() {
-        return healthStatus;
+    public String getCode() {
+        return code;
     }
 
-    public void setHealthStatus(String healthStatus) {
-        this.healthStatus = healthStatus;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCardCode() {
+        return cardCode;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getRelation() {
-        return relation;
-    }
-
-    public void setRelation(String relation) {
-        this.relation = relation;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode;
     }
 }
