@@ -14,9 +14,11 @@ import com.stylefeng.guns.modular.main.controller.MembermanagementController;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordService;
 import com.stylefeng.guns.modular.main.service.IIntegralrecordtypeService;
 import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.system.model.Integralrecordtype;
 import com.stylefeng.guns.modular.system.model.MemberCard;
 import com.stylefeng.guns.modular.system.model.Membermanagement;
+import com.stylefeng.guns.modular.system.model.Membershipcardtype;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -48,6 +50,8 @@ public class JifenAddApiController extends BaseController {
     private IntegralrecordController integralrecordController;
     @Autowired
     private IIntegralrecordtypeService integralrecordtypeService;
+    @Autowired
+    private IMembershipcardtypeService membershipcardtypeService;
 
     @RequestMapping(value = "/findUserInfo", method = RequestMethod.POST)
     @ApiOperation("读卡查询用户信息")
@@ -67,10 +71,12 @@ public class JifenAddApiController extends BaseController {
             //获取积分类型
             String deptId = membermanagement.getDeptId();
             EntityWrapper<Integralrecordtype> integralrecordtypeEntityWrapper = new EntityWrapper<>();
-            integralrecordtypeEntityWrapper.eq("deptId",deptId);
             List<Map<String, Object>> mapList = integralrecordtypeService.selectMaps(integralrecordtypeEntityWrapper);
             if(mapList==null)throw new NoSuchMethodException("无积分类型");
             change.setJifenType(mapList);
+            //设置卡等级
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(change.getLevelID());
+            if(membershipcardtype!=null)change.setLevelID(membershipcardtype.getCardname());
             responseData.setDataCollection(change);
         }catch (Exception e){
             throw new Exception("系统异常!"+e.getMessage());
@@ -108,13 +114,13 @@ public class JifenAddApiController extends BaseController {
         ResponseData<List<ZengSongJifenModel>> responseData = new ResponseData();
         try {
 
-            BaseEntityWrapper<Integralrecordtype> zengSongJifenModelBaseEntityWrapper=new BaseEntityWrapper();
-            List<Integralrecordtype> list=integralrecordtypeService.selectList(zengSongJifenModelBaseEntityWrapper);
+            BaseEntityWrapper<Membershipcardtype> zengSongJifenModelBaseEntityWrapper=new BaseEntityWrapper();
+            List<Membershipcardtype> list=membershipcardtypeService.selectList(zengSongJifenModelBaseEntityWrapper);
             List<ZengSongJifenModel> list1=new ArrayList<>();
             list.forEach(a->{
                 ZengSongJifenModel zengSongJifenModel=new ZengSongJifenModel();
                 zengSongJifenModel.setLeaveId(a.getId());
-                zengSongJifenModel.setLeaveName(a.getNames());
+                zengSongJifenModel.setLeaveName(a.getCardname());
                 list1.add(zengSongJifenModel);
             });
             responseData.setDataCollection(list1);

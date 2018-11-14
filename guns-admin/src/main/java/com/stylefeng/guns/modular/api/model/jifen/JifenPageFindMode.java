@@ -11,7 +11,7 @@ public class JifenPageFindMode {
     @ApiModelProperty("身份证")
     private String cardId;
     @ApiModelProperty("积分类型")
-    private Integer integraltype;
+    private Integer integraltype=-1;
     @ApiModelProperty("操作人")
     private String staffId="-1" ;
     @ApiModelProperty("开始时间")
