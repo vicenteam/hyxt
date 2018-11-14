@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +41,6 @@ public class CheckInFindApiController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
             @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
-            @ApiImplicitParam(required = true, name = "search", value = "搜索数据", paramType = "query"),
             @ApiImplicitParam(required = true, name = "offset", value = "当前页码(从0开始)", paramType = "query"),
             @ApiImplicitParam(required = true, name = "limit", value = "每页条数", paramType = "query"),
     })
@@ -50,6 +50,7 @@ public class CheckInFindApiController extends BaseController {
         Page<Checkin> checkInFindModelPage = new PageFactory<Checkin>().defaultPage();
         try {
             BaseEntityWrapper<Checkin> checkinBaseEntityWrapper = new BaseEntityWrapper<>();
+            if(!StringUtils.isEmpty(search))checkinBaseEntityWrapper.eq("screenings",search);
             Page<Checkin> page = checkinService.selectPage(checkInFindModelPage, checkinBaseEntityWrapper);
             List<CheckInFindModel> list = new ArrayList<>();
             page.getRecords().forEach(a -> {
