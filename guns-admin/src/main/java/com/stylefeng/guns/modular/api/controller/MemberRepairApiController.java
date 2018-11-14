@@ -3,7 +3,12 @@ package com.stylefeng.guns.modular.api.controller;
 import com.stylefeng.guns.modular.api.apiparam.RequstData;
 import com.stylefeng.guns.modular.api.apiparam.ResponseData;
 import com.stylefeng.guns.modular.api.base.BaseController;
+import com.stylefeng.guns.modular.api.model.memerber.MemberRepairModel;
 import com.stylefeng.guns.modular.main.controller.MemberRepairController;
+import com.stylefeng.guns.modular.main.controller.MembermanagementController;
+import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.system.model.MemberCard;
+import com.stylefeng.guns.modular.system.model.Membermanagement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -20,6 +25,31 @@ public class MemberRepairApiController extends BaseController {
 
     @Autowired
     private MemberRepairController memberRepairController;
+    @Autowired
+    private MembermanagementController membermanagementController;
+    @Autowired
+    private IMembermanagementService membermanagementService;
+
+    @RequestMapping(value = "/getRepairUser",method = RequestMethod.POST)
+    @ApiOperation("会员补签")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "cardCode", value = "卡片信息", paramType = "query"),
+    })
+    public ResponseData<MemberRepairModel> getRepairUser(RequstData requstData, String cardCode) throws Exception{
+        ResponseData<MemberRepairModel> responseData = new ResponseData();
+        try{
+            MemberCard memberCard = (MemberCard) membermanagementController.getUserInfo(cardCode);
+            Integer memberId = memberCard.getMemberid();
+            Membermanagement membermanagement = membermanagementService.selectById(memberId);
+            MemberRepairModel repairModel = new MemberRepairModel();
+            repairModel.setCadID(membermanagement.getCadID());
+            repairModel.setMemberId(membermanagement.getId().toString());
+            responseData.setDataCollection(repairModel);
+        }catch (Exception e){
+            throw e;
+        }
+        return responseData;
+    }
 
     @RequestMapping(value = "/clientRepair", method = RequestMethod.POST)
     @ApiOperation("会员补签")
