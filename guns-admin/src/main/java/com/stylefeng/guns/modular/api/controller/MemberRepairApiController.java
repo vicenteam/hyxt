@@ -31,7 +31,7 @@ public class MemberRepairApiController extends BaseController {
     private IMembermanagementService membermanagementService;
 
     @RequestMapping(value = "/getRepairUser",method = RequestMethod.POST)
-    @ApiOperation("会员补签")
+    @ApiOperation("补签获取会员信息")
     @ApiImplicitParams({
             @ApiImplicitParam(required = true, name = "cardCode", value = "卡片信息", paramType = "query"),
     })
@@ -54,12 +54,12 @@ public class MemberRepairApiController extends BaseController {
     @RequestMapping(value = "/clientRepair", method = RequestMethod.POST)
     @ApiOperation("会员补签")
     @ApiImplicitParams({
-//            @ApiImplicitParam(required = true, name = "userId", value = "操作人id", paramType = "query"),
-//            @ApiImplicitParam(required = true, name = "deptId", value = "操作人部门id", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "time", value = "补签时间", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "memberId", value = "会员id", paramType = "query"),
     })
-    public ResponseData memberRepair(RequstData requstData,String memberId,String time) throws Exception{
+    public ResponseData memberRepair(RequstData requstData,MemberRepairModel memberRepairModel) throws Exception{
         ResponseData responseData = new ResponseData();
-        memberRepairController.repair(memberId,time);
+        memberRepairController.repair(memberRepairModel.getMemberId(),memberRepairModel.getTime());
         return responseData;
     }
 
