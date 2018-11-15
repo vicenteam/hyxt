@@ -216,6 +216,9 @@ public class CheckinController extends BaseController {
                     map.put("qiandao", 2);
                 }
             }
+            if(map.get("relation")==null){
+                map.put("relation","");
+            };
             return map;
         }
         return null;
