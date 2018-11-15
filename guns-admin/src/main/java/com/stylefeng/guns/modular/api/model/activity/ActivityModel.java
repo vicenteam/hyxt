@@ -23,7 +23,7 @@ public class ActivityModel {
     @ApiModelProperty("活动创建者")
     private String creater;
     /**
-     * 活动规则(0累计签到 1连续签到 2积分兑换)
+     * 活动规则(0累计签到 1连续签到 2积分兑换 3推荐奖励 4被推荐奖励)
      */
     @ApiModelProperty("活动规则(0累计签到 1连续签到 2积分兑换 3推荐奖励 4被推荐奖励)")
     private Integer ruleexpression;
