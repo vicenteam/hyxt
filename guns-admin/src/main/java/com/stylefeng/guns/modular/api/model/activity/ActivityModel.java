@@ -25,7 +25,7 @@ public class ActivityModel {
     /**
      * 活动规则(0累计签到 1连续签到 2积分兑换)
      */
-    @ApiModelProperty("活动规则(0累计签到 1连续签到 2积分兑换)")
+    @ApiModelProperty("活动规则(0累计签到 1连续签到 2积分兑换 3推荐奖励 4被推荐奖励)")
     private Integer ruleexpression;
     /**
      * 活到开始时间
