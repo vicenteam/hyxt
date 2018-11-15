@@ -147,7 +147,7 @@ if($("#readDeviceCard").val().length==0){
         $("#medicalHistory").val("")
         $("#birthday").val("")
         $("#readDeviceCard").val("")
-        $("#introducerId2").val("")
+        $("#otherMemberId").val("")
         $("#anotherName").val("")
 
     },function(data){
