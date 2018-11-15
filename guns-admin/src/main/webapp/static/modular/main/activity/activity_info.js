@@ -121,7 +121,7 @@ ActivityInfoDlg.collectData = function() {
     .set('maxgetnum');
 }
 ActivityInfoDlg.validate = function () {
-    // $('#membermanagementInfoTable').data("bootstrapValidator").resetForm();
+    $('#activityId').data("bootstrapValidator").resetForm();
     $('#activityId').bootstrapValidator('validate');
     return $("#activityId").data('bootstrapValidator').isValid();
 };
@@ -146,7 +146,7 @@ ActivityInfoDlg.addSubmit = function() {
     var ajax = new $ax(Feng.ctxPath + "/activity/add", function(data){
         Feng.success("添加成功!");
         //清除数据
-        $("#name").val("");
+        $("#name").val(null);
         $("#content").val("");
         $("#begindate").val("");
         $("#enddate").val("");
