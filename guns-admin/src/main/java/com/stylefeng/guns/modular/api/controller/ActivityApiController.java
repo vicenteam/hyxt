@@ -107,7 +107,7 @@ public class ActivityApiController extends BaseController {
         EntityWrapper<Activity> activityEntityWrapper = new EntityWrapper<>();
         activityEntityWrapper.eq("deptid", requstData.getDeptId());
         activityEntityWrapper.eq("status", 2);
-        activityEntityWrapper.notIn("ruleexpression", 3);
+//        activityEntityWrapper.notIn("ruleexpression", 3);
         activityEntityWrapper.orderBy("createtime", false);
         Page<Activity> page = new PageFactory<Activity>().defaultPage();
         Page<ActivityDetailModel> detailModelPage = new PageFactory<ActivityDetailModel>().defaultPage();
