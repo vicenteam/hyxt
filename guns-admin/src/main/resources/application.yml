@@ -95,5 +95,6 @@ spring:
 
      # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  mina.jar > catalina.out  2>&1 &
      # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  xx.jar > catalina.out  2>&1 &
+
      # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  xx.jar   2>&1 &     netstat -tunlp|grep 8086
 
