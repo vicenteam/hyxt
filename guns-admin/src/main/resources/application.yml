@@ -39,7 +39,7 @@ spring:
   profiles: local
   datasource:
 #    url: jdbc:mysql://192.168.0.101:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
-    url: jdbc:mysql://47.104.252.44:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://47.104.252.4:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
     username: root
 #    password: root
     password: Cdxxkj@123
@@ -51,10 +51,9 @@ guns:
   muti-datasource:
     open: false
 #    url: jdbc:mysql://192.168.0.101:3306/guns_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
-    url: jdbc:mysql://47.104.252.44:3306/guns_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://47.104.252.4:3306/guns_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
     username: root
 #    password: root
-    password: Cdxxkj@123
     dataSourceNames:
       - dataSourceGuns
       - dataSourceBiz
@@ -65,10 +64,9 @@ spring:
   profiles: dev
   datasource:
 #    url: jdbc:mysql://192.168.0.101:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
-    url: jdbc:mysql://47.104.252.44:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://47.104.252.4:3306/guns4_0?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=UTC
     username: root
    #    password: root
-    password: Cdxxkj@123
     db-name: guns4_0 #用来搜集数据库的所有表
     filters: wall,mergeStat
 
