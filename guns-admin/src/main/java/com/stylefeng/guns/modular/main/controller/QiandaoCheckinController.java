@@ -120,6 +120,13 @@ public class QiandaoCheckinController extends BaseController {
         qiandaoCheckin.setDeptid(ShiroKit.getUser().getDeptId());
         qiandaoCheckin.setMemberid(Integer.parseInt(memberId));
         qiandaoCheckinService.insert(qiandaoCheckin);
+        //修改签到记录
+        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+        if(membermanagement!=null){
+            membermanagement.setCheckINTime1(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            membermanagement.setIsvisit(0);
+            membermanagementService.updateById(membermanagement);
+        }
         return SUCCESS_TIP;
     }
 

@@ -22,4 +22,9 @@ public class MembermanagementServiceImpl extends ServiceImpl<MembermanagementMap
     public boolean updateIntegralRollBack(Integralrecord integralrecord) {
         return this.baseMapper.updateIntegralRollBack(integralrecord);
     }
+
+    @Override
+    public int updateisvisit(String time) {
+        return this.baseMapper.updateisvisit(time);
+    }
 }
