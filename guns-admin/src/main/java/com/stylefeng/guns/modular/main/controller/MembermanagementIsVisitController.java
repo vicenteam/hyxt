@@ -107,6 +107,7 @@ public class MembermanagementIsVisitController extends BaseController {
         String specifiedDayBefore = getSpecifiedDayBefore(DateUtil.formatDate(new Date(), "yyyy-MM-dd"), name);
         EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
         baseEntityWrapper.le("CheckINTime1",specifiedDayBefore+" 23:59:59");
+        baseEntityWrapper.le("deptId",ShiroKit.getUser().getDeptId());
         if(name!=null){
             baseEntityWrapper.eq("state", 0);
         }else {
