@@ -1,15 +1,50 @@
 @layout("/common/_container.html"){
+<link href="/static/daterangepicker/style/daterangepicker.css" rel="stylesheet">
+<script src="/static/daterangepicker/moment.js"></script>
+<script src="/static/daterangepicker/daterangepicker.js"></script>
 <div class="ibox float-e-margins">
     <div class="ibox-content">
         <div class="form-horizontal" id="memberRepairInfoTable">
             <input type="hidden" id="introducerId" name="introducerId"/>
             <div class="row">
                 <div class="col-sm-4 b-r">
-                    <#input id="introducerName" name="身份证号" underline="true" button="读卡" buttonId="read" disabled="disabled"/>
-                    <#input id="name" name="会员名称" underline="true" disabled="disabled"/>
-                    <#time id="time" name="签到时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss"  underline="true"/>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">身份证号</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="introducerName" name="introducerName" disabled>
+                            <button type="button" class="btn btn-primary button-margin"  id="read"><i class="fa fa-edit"></i>&nbsp;读卡</button>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">会员名称</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="name" name="name" disabled>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">补签日期范围</label>
+                        <div class="col-sm-9 demo">
+                            <input type="text" id="time" class="form-control" autocomplete="off">
+                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <!--<style type="text/css">-->
+                <!--.demo {-->
+                    <!--position: relative;-->
+                <!--}-->
+
+                <!--.demo i {-->
+                    <!--position: absolute;-->
+                    <!--bottom: 10px;-->
+                    <!--right: 24px;-->
+                    <!--top: auto;-->
+                    <!--cursor: pointer;-->
+                <!--}-->
+            <!--</style>-->
 
             <div class="row btn-group-m-t">
                 <div class="col-sm-10">
@@ -22,13 +57,14 @@
     </div>
 </div>
 <div style="display: none">
-    <OBJECT classid=clsid:730BF2F0-EAE2-46C5-BA06-5ABFC9AB8A0A width=0 height=0 align="center" codebase="zx_32.cab#version=1,0,0,1" id="CZx_32Ctrl" HSPACE=0 VSPACE=0>
+    <OBJECT classid=clsid:730BF2F0-EAE2-46C5-BA06-5ABFC9AB8A0A width=0 height=0 align="center"
+            codebase="zx_32.cab#version=1,0,0,1" id="CZx_32Ctrl" HSPACE=0 VSPACE=0>
     </OBJECT>
     <div style="display: none">
         <fieldset>
             <legend>设备操作函数组</legend>
             硬件版本号：
-            <input type="text" name="Version" id="Account" maxlength="100" size="30" >
+            <input type="text" name="Version" id="Account" maxlength="100" size="30">
             产品序列号：
             <input type="text" name="Serial" id="Account" maxlength="100" size="30">
             蜂鸣时间：
@@ -41,9 +77,9 @@
             <input type="text" name="DeviceHandle" id="Account" maxlength="100" size="5" value="-1">
 
             <form name="设备操作">
-                <input type="button" onclick="javascript:OpenDevice()" value="打开设备" >
-                <input type="button" onclick="javascript:CloseDevice()" value="关闭设备" >
-                <input type="button" onclick="javascript:DevBeep()" value="蜂鸣" >
+                <input type="button" onclick="javascript:OpenDevice()" value="打开设备">
+                <input type="button" onclick="javascript:CloseDevice()" value="关闭设备">
+                <input type="button" onclick="javascript:DevBeep()" value="蜂鸣">
             </form>
         </fieldset>
 
@@ -51,13 +87,14 @@
 
         <fieldset>
             转换数据：
-            <input type="text" name="WriteDataASCHEX" id="Account" maxlength="3000" size="85" value="3030313132323333343435353636">
+            <input type="text" name="WriteDataASCHEX" id="Account" maxlength="3000" size="85"
+                   value="3030313132323333343435353636">
             转换结果：
             <input type="text" name="ReadDataASCHEX" id="Account" maxlength="3000" size="85">
 
             <form name="ASCHEX操作">
-                <input type="button" onclick="javascript:AscHex()" value="ASC码转HEX码" >
-                <input type="button" onclick="javascript:HexAsc()" value="HEX码转ASC码" >
+                <input type="button" onclick="javascript:AscHex()" value="ASC码转HEX码">
+                <input type="button" onclick="javascript:HexAsc()" value="HEX码转ASC码">
             </form>
         </fieldset>
 
@@ -70,13 +107,14 @@
             长度：
             <input type="text" name="LengthEeprom" id="Account" maxlength="10" size="5" value="200">
             写入数据：
-            <input type="text" name="WriteDataEeprom" id="Account" maxlength="3000" size="65" value="00112233445566778899AABBCCDDEEFF">
+            <input type="text" name="WriteDataEeprom" id="Account" maxlength="3000" size="65"
+                   value="00112233445566778899AABBCCDDEEFF">
             读出数据：
             <input type="text" name="ReadDataEeprom" id="Account" maxlength="3000" size="65">
 
             <form name="EEPROM操作">
-                <input type="button" onclick="javascript:DevReadeeprom()" value="读Eeprom" >
-                <input type="button" onclick="javascript:DevWriteeeprom()" value="写Eeprom" >
+                <input type="button" onclick="javascript:DevReadeeprom()" value="读Eeprom">
+                <input type="button" onclick="javascript:DevWriteeeprom()" value="写Eeprom">
             </form>
         </fieldset>
 
@@ -85,7 +123,7 @@
         <fieldset>
             <legend>操作M1卡函数组</legend>
             <label>密码类型：
-                <select name="keytypem1" id="keytypem1" >
+                <select name="keytypem1" id="keytypem1">
                     <option value="0" SELECTED>A密码</option>
                     <option value="1">B密码</option>
                 </select>
@@ -97,25 +135,26 @@
             卡片UID：
             <input type="text" name="UidM1" id="Account" maxlength="130" size="20">
             当前块值：
-            <input type="text" name="NowValueM1" id="Account" maxlength="130" size="5" >
+            <input type="text" name="NowValueM1" id="Account" maxlength="130" size="5">
             值操作：
             <input type="text" name="NewValueM1" id="Account" maxlength="3000" size="5" value="100">
             写入数据：
-            <input type="text" name="WriteDataM1" id="Account" maxlength="3000" size="60" value="00112233445566778899AABBCCDDEEFF">
+            <input type="text" name="WriteDataM1" id="Account" maxlength="3000" size="60"
+                   value="00112233445566778899AABBCCDDEEFF">
             读出数据：
             <input type="text" name="ReadDataM1" id="Account" maxlength="3000" size="60">
             <form name="M1卡操作">
-                <input type="button" onclick="javascript:RfCard()" value="寻卡" >
-                <input type="button" onclick="javascript:RfAuthenticationKey()" value="校验密码" >
-                <input type="button" onclick="javascript:RfRead()" value="读数据" >
-                <input type="button" onclick="javascript:RfWrite()" value="写数据" >
-                <input type="button" onclick="javascript:RfInitval()" value="初始化块值" >
-                <input type="button" onclick="javascript:RfReadval()" value="读块值" >
-                <input type="button" onclick="javascript:RfIncrement()" value="加值" >
-                <input type="button" onclick="javascript:RfDecrement()" value="减值" >
-                <input type="button" onclick="javascript:RfRestore()" value="回传" >
-                <input type="button" onclick="javascript:RfTransfer()" value="传送" >
-                <input type="button" onclick="javascript:RfTerminal()" value="中止卡片" >
+                <input type="button" onclick="javascript:RfCard()" value="寻卡">
+                <input type="button" onclick="javascript:RfAuthenticationKey()" value="校验密码">
+                <input type="button" onclick="javascript:RfRead()" value="读数据">
+                <input type="button" onclick="javascript:RfWrite()" value="写数据">
+                <input type="button" onclick="javascript:RfInitval()" value="初始化块值">
+                <input type="button" onclick="javascript:RfReadval()" value="读块值">
+                <input type="button" onclick="javascript:RfIncrement()" value="加值">
+                <input type="button" onclick="javascript:RfDecrement()" value="减值">
+                <input type="button" onclick="javascript:RfRestore()" value="回传">
+                <input type="button" onclick="javascript:RfTransfer()" value="传送">
+                <input type="button" onclick="javascript:RfTerminal()" value="中止卡片">
             </form>
         </fieldset>
 
@@ -135,8 +174,8 @@
             <input type="text" name="ReadDataDiscpu" id="Account" maxlength="3000" size="83">
 
             <form name="非接触式CPU卡操作">
-                <input type="button" onclick="javascript:OpenCard5()" value="激活卡片" >
-                <input type="button" onclick="javascript:ExchangePro5()" value="发送命令" >
+                <input type="button" onclick="javascript:OpenCard5()" value="激活卡片">
+                <input type="button" onclick="javascript:ExchangePro5()" value="发送命令">
             </form>
         </fieldset>
     </div>
@@ -144,9 +183,12 @@
     </br>
 
     <div>
-        <button onclick="readDeviceCard()">读取卡片</button>:<input type="text" id="readDeviceCard">
-        <button onclick="readData()">读取数据</button>:<input id="readData" type="text" maxlength="3000" size="60">
-        <button onclick="writeData()">写入数据</button>:<input id="writeData" type="text" maxlength="3000" size="60" placeholder="长度为32位 字符规则(0-9|a-f)">
+        <button onclick="readDeviceCard()">读取卡片</button>
+        :<input type="text" id="readDeviceCard">
+        <button onclick="readData()">读取数据</button>
+        :<input id="readData" type="text" maxlength="3000" size="60">
+        <button onclick="writeData()">写入数据</button>
+        :<input id="writeData" type="text" maxlength="3000" size="60" placeholder="长度为32位 字符规则(0-9|a-f)">
     </div>
 </div>
 <script src="${ctxPath}/static/modular/main/membermanagement/memberRepair.js"></script>
@@ -155,10 +197,10 @@
     $("#read").click(function () {
         getUserInfo();
         var memberId = $("#introducerId").val();
-        if(memberId != null && memberId != ""){
+        if (memberId != null && memberId != "") {
             $.ajax({
                 url: '/membermanagement/getMemberInfo',
-                data: { memberId: memberId },
+                data: {memberId: memberId},
                 type: 'POST',
                 async: false,
                 success: function (data) {
@@ -166,10 +208,41 @@
                     $("#name").val(data.name);
                 }
             });
-        }else {
+        } else {
             Feng.error("该门店不存在没有此卡会员信息!");
         }
 
+    });
+</script>
+<script type="text/javascript">
+    $('#time').daterangepicker({
+        ranges : {
+            //'最近1小时': [moment().subtract('hours',1), moment()],
+            '今日': [moment().startOf('day'), moment()],
+            '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
+            '最近7日': [moment().subtract('days', 6), moment()],
+            '最近30日': [moment().subtract('days', 29), moment()]
+        },
+        "alwaysShowCalendars": true,
+        "locale": { //汉化
+            format : 'YYYY-MM-DD',
+            separator : ' ~ ',
+            applyLabel : "应用",
+            cancelLabel : "取消",
+            resetLabel : "重置",
+            customRangeLabel : '自定义',
+            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
+            monthNames : [ '1月', '2月', '3月', '4月', '5月', '6月',
+                '7月', '8月', '9月', '10月', '11月', '12月' ],
+            firstDay : 1
+        }
+    }, function(start, end, label) {
+        $('#time').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+        // if(!this.startDate){
+        //     this.element.val('');
+        // }else{
+        //     this.element.val(this.startDate.format(this.locale.format) + this.locale.separator + this.endDate.format(this.locale.format));
+        // }
     });
 </script>
 @}
