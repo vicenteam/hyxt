@@ -96,8 +96,9 @@ Membermanagement.initColumn = function () {
                 if(row.isvisit==1){
                     html+='<button type="button" class=" btn-danger button-margin" onclick="Membermanagement.delete(' + row.id + ')" id=""><i class="fa fa-trash-o fa-lg"></i>&nbsp;标记回访</button>';
                 }
-                return  html+
-                    '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>';
+                html +='<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.opencheckHistory(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;签到记录</button>';
+                return html +
+                    '<button type="button" class=" btn-primary button-margin" onclick="Membermanagement.openMembermanagementDetail(' + row.id + ')" id=""><i class="fa fa-edit"></i>&nbsp;编辑</button>';
             }
         },
     ];
