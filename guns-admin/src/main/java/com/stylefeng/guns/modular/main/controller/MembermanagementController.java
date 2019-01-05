@@ -202,7 +202,7 @@ public class MembermanagementController extends BaseController {
         if (!StringUtils.isEmpty(address)) baseEntityWrapper.like("address", address);
         if (!StringUtils.isEmpty(fstatus)) baseEntityWrapper.eq("familyStatusID", fstatus);
         if (!StringUtils.isEmpty(sex)) baseEntityWrapper.eq("sex", sex);
-        if (!StringUtils.isEmpty(idcard)) baseEntityWrapper.eq("idcard", idcard);
+        if (!StringUtils.isEmpty(idcard)) baseEntityWrapper.eq("cadID", idcard);
         if (!StringUtils.isEmpty(phone)) baseEntityWrapper.like("phone", phone);
         if (!StringUtils.isEmpty(stafff)) baseEntityWrapper.eq("staffid", stafff);
         if (!StringUtils.isEmpty(deptid)){
