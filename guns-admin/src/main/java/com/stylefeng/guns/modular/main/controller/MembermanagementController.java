@@ -35,6 +35,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Member;
 import java.util.*;
 
 /**
@@ -129,6 +130,16 @@ public class MembermanagementController extends BaseController {
     public String membermanagementUpdate(@PathVariable Integer membermanagementId, Model model) {
         Membermanagement membermanagement = membermanagementService.selectById(membermanagementId);
         model.addAttribute("item", membermanagement);
+
+        Membermanagement relationMember = new Membermanagement();
+        if (!StringUtils.isEmpty(membermanagement.getRelation())){
+            BaseEntityWrapper<Membermanagement> baseEntityWrapper = new BaseEntityWrapper<>();
+            baseEntityWrapper.eq("relation",membermanagement.getRelation());
+            baseEntityWrapper.ne("id",membermanagement.getId());
+            relationMember = membermanagementService.selectOne(baseEntityWrapper);
+        }
+        model.addAttribute("item2",relationMember);
+
         BaseEntityWrapper<Dept> deptBaseEntityWrapper = new BaseEntityWrapper<>();
         List list = userService.selectList(deptBaseEntityWrapper);
         model.addAttribute("staffs", list);
