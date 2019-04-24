@@ -114,6 +114,7 @@ public class MembermanagementIsVisitController extends BaseController {
             baseEntityWrapper.eq("state", -1);
 
         }
+        baseEntityWrapper.orderBy("CheckINTime1",false);
         membermanagements = membermanagementService.selectList(baseEntityWrapper);
         Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = mapPage.getRecords();
