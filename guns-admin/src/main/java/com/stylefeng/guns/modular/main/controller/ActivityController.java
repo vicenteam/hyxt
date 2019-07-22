@@ -102,7 +102,7 @@ public class ActivityController extends BaseController {
         BaseEntityWrapper<Activity> baseEntityWrapper = new BaseEntityWrapper<>();
         baseEntityWrapper.orderBy("createtime",false);
         if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("name",condition);
-        Page<Activity> result = activityService.selectPage(page, baseEntityWrapper);
+        Page<Activity> result = activityService.selectPage(page,"admin".equals(ShiroKit.getUser().account)?new EntityWrapper<>(): baseEntityWrapper);
         List<Activity> records = result.getRecords();
         records.forEach(a -> {
             String creater = a.getCreater();
@@ -281,6 +281,26 @@ public class ActivityController extends BaseController {
             baseEntityWrapper.eq("activityId",activityId);
             List<MemberInactivity> list=memberInactivityService.selectList(baseEntityWrapper);
             if(list.size()>=1){
+               if(ruleexpression==4){
+                   //获取用户等级与领取次数
+                   Membermanagement membermanagement = membermanagementService.selectById(memberId);
+                   Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
+                   Integer leaves = membershipcardtype.getLeaves();
+                   EntityWrapper<ActivityMember> activityMemberEntityWrapper = new EntityWrapper<>();
+                   activityMemberEntityWrapper.eq("memberid",memberId);
+                   activityMemberEntityWrapper.eq("activityid",activityId);
+                   int i = activityMemberService.selectCount(activityMemberEntityWrapper);
+                   if(i>=30){
+                       throw new GunsException(BizExceptionEnum.NO_PERMITION1);
+                   }
+                   //新增积分
+                   if (membershipcardtype != null) {
+                       double checkJifen = leaves>0?5:3;
+                       membermanagement.setIntegral((membermanagement.getIntegral().doubleValue()+checkJifen));
+                       membermanagement.updateById();
+                   }
+
+               }
                 MemberInactivity memberInactivity=list.get(0);
                 memberInactivityService.deleteById(memberInactivity.getId());
             }else {

@@ -4,12 +4,8 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
-import com.stylefeng.guns.modular.main.service.ICheckinService;
-import com.stylefeng.guns.modular.main.service.IMembermanagementService;
-import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
-import com.stylefeng.guns.modular.system.model.Checkin;
-import com.stylefeng.guns.modular.system.model.Membermanagement;
-import com.stylefeng.guns.modular.system.model.Membershipcardtype;
+import com.stylefeng.guns.modular.main.service.*;
+import com.stylefeng.guns.modular.system.model.*;
 import org.springframework.stereotype.Controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.core.common.constant.factory.PageFactory;
@@ -24,8 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
-import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +44,12 @@ public class QiandaoCheckinController extends BaseController {
     private IMembermanagementService membermanagementService;
     @Autowired
     private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IActivityMemberService activityMemberService;
+    @Autowired
+    private IMemberInactivityService memberInactivityService;
+    @Autowired
+    private IActivityService activityService;
 
     /**
      * 跳转到复签记录首页
@@ -109,6 +109,9 @@ public class QiandaoCheckinController extends BaseController {
         BaseEntityWrapper<QiandaoCheckin> qiandaoCheckinBaseEntityWrapper = new BaseEntityWrapper<>();
         qiandaoCheckinBaseEntityWrapper.eq("memberid", memberId);
         qiandaoCheckinBaseEntityWrapper.eq("deptid", ShiroKit.getUser().getDeptId());
+        //获取会员签到次数
+        int i1 = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
+
         qiandaoCheckinBaseEntityWrapper.like("createtime", DateUtil.formatDate(new Date(), "yyyy-MM-dd"));
         int i = qiandaoCheckinService.selectCount(qiandaoCheckinBaseEntityWrapper);
         if (i != 0) {
@@ -122,7 +125,13 @@ public class QiandaoCheckinController extends BaseController {
         qiandaoCheckinService.insert(qiandaoCheckin);
         //修改签到记录
         Membermanagement membermanagement = membermanagementService.selectById(memberId);
-        if(membermanagement!=null){
+        if (!StringUtils.isEmpty(membermanagement.getLevelID())) {
+            Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
+            if (membershipcardtype != null && membershipcardtype.getCheckNums() < i1) {
+                throw new Exception("可签到次数不足!");
+            }
+        }
+        if (membermanagement != null) {
             membermanagement.setCheckINTime1(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
             membermanagement.setIsvisit(0);
             membermanagementService.updateById(membermanagement);
@@ -187,6 +196,40 @@ public class QiandaoCheckinController extends BaseController {
                         membermanagementService.updateById(membermanagement);
                     }
                 }
+                //新增签到积分
+                if (membershipcardtype != null) {
+                    double checkJifen = membershipcardtype.getCheckJifen();
+                    Membermanagement membermanagement = membermanagementService.selectById(memberId);
+                    membermanagement.setIntegral((membermanagement.getIntegral().doubleValue()+checkJifen));
+                    membermanagement.updateById();
+                }
+                //推荐人活动
+                EntityWrapper<Activity> activityBaseEntityWrapper = new EntityWrapper<>();
+                activityBaseEntityWrapper.eq("deptId",membermanagement1.getDeptId());
+                activityBaseEntityWrapper.eq("ruleexpression",3);
+                Activity activity = activityService.selectOne(activityBaseEntityWrapper);
+                if(activity!=null){
+                    //根据memberid获取推荐人信息，
+                    String introducerId = membermanagement1.getIntroducerId();
+                    if(!StringUtils.isEmpty(introducerId)){
+                        //把数据写入待领取数据列表
+                        String createDt = DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+                        MemberInactivity memberInactivity1 = new MemberInactivity();
+                        memberInactivity1.setActivityId(activity.getId());
+                        memberInactivity1.setCreateDt(createDt);
+                        memberInactivity1.setDeptId(Integer.parseInt(membermanagement1.getDeptId()));
+                        memberInactivity1.setMemberId(Integer.parseInt(memberId));
+                        memberInactivity1.insert();
+                        MemberInactivity memberInactivity2 = new MemberInactivity();
+                        memberInactivity2.setActivityId(activity.getId());
+                        memberInactivity2.setCreateDt(createDt);
+                        memberInactivity2.setDeptId(Integer.parseInt(membermanagement1.getDeptId()));
+                        memberInactivity2.setMemberId(Integer.parseInt(introducerId));
+                        memberInactivity2.insert();
+                    }
+                }
+
+
 
             }
 

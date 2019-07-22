@@ -19,6 +19,8 @@
         <result column="updatedt" property="updatedt" />
         <result column="checkleavenum" property="checkleavenum" />
         <result column="leaves" property="leaves" />
+        <result column="checkNums" property="checkNums" />
+        <result column="checkJifen" property="checkJifen" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -65,6 +65,30 @@ public class Membershipcardtype extends Model<Membershipcardtype> {
     private String updatedt;
     private Integer checkleavenum;
     private Integer leaves;
+    /**
+     * 剩余可签到次数
+     */
+    private int checkNums;
+    /**
+     * 签到赠送积分
+     */
+    private double checkJifen;
+
+    public double getCheckJifen() {
+        return checkJifen;
+    }
+
+    public void setCheckJifen(double checkJifen) {
+        this.checkJifen = checkJifen;
+    }
+
+    public int getCheckNums() {
+        return checkNums;
+    }
+
+    public void setCheckNums(int checkNums) {
+        this.checkNums = checkNums;
+    }
 
     public Integer getLeaves() {
         return leaves;

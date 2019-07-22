@@ -1,5 +1,6 @@
 package com.stylefeng.guns.modular.main.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.base.controller.BaseController;
@@ -133,11 +134,19 @@ public class MembermanagementController extends BaseController {
 
         Membermanagement relationMember = new Membermanagement();
         if (!StringUtils.isEmpty(membermanagement.getRelation())){
-            BaseEntityWrapper<Membermanagement> baseEntityWrapper = new BaseEntityWrapper<>();
-            baseEntityWrapper.eq("relation",membermanagement.getRelation());
-            baseEntityWrapper.ne("id",membermanagement.getId());
-            relationMember = membermanagementService.selectOne(baseEntityWrapper);
+            if(ShiroKit.getUser().account.equals("admin")){
+                EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
+                baseEntityWrapper.eq("relation",membermanagement.getRelation());
+                baseEntityWrapper.ne("id",membermanagement.getId());
+                relationMember = membermanagementService.selectOne(baseEntityWrapper);
+            }else {
+                BaseEntityWrapper<Membermanagement> baseEntityWrapper = new BaseEntityWrapper<>();
+                baseEntityWrapper.eq("relation",membermanagement.getRelation());
+                baseEntityWrapper.ne("id",membermanagement.getId());
+                relationMember = membermanagementService.selectOne(baseEntityWrapper);
+            }
         }
+        System.out.println(JSON.toJSONString(relationMember));
         model.addAttribute("item2",relationMember);
 
         BaseEntityWrapper<Dept> deptBaseEntityWrapper = new BaseEntityWrapper<>();
@@ -275,6 +284,18 @@ public class MembermanagementController extends BaseController {
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public Object add(Membermanagement membermanagement, String cardCode, String baMedicals, String code
                     ,String otherMemberId) throws Exception {
+        //获取当前身份证号是否存在用户信息
+        String cadID = membermanagement.getCadID();
+        if(!StringUtils.isEmpty(cadID)){
+            EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
+            membermanagementEntityWrapper.eq("cadID",cadID);
+            int i = membermanagementService.selectCount(membermanagementEntityWrapper);
+            if(i!=0){
+                throw new Exception("该身份证号已开过会员卡！");
+            }
+        }else {
+            throw new Exception("该身份证号为空！");
+        }
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");//生成关联字符串
         if (StringUtils.isEmpty(code)) throw new Exception("请进行读卡操作！");
         membermanagement.setCreateTime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
