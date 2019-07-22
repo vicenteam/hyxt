@@ -77,6 +77,8 @@ MembershipcardtypeInfoDlg.collectData = function() {
     .set('checkleavenum')
     .set('createdt')
     .set('leaves')
+    .set('checkJifen')
+    .set('checkNums')
     .set('updatedt');
 }
 
