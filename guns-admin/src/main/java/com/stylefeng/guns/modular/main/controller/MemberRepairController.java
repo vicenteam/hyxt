@@ -122,6 +122,27 @@ public class MemberRepairController extends BaseController {
                     qiandaoCheckin.setDeptid(ShiroKit.getUser().getDeptId());
                     qiandaoCheckin.setMemberid(Integer.parseInt(memberId));
                     qiandaoCheckinService.insert(qiandaoCheckin);
+
+                    Membermanagement membermanagement1 = membermanagementService.selectById(memberId);
+                    Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement1.getLevelID());
+                    //新增签到积分
+                    if (membershipcardtype != null) {
+                        double checkJifen = membershipcardtype.getCheckJifen();
+                        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+                        membermanagement.setIntegral((membermanagement.getIntegral().doubleValue()+checkJifen));
+                        membermanagement.setCountPrice((membermanagement.getCountPrice().doubleValue()+checkJifen));
+                        membermanagement.updateById();
+
+                        //新增积分记录
+                        Integralrecord integralrecord= new Integralrecord();
+                        integralrecord.setDeptid(Integer.parseInt(membermanagement1.getDeptId()));
+                        integralrecord.setIntegral(checkJifen);
+                        integralrecord.setTypeId(14);//签到积分
+                        integralrecord.setMemberid(Integer.parseInt(memberId));
+                        integralrecord.setCreateTime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                        integralrecord.setStaffid(requstDataUserId);
+                        integralrecord.insert();
+                    }
                 }else {
                     throw new Exception("当天无签到场次，日期为："+t);
                 }
