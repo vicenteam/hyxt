@@ -5,10 +5,12 @@ import com.stylefeng.guns.core.common.BaseEntityWrapper.BaseEntityWrapper;
 import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.ICheckinService;
+import com.stylefeng.guns.modular.main.service.IMembermanagementService;
+import com.stylefeng.guns.modular.main.service.IMembershipcardtypeService;
 import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
-import com.stylefeng.guns.modular.system.model.Checkin;
-import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
+import com.stylefeng.guns.modular.system.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -30,6 +32,10 @@ public class MemberRepairController extends BaseController {
     private ICheckinService checkinService;
     @Autowired
     private IQiandaoCheckinService qiandaoCheckinService;
+    @Autowired
+    private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IMembermanagementService membermanagementService;
 
     @RequestMapping("")
     public String index(){
@@ -45,7 +51,12 @@ public class MemberRepairController extends BaseController {
      */
     @RequestMapping(value = "/repair")
     @ResponseBody
-    public Object repair(String memberId,String time) throws Exception {
+    public Object repair(String memberId,String time,Integer requstDataUserId) throws Exception {
+        if(requstDataUserId==null){
+            try{
+                requstDataUserId=ShiroKit.getUser().id;
+            }catch (Exception e){ requstDataUserId=0;}
+        }
         String[] newTime = time.split(" ~ ");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date dBegin = sdf.parse(newTime[0]);
@@ -69,6 +80,26 @@ public class MemberRepairController extends BaseController {
                 if(StringUtils.isEmpty(qian.getUpdatetime())){ //已首签未复签
                     qian.setUpdatetime(qian.getCreatetime()); //如果已经首签 补签复签的时间就为首签时间
                     qiandaoCheckinService.updateById(qian); //进行补签
+                    Membermanagement membermanagement1 = membermanagementService.selectById(memberId);
+                    Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement1.getLevelID());
+                    //新增签到积分
+                    if (membershipcardtype != null) {
+                        double checkJifen = membershipcardtype.getCheckJifen();
+                        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+                        membermanagement.setIntegral((membermanagement.getIntegral().doubleValue()+checkJifen));
+                        membermanagement.setCountPrice((membermanagement.getCountPrice().doubleValue()+checkJifen));
+                        membermanagement.updateById();
+
+                        //新增积分记录
+                        Integralrecord integralrecord= new Integralrecord();
+                        integralrecord.setDeptid(Integer.parseInt(membermanagement1.getDeptId()));
+                        integralrecord.setIntegral(checkJifen);
+                        integralrecord.setTypeId(14);//签到积分
+                        integralrecord.setMemberid(Integer.parseInt(memberId));
+                        integralrecord.setCreateTime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                        integralrecord.setStaffid(requstDataUserId);
+                        integralrecord.insert();
+                    }
                 }
             }else {
                 String[] val = t.split("-");

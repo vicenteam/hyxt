@@ -4,6 +4,22 @@
     <meta charset="utf-8">
 </head>
 <body style="height: 100%; margin: 0">
+<div>
+    @layout("/common/_container.html"){
+    <div class="col-sm-2">
+        <#DeptSelectCon id="deptId" name="门店" val="${shiro.getUser().deptId}"/>
+    </div>
+    <div class="col-sm-2">
+        <#TimeCon id="begindate" name="开始时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss" />
+    </div>
+    <div class="col-sm-2">
+        <#TimeCon id="enddate" name="结束时间" isTime="false" pattern="yyyy-MM-dd HH:mm:ss" />
+    </div>
+    <div class="col-sm-2">
+        <#button name="查询" icon="fa-search" clickFun="find()"/>
+    </div>
+    @}
+</div>
 <div id="container" style="height: 100%"></div>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
@@ -89,70 +105,145 @@
     }
 </script>
 <script type="text/javascript">
-    var dom = document.getElementById("container");
-    var myChart = echarts.init(dom);
-    var app = {};
-    option = null;
-    app.title = '坐标轴刻度与标签对齐';
-
-    var sData = [];
-    var xData = [];
-    var weekdata = new GetWeekDate(new Date()).getAWeedkYMD();
-    $.ajax({
-        url: '/barranking/countData',
-        type: 'POST',
-        data: {startDate: weekdata[0][0]},
-        async: false,
-        success: function (data) {
-            for(var i=0; i<data.length; i++){
-                sData.push(data[i]);
-            }
-        }
+    $(document).ready(function () {
+        find();
     });
 
-    option = {
-        title: {
-            text: '本周会员开卡数统计',
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            data:['最高气温','最低气温']
-        },
-        toolbox: {
-            show: true,
-            feature: {
-                dataZoom: {
-                    yAxisIndex: 'none'
-                },
-                dataView: {readOnly: false},
-                magicType: {type: ['line', 'bar']},
-                restore: {},
-                saveAsImage: {}
+    function find() {
+        var dom = document.getElementById("container");
+        var myChart = echarts.init(dom, "macarons");
+        option = null;
+
+        var sData = [];
+        var xData = [];
+        // var weekdata = new GetWeekDate(new Date()).getAWeedkYMD();
+        $.ajax({
+            url: '/barranking/countData',
+            type: 'POST',
+            data: {
+                deptId: $("#deptId").val(),
+                begindate: $("#begindate").val(),
+                enddate: $("#enddate").val()
+            },
+            async: false,
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    sData.push(data[i].number);
+                    xData.push(data[i].deptName);
+                }
+                option = {
+                    title: {
+                        text: '会员开卡数统计',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['最高气温', '最低气温']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataZoom: {
+                                yAxisIndex: 'none'
+                            },
+                            dataView: {readOnly: false},
+                            magicType: {type: ['line', 'bar']},
+                            restore: {},
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: xData
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} 人次'
+                        }
+                    },
+                    series: [{
+                        data: sData,
+                        name: '开卡人次',
+                        barWidth: '60%',
+                        type: 'bar'
+                    }]
+                };
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
             }
-        },
-        xAxis: {
-            type: 'category',
-            data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
-        },
-        yAxis: {
-            type: 'value',
-            axisLabel: {
-                formatter: '{value} 人次'
-            }
-        },
-        series: [{
-            data: sData,
-            name:'开卡人次',
-            barWidth: '60%',
-            type: 'line'
-        }]
-    };
-    if (option && typeof option === "object") {
-        myChart.setOption(option, true);
+        });
+
+
     }
 </script>
+<!--<script type="text/javascript">-->
+<!--    var dom = document.getElementById("container");-->
+<!--    var myChart = echarts.init(dom);-->
+<!--    var app = {};-->
+<!--    option = null;-->
+<!--    app.title = '坐标轴刻度与标签对齐';-->
+
+<!--    var sData = [];-->
+<!--    var xData = [];-->
+<!--    var weekdata = new GetWeekDate(new Date()).getAWeedkYMD();-->
+<!--    $.ajax({-->
+<!--        url: '/barranking/countData',-->
+<!--        type: 'POST',-->
+<!--        data: {startDate: weekdata[0][0]},-->
+<!--        async: false,-->
+<!--        success: function (data) {-->
+<!--            for(var i=0; i<data.length; i++){-->
+<!--                sData.push(data[i]);-->
+<!--            }-->
+<!--        }-->
+<!--    });-->
+
+<!--    option = {-->
+<!--        title: {-->
+<!--            text: '本周会员开卡数统计',-->
+<!--        },-->
+<!--        tooltip: {-->
+<!--            trigger: 'axis'-->
+<!--        },-->
+<!--        legend: {-->
+<!--            data:['最高气温','最低气温']-->
+<!--        },-->
+<!--        toolbox: {-->
+<!--            show: true,-->
+<!--            feature: {-->
+<!--                dataZoom: {-->
+<!--                    yAxisIndex: 'none'-->
+<!--                },-->
+<!--                dataView: {readOnly: false},-->
+<!--                magicType: {type: ['line', 'bar']},-->
+<!--                restore: {},-->
+<!--                saveAsImage: {}-->
+<!--            }-->
+<!--        },-->
+<!--        xAxis: {-->
+<!--            type: 'category',-->
+<!--            data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']-->
+<!--        },-->
+<!--        yAxis: {-->
+<!--            type: 'value',-->
+<!--            axisLabel: {-->
+<!--                formatter: '{value} 人次'-->
+<!--            }-->
+<!--        },-->
+<!--        series: [{-->
+<!--            data: sData,-->
+<!--            name:'开卡人次',-->
+<!--            barWidth: '60%',-->
+<!--            type: 'line'-->
+<!--        }]-->
+<!--    };-->
+<!--    if (option && typeof option === "object") {-->
+<!--        myChart.setOption(option, true);-->
+<!--    }-->
+<!--</script>-->
 
 </body>
 </html>

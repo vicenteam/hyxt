@@ -146,9 +146,9 @@ Activity.initColumn = function () {
                 }
                 doma += '><i class="fa fa-arrows-alt"></i>修改</button>';
                 doma += '<button type="button" class="btn btn-danger button-margin" onclick="Activity.delete(' + row.id + ')" id="" '
-                if (row.status != 0) {
-                    doma += ' disabled="disabled"'
-                }
+                // if (row.status != 0) {
+                //     doma += ' disabled="disabled"'
+                // }
                 doma += '><i class="fa fa-edit"></i>删除</button>'
 
                 return doma;
@@ -218,14 +218,18 @@ Activity.lingqu = function (id) {
  * 删除活动管理
  */
 Activity.delete = function (id) {
-    var ajax = new $ax(Feng.ctxPath + "/activity/delete", function (data) {
-        Feng.success("删除成功!");
-        Activity.table.refresh();
-    }, function (data) {
-        Feng.error("删除失败!" + data.responseJSON.message + "!");
+    layer.confirm('您确定要删除本条数据吗？', {btn: ['确定', '取消']}, function () {
+        layer.closeAll('dialog');
+        var ajax = new $ax(Feng.ctxPath + "/activity/delete", function (data) {
+            Feng.success("删除成功!");
+            Activity.table.refresh();
+        }, function (data) {
+            Feng.error("删除失败!" + data.responseJSON.message + "!");
+        });
+        ajax.set("activityId", id);
+        ajax.start();
     });
-    ajax.set("activityId", id);
-    ajax.start();
+
 };
 
 /**

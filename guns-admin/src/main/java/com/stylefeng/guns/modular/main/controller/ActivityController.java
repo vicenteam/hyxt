@@ -10,6 +10,7 @@ import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.modular.main.service.*;
 import com.stylefeng.guns.modular.system.model.*;
+import com.stylefeng.guns.modular.system.service.IDeptService;
 import com.stylefeng.guns.modular.system.service.IUserService;
 import com.stylefeng.guns.modular.task.ActivityTask;
 import org.springframework.stereotype.Controller;
@@ -63,6 +64,8 @@ public class ActivityController extends BaseController {
     private MembermanagementController membermanagementController;
     @Autowired
     private IMemberInactivityService memberInactivityService;
+    @Autowired
+    private IDeptService deptService;
 
     /**
      * 跳转到活动管理首页
@@ -100,9 +103,13 @@ public class ActivityController extends BaseController {
         activityTask.scannerActivity();
         Page<Activity> page = new PageFactory<Activity>().defaultPage();
         BaseEntityWrapper<Activity> baseEntityWrapper = new BaseEntityWrapper<>();
-        baseEntityWrapper.orderBy("createtime",false);
-        if(!StringUtils.isEmpty(condition))baseEntityWrapper.like("name",condition);
-        Page<Activity> result = activityService.selectPage(page,"admin".equals(ShiroKit.getUser().account)?new EntityWrapper<>(): baseEntityWrapper);
+        baseEntityWrapper.ne("status", 4);
+        baseEntityWrapper.orderBy("createtime", false);
+        if (!StringUtils.isEmpty(condition)) baseEntityWrapper.like("name", condition);
+        EntityWrapper<Activity> activityEntityWrapper = new EntityWrapper<>();
+        activityEntityWrapper.ne("status", 4);
+        activityEntityWrapper.orderBy("createtime", false);
+        Page<Activity> result = activityService.selectPage(page, "admin".equals(ShiroKit.getUser().account) ? activityEntityWrapper : baseEntityWrapper);
         List<Activity> records = result.getRecords();
         records.forEach(a -> {
             String creater = a.getCreater();
@@ -110,7 +117,7 @@ public class ActivityController extends BaseController {
             a.setCreater(user.getName());
             //获取当前活动签到人数
             BaseEntityWrapper<ActivityMember> activityMemberBaseEntityWrapper = new BaseEntityWrapper<>();
-            activityMemberBaseEntityWrapper.eq("activityid",a.getId());
+            activityMemberBaseEntityWrapper.eq("activityid", a.getId());
             int i = activityMemberService.selectCount(activityMemberBaseEntityWrapper);
             a.setJifen((double) i);
         });
@@ -136,7 +143,17 @@ public class ActivityController extends BaseController {
         } else {
             activity.setStatus(0);
         }
-        activityService.insert(activity);
+        if(ShiroKit.getUser().account.equals("admin")){
+            List<Dept> depts = deptService.selectList(null);
+            depts.forEach(a->{
+                activity.setDeptid(a.getId().toString());
+                activityService.insert(activity);
+            });
+        }else {
+            activityService.insert(activity);
+        }
+
+
         return SUCCESS_TIP;
     }
 
@@ -147,7 +164,9 @@ public class ActivityController extends BaseController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public Object delete(@RequestParam Integer activityId) {
-        activityService.deleteById(activityId);
+        Activity activity = activityService.selectById(activityId);
+        activity.setStatus(4);
+        activityService.updateById(activity);
         return SUCCESS_TIP;
     }
 
@@ -236,9 +255,9 @@ public class ActivityController extends BaseController {
                 }
                 //小于的话 判读当前日期后面签到最大天数是否> (累计签到次数-当前签到次数)?"提示还需要多少次签到":"请参加下一次活动"
 
-            }else {//判断会员积分是否足够参与该活动
+            } else {//判断会员积分是否足够参与该活动
                 Double integral = m.getIntegral();
-                if(integral<activity.getJifen()){
+                if (integral < activity.getJifen()) {
                     memberinfo.put("error", "202");
                     memberinfo.put("errorMessage", "积分不足!");
                 }
@@ -274,44 +293,44 @@ public class ActivityController extends BaseController {
             membermanagements.add(membermanagement);
             //调用积分变动方法
             integralrecordController.insertIntegral(jifen, 13, membermanagements);
-        }else if (ruleexpression == 3||ruleexpression == 4){
+        } else if (ruleexpression == 3 || ruleexpression == 4) {
             //清除一条待领取活动信息
-            EntityWrapper<MemberInactivity> baseEntityWrapper=new EntityWrapper<MemberInactivity>();
-            baseEntityWrapper.eq("memberId",memberId);
-            baseEntityWrapper.eq("activityId",activityId);
-            List<MemberInactivity> list=memberInactivityService.selectList(baseEntityWrapper);
-            if(list.size()>=1){
-               if(ruleexpression==4){
-                   //获取用户等级与领取次数
-                   Membermanagement membermanagement = membermanagementService.selectById(memberId);
-                   Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
-                   Integer leaves = membershipcardtype.getLeaves();
-                   EntityWrapper<ActivityMember> activityMemberEntityWrapper = new EntityWrapper<>();
-                   activityMemberEntityWrapper.eq("memberid",memberId);
-                   activityMemberEntityWrapper.eq("activityid",activityId);
-                   int i = activityMemberService.selectCount(activityMemberEntityWrapper);
-                   if(i>=30){
-                       throw new GunsException(BizExceptionEnum.NO_PERMITION1);
-                   }
-                   //新增积分
-                   if (membershipcardtype != null) {
-                       double checkJifen = leaves>0?5:3;
-                       membermanagement.setIntegral((membermanagement.getIntegral().doubleValue()+checkJifen));
-                       membermanagement.updateById();
-                   }
+            EntityWrapper<MemberInactivity> baseEntityWrapper = new EntityWrapper<MemberInactivity>();
+            baseEntityWrapper.eq("memberId", memberId);
+            baseEntityWrapper.eq("activityId", activityId);
+            List<MemberInactivity> list = memberInactivityService.selectList(baseEntityWrapper);
+            if (list.size() >= 1) {
+                if (ruleexpression == 4) {
+                    //获取用户等级与领取次数
+                    Membermanagement membermanagement = membermanagementService.selectById(memberId);
+                    Membershipcardtype membershipcardtype = membershipcardtypeService.selectById(membermanagement.getLevelID());
+                    Integer leaves = membershipcardtype.getLeaves();
+                    EntityWrapper<ActivityMember> activityMemberEntityWrapper = new EntityWrapper<>();
+                    activityMemberEntityWrapper.eq("memberid", memberId);
+                    activityMemberEntityWrapper.eq("activityid", activityId);
+                    int i = activityMemberService.selectCount(activityMemberEntityWrapper);
+                    if (i >= 30) {
+                        throw new GunsException(BizExceptionEnum.NO_PERMITION1);
+                    }
+                    //新增积分
+                    if (membershipcardtype != null) {
+                        double checkJifen = leaves > 0 ? 5 : 3;
+                        membermanagement.setIntegral((membermanagement.getIntegral().doubleValue() + checkJifen));
+                        membermanagement.updateById();
+                    }
 
-               }
-                MemberInactivity memberInactivity=list.get(0);
+                }
+                MemberInactivity memberInactivity = list.get(0);
                 memberInactivityService.deleteById(memberInactivity.getId());
-            }else {
+            } else {
                 throw new GunsException(BizExceptionEnum.NO_PERMITION1);
             }
         }
-            insertAcitvityMember(activityId, memberId,Integer.parseInt(activity.getDeptid()));
+        insertAcitvityMember(activityId, memberId, Integer.parseInt(activity.getDeptid()));
         return SUCCESS_TIP;
     }
 
-    public void insertAcitvityMember(String activityId, String memberId,Integer deptId) {
+    public void insertAcitvityMember(String activityId, String memberId, Integer deptId) {
         ActivityMember activityMember = new ActivityMember();
         activityMember.setCreatetime(DateUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
         activityMember.setActivityid(Integer.parseInt(activityId));
@@ -322,84 +341,87 @@ public class ActivityController extends BaseController {
 
     /**
      * 活动领取查询页面跳转
+     *
      * @return
      */
     @RequestMapping("/activitygetpage")
     public String activitygetpage() {
         return PREFIX + "activitygetpage.html";
     }
+
     /**
      * 获取活动管理列表
      */
     @RequestMapping(value = "/activitygetpagelist")
     @ResponseBody
-    public Object activitygetpagelist(String condition,Integer type) throws ParseException {
-        Membermanagement membermanagement=null;
+    public Object activitygetpagelist(String condition, Integer type) throws ParseException {
+        Membermanagement membermanagement = null;
         //获取用户信息
-        if(type==0){
-            BaseEntityWrapper<Membermanagement> baseEntityWrapper=new BaseEntityWrapper<Membermanagement>();
-            baseEntityWrapper.eq("cadID",condition);
-            membermanagement=membermanagementService.selectOne(baseEntityWrapper);
-        }else if(type==1){
-            Object obj=membermanagementController.getUserInfo(condition);
-            if(!(obj).equals("202")){
-                MemberCard memberCard=(MemberCard)obj;
-                membermanagement=membermanagementService.selectById(memberCard.getMemberid());
+        if (type == 0) {
+            BaseEntityWrapper<Membermanagement> baseEntityWrapper = new BaseEntityWrapper<Membermanagement>();
+            baseEntityWrapper.eq("cadID", condition);
+            membermanagement = membermanagementService.selectOne(baseEntityWrapper);
+        } else if (type == 1) {
+            Object obj = membermanagementController.getUserInfo(condition);
+            if (!(obj).equals("202")) {
+                MemberCard memberCard = (MemberCard) obj;
+                membermanagement = membermanagementService.selectById(memberCard.getMemberid());
             }
-        }else if(type==2){
-            membermanagement=membermanagementService.selectById(condition);
+        } else if (type == 2) {
+            membermanagement = membermanagementService.selectById(condition);
         }
         //查询用户已领取活动时间排序
         Page<ActivityMember> page = new PageFactory<ActivityMember>().defaultPage();
-        if(membermanagement!=null){
+        if (membermanagement != null) {
             BaseEntityWrapper<ActivityMember> baseEntityWrapper = new BaseEntityWrapper<>();
-            baseEntityWrapper.eq("memberid",membermanagement.getId());
-            baseEntityWrapper.orderBy("createtime",false);
-            Page<ActivityMember> result =activityMemberService.selectPage(page,baseEntityWrapper);
-            Page<Map<String,Object>> page2 = new PageFactory<Map<String,Object>>().defaultPage();
+            baseEntityWrapper.eq("memberid", membermanagement.getId());
+            baseEntityWrapper.orderBy("createtime", false);
+            Page<ActivityMember> result = activityMemberService.selectPage(page, baseEntityWrapper);
+            Page<Map<String, Object>> page2 = new PageFactory<Map<String, Object>>().defaultPage();
             page2.setRecords(new ArrayList<>());
-           List<ActivityMember> list= result.getRecords();
-           list.forEach(a->{
-              Activity activity= activityService.selectById(a.getActivityid());
-              Map<String,Object> map=new HashMap<>();
-              map.put("id",activity.getId());
-              map.put("name",activity.getName());
-              map.put("createtime",a.getCreatetime());
-               page2.getRecords().add(map);
-           });
+            List<ActivityMember> list = result.getRecords();
+            list.forEach(a -> {
+                Activity activity = activityService.selectById(a.getActivityid());
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", activity.getId());
+                map.put("name", activity.getName());
+                map.put("createtime", a.getCreatetime());
+                page2.getRecords().add(map);
+            });
             page2.setTotal(result.getTotal());
             return super.packForBT(page2);
         }
         return super.packForBT(page);
     }
+
     /**
      * 获取活动管理列表
      */
     @RequestMapping(value = "/activitygetpagelist2")
     @ResponseBody
-    public Object activitygetpagelist2(String condition,Integer type) throws ParseException {
-        Membermanagement membermanagement=null;
+    public Object activitygetpagelist2(String condition, Integer type) throws ParseException {
+        Membermanagement membermanagement = null;
         //获取用户信息
-        if(type==0){
-            BaseEntityWrapper<Membermanagement> baseEntityWrapper=new BaseEntityWrapper<Membermanagement>();
-            baseEntityWrapper.eq("cadID",condition);
-            membermanagement=membermanagementService.selectOne(baseEntityWrapper);
-        }else if(type==1){
-        Object obj=membermanagementController.getUserInfo(condition);
-        if(!(obj).equals("202")){
+        if (type == 0) {
+            BaseEntityWrapper<Membermanagement> baseEntityWrapper = new BaseEntityWrapper<Membermanagement>();
+            baseEntityWrapper.eq("cadID", condition);
+            membermanagement = membermanagementService.selectOne(baseEntityWrapper);
+        } else if (type == 1) {
+            Object obj = membermanagementController.getUserInfo(condition);
+            if (!(obj).equals("202")) {
 
-            MemberCard memberCard=(MemberCard)obj;
-            membermanagement=membermanagementService.selectById(memberCard.getMemberid());
-          }
+                MemberCard memberCard = (MemberCard) obj;
+                membermanagement = membermanagementService.selectById(memberCard.getMemberid());
+            }
         }
-        Page<ActivityMember> result =null;
-        System.out.println(membermanagement!=null);
-        if(membermanagement!=null){
+        Page<ActivityMember> result = null;
+        System.out.println(membermanagement != null);
+        if (membermanagement != null) {
 
-            BaseEntityWrapper<Membermanagement> baseEntityWrapper=new BaseEntityWrapper<Membermanagement>();
-            baseEntityWrapper.eq("introducerId",membermanagement.getId());
+            BaseEntityWrapper<Membermanagement> baseEntityWrapper = new BaseEntityWrapper<Membermanagement>();
+            baseEntityWrapper.eq("introducerId", membermanagement.getId());
             Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
-           result =membermanagementService.selectPage(page,baseEntityWrapper);
+            result = membermanagementService.selectPage(page, baseEntityWrapper);
         }
         return super.packForBT(result);
     }

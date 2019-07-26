@@ -63,7 +63,7 @@ public class MemberRepairApiController extends BaseController {
     })
     public ResponseData memberRepair(RequstData requstData,MemberRepairModel memberRepairModel) throws Exception{
         ResponseData responseData = new ResponseData();
-        memberRepairController.repair(memberRepairModel.getMemberId(),memberRepairModel.getTime());
+        memberRepairController.repair(memberRepairModel.getMemberId(),memberRepairModel.getTime(),requstData.getUserId());
         return responseData;
     }
 

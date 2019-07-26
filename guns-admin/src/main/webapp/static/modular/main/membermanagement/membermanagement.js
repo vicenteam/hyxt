@@ -128,7 +128,32 @@ Membermanagement.openintroducer = function (id) {
         });
         this.layerIndex = index;
 };
-
+Membermanagement.jifenzengsong = function () {
+    if (this.check()) {
+        // var index = layer.open({
+        //     type: 2,
+        //     title: '积分赠送',
+        //     area: ['800px', '420px'], //宽高
+        //     fix: false, //不固定
+        //     maxmin: true,
+        //     content: Feng.ctxPath + '/qiandaoCheckin/qiandaoCheckin_update/' + QiandaoCheckin.seItem.id
+        // });
+        // this.layerIndex = index;
+        var selectid = this.seItem.id;
+        layer.confirm('<div>赠送积分数量：<input type="text" style="width: 50px"value="0" id="jifenNum"></div>', {btn: ['确定', '取消']}, function () {
+            layer.closeAll('dialog');
+            var ajax = new $ax(Feng.ctxPath + "/membermanagement/jifenzengsong", function (data) {
+                Feng.success("赠送成功!");
+                Membermanagement.table.refresh();
+            }, function (data) {
+                Feng.error("赠送失败!" + data.responseJSON.message + "!");
+            });
+            ajax.set("id", selectid);
+            ajax.set("jifenNum", $("#jifenNum").val());
+            ajax.start();
+        });
+    }
+};
 /**
  * 删除会员基础信息
  */

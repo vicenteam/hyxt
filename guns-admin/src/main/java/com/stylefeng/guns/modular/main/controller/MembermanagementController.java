@@ -76,7 +76,6 @@ public class MembermanagementController extends BaseController {
     private ActivityController activityController;
     @Autowired
     private IMemberInactivityService memberInactivityService;
-
     /**
      * 跳转到会员管理首页
      */
@@ -744,5 +743,18 @@ public class MembermanagementController extends BaseController {
             memberExcels.clear();
             outputStream.close();
         }
+    }
+
+    @BussinessLog(value = "积分赠送", key = "jifenzengsong")
+    @RequestMapping("/jifenzengsong")
+    @ResponseBody
+    public Object jifenzengsong(String id, Double jifenNum) throws Exception {
+        List<Membermanagement> membermanagements = new ArrayList<>();
+        Membermanagement membermanagement = new Membermanagement();
+        membermanagement.setId(Integer.parseInt(id));
+        membermanagements.add(membermanagement);
+        //积分添加操作
+        integralrecordController.insertIntegral(jifenNum,10,membermanagements);
+        return SUCCESS_TIP;
     }
 }

@@ -155,7 +155,7 @@ public class QiandaoCheckinController extends BaseController {
     @RequestMapping(value = "/update")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-    public Object update(String memberId, String chechId) throws Exception {
+    public Object update(String memberId, String chechId,int requstDataUserId) throws Exception {
         //判断签到场次是否被结束
         if (!StringUtils.isEmpty(chechId)) {
             Checkin checkin1 = checkinService.selectById(chechId);
@@ -201,8 +201,20 @@ public class QiandaoCheckinController extends BaseController {
                     double checkJifen = membershipcardtype.getCheckJifen();
                     Membermanagement membermanagement = membermanagementService.selectById(memberId);
                     membermanagement.setIntegral((membermanagement.getIntegral().doubleValue()+checkJifen));
+                    membermanagement.setCountPrice((membermanagement.getCountPrice().doubleValue()+checkJifen));
                     membermanagement.updateById();
+
+                    //新增积分记录
+                    Integralrecord integralrecord= new Integralrecord();
+                    integralrecord.setDeptid(Integer.parseInt(membermanagement1.getDeptId()));
+                    integralrecord.setIntegral(checkJifen);
+                    integralrecord.setTypeId(14);//签到积分
+                    integralrecord.setMemberid(Integer.parseInt(memberId));
+                    integralrecord.setCreateTime(DateUtil.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                    integralrecord.setStaffid(requstDataUserId);
+                    integralrecord.insert();
                 }
+
                 //推荐人活动
                 EntityWrapper<Activity> activityBaseEntityWrapper = new EntityWrapper<>();
                 activityBaseEntityWrapper.eq("deptId",membermanagement1.getDeptId());
