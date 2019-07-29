@@ -139,6 +139,7 @@ public class ActivityApiController extends BaseController {
             resultList.add(detailModel);
         });
         detailModelPage.setRecords(resultList);
+        detailModelPage.setTotal(activityService.selectCount(activityEntityWrapper));
         activityModelResponseData.setDataCollection(detailModelPage);
         return activityModelResponseData;
     }
