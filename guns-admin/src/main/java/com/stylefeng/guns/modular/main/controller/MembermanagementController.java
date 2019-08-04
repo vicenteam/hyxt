@@ -76,6 +76,8 @@ public class MembermanagementController extends BaseController {
     private ActivityController activityController;
     @Autowired
     private IMemberInactivityService memberInactivityService;
+    @Autowired
+    private IIntegralrecordService in;
     /**
      * 跳转到会员管理首页
      */
@@ -657,6 +659,12 @@ public class MembermanagementController extends BaseController {
     public void updateMemberLeave(String memberId) {
         Membermanagement membermanagement = membermanagementService.selectById(memberId);
         Double countPrice = membermanagement.getCountPrice();
+        //计算总消费积分
+        EntityWrapper<Integralrecord> integralrecordEntityWrapper = new EntityWrapper<>();
+        integralrecordEntityWrapper.eq("memberid",memberId);
+        integralrecordEntityWrapper.lt("typeId",10);
+        List<Integralrecord> integralrecords = in.selectList(integralrecordEntityWrapper);
+         countPrice= integralrecords.stream().mapToDouble(a -> a.getIntegral().doubleValue()).sum();
         BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
         membershipcardtypeBaseEntityWrapper.orderBy("upamount", false);
         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);

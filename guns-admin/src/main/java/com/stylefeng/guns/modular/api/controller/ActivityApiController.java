@@ -103,13 +103,14 @@ public class ActivityApiController extends BaseController {
             @ApiImplicitParam(required = true, name = "limit", value = "每页条数", paramType = "query"),
     })
     public ResponseData<Page<ActivityDetailModel>> giftDetails(RequstData requstData, String memberId, Integer offset, Integer limit) {
+        System.out.println("--"+offset+"--"+limit);
         ResponseData<Page<ActivityDetailModel>> activityModelResponseData = new ResponseData<>();
         EntityWrapper<Activity> activityEntityWrapper = new EntityWrapper<>();
         activityEntityWrapper.eq("deptid", requstData.getDeptId());
         activityEntityWrapper.eq("status", 2);
 //        activityEntityWrapper.notIn("ruleexpression", 3);
         activityEntityWrapper.orderBy("createtime", false);
-        Page<Activity> page = new PageFactory<Activity>().defaultPage();
+        Page<Activity> page = new PageFactory<Activity>().defaultPage(offset*(limit),limit);
         Page<ActivityDetailModel> detailModelPage = new PageFactory<ActivityDetailModel>().defaultPage();
         Page<Activity> activityPage = activityService.selectPage(page, activityEntityWrapper);
         List<Activity> records = activityPage.getRecords();

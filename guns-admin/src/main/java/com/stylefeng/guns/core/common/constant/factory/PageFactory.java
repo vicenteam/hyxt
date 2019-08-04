@@ -43,4 +43,22 @@ public class PageFactory<T> {
             return page;
         }
     }
+    public Page<T> defaultPage(int offset,int limit) {
+        String sort="";
+        String order="";
+        if (ToolUtil.isEmpty(sort)) {
+            System.out.println("--"+offset);
+            Page<T> page = new Page<>((offset / limit + 1), limit);
+            page.setOpenSort(false);
+            return page;
+        } else {
+            Page<T> page = new Page<>((offset / limit + 1), limit, sort);
+            if (Order.ASC.getDes().equals(order)) {
+                page.setAsc(true);
+            } else {
+                page.setAsc(false);
+            }
+            return page;
+        }
+    }
 }
