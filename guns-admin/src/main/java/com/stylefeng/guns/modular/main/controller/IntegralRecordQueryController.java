@@ -96,7 +96,8 @@ public class IntegralRecordQueryController extends BaseController {
         if(! StringUtils.isEmpty(begindate) || ! StringUtils.isEmpty(enddate)){
             iWrapper.between("createTime",begindate,enddate);
         }
-        iWrapper.orderBy("createTime",false);
+        //iWrapper.orderBy("createTime",false);
+        iWrapper.orderBy("integral",false);
         Page<Map<String, Object>> serverPage = integralrecordService.selectMapsPage(page, iWrapper);
         if (serverPage.getRecords().size() >= 0){
             for(Map<String, Object> map : serverPage.getRecords()){

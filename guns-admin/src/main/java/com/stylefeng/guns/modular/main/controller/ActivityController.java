@@ -200,6 +200,7 @@ public class ActivityController extends BaseController {
         Membermanagement m = membermanagementService.selectById(memberId);
         Membershipcardtype ms = membershipcardtypeService.selectById(m.getLevelID());
         Map<String, Object> memberinfo = new HashMap<>();
+        memberinfo.put("error", "200");
         memberinfo.put("cadID", m.getCadID());
         memberinfo.put("name", m.getName());
         memberinfo.put("id", m.getId());
