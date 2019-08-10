@@ -665,7 +665,8 @@ public class MembermanagementController extends BaseController {
         integralrecordEntityWrapper.lt("typeId",10);
         List<Integralrecord> integralrecords = in.selectList(integralrecordEntityWrapper);
          countPrice= integralrecords.stream().mapToDouble(a -> a.getIntegral().doubleValue()).sum();
-        BaseEntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new BaseEntityWrapper<>();
+        EntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new EntityWrapper<>();
+        membershipcardtypeBaseEntityWrapper.eq("deptId",membermanagement.getDeptId());
         membershipcardtypeBaseEntityWrapper.orderBy("upamount", false);
         List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
         for (Membershipcardtype membershipcardtype : list) {

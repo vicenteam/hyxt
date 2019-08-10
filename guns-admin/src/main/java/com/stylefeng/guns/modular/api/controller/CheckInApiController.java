@@ -10,13 +10,10 @@ import com.stylefeng.guns.modular.api.model.checkin.CheckInTimeModel;
 import com.stylefeng.guns.modular.api.model.checkin.CountersigningInfoMode;
 import com.stylefeng.guns.modular.api.model.memerber.MemberModel;
 import com.stylefeng.guns.modular.api.util.ReflectionObject;
+import com.stylefeng.guns.modular.main.controller.MembermanagementController;
 import com.stylefeng.guns.modular.main.controller.QiandaoCheckinController;
-import com.stylefeng.guns.modular.main.service.ICheckinService;
-import com.stylefeng.guns.modular.main.service.IMembermanagementService;
-import com.stylefeng.guns.modular.main.service.IQiandaoCheckinService;
-import com.stylefeng.guns.modular.system.model.Checkin;
-import com.stylefeng.guns.modular.system.model.Membermanagement;
-import com.stylefeng.guns.modular.system.model.QiandaoCheckin;
+import com.stylefeng.guns.modular.main.service.*;
+import com.stylefeng.guns.modular.system.model.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +43,12 @@ public class CheckInApiController extends BaseController {
     private MemberApiController memberApiController;
     @Autowired
     private QiandaoCheckinController qiandaoCheckinController;
+    @Autowired
+    private MembermanagementController me;
+    @Autowired
+    private IMembershipcardtypeService membershipcardtypeService;
+    @Autowired
+    private IIntegralrecordService in;
 
     @RequestMapping(value = "/getCheckInRecord", method = RequestMethod.POST)
     @ApiOperation("获取签到详情数据")
@@ -147,6 +150,7 @@ public class CheckInApiController extends BaseController {
         }
 
         checkInModelResponseData.setResultMessage("复签成功!");
+        updateMemberLeave(dataCollection.getMemberId().toString());
         return checkInModelResponseData;
     }
 
@@ -164,4 +168,40 @@ public class CheckInApiController extends BaseController {
 //        checkInModelResponseData.setDataCollection("操作成功!");
         return checkInModelResponseData;
     }
+    @RequestMapping(value = "/updateLeave", method = RequestMethod.POST)
+    @ApiOperation("结算会员等级")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "memberId", value = "会员id", paramType = "query"),
+    })
+    public ResponseData updateLeave(RequstData requstData,String memberId) throws Exception {
+        me.updateMemberLeave(memberId);
+       return  null;
+    }
+    /**
+     * 修改用户等级
+     *
+     * @param memberId
+     */
+    public void updateMemberLeave(String memberId) {
+        Membermanagement membermanagement = membermanagementService.selectById(memberId);
+        Double countPrice = membermanagement.getCountPrice();
+        //计算总消费积分
+        EntityWrapper<Integralrecord> integralrecordEntityWrapper = new EntityWrapper<>();
+        integralrecordEntityWrapper.eq("memberid",memberId);
+        integralrecordEntityWrapper.lt("typeId",10);
+        List<Integralrecord> integralrecords = in.selectList(integralrecordEntityWrapper);
+        countPrice= integralrecords.stream().mapToDouble(a -> a.getIntegral().doubleValue()).sum();
+        EntityWrapper<Membershipcardtype> membershipcardtypeBaseEntityWrapper = new EntityWrapper<>();
+        membershipcardtypeBaseEntityWrapper.eq("deptId",membermanagement.getDeptId());
+        membershipcardtypeBaseEntityWrapper.orderBy("upamount", false);
+        List<Membershipcardtype> list = membershipcardtypeService.selectList(membershipcardtypeBaseEntityWrapper);
+        for (Membershipcardtype membershipcardtype : list) {
+            if (countPrice >= membershipcardtype.getUpamount()) {
+                membermanagement.setLevelID(membershipcardtype.getId() + "");
+                membermanagementService.updateById(membermanagement);
+                break;
+            }
+        }
+    }
+
 }
