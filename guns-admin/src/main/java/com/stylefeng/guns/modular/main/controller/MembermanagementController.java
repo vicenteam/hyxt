@@ -344,7 +344,13 @@ public class MembermanagementController extends BaseController {
         //判断推荐人]
         String introducerId = membermanagement.getIntroducerId();
         if (!StringUtils.isEmpty(introducerId)) {
-            Membermanagement membermanagement1 = membermanagementService.selectById(introducerId);
+            EntityWrapper<Membermanagement> membermanagementEntityWrapper = new EntityWrapper<>();
+            membermanagementEntityWrapper.eq("cadID",introducerId);
+
+            //Membermanagement membermanagement1 = membermanagementService.selectById(introducerId);
+            Membermanagement membermanagement1 = membermanagementService.selectOne(membermanagementEntityWrapper);
+            if(membermanagement1==null)throw new Exception("推荐人卡号无效！");
+            membermanagement.setIntroducerId(membermanagement1.getId().toString());
 //            BaseEntityWrapper<Activity> activityBaseEntityWrapper = new BaseEntityWrapper<>();
 //            activityBaseEntityWrapper.eq("ruleexpression", 3);
 //            Activity activity = activityService.selectOne(activityBaseEntityWrapper);
@@ -490,7 +496,28 @@ public class MembermanagementController extends BaseController {
         }
         return memberCard;
     }
-
+    @RequestMapping(value = "/getUserInfo2")
+    @ResponseBody
+    public Object getUserInfo2(String value) {
+        BaseEntityWrapper<MemberCard> memberCardBaseEntityWrapper = new BaseEntityWrapper<>();
+        memberCardBaseEntityWrapper.eq("code", value);
+        MemberCard memberCard = memberCardService.selectOne(memberCardBaseEntityWrapper);
+        String cadID="";
+        //卡片是否锁定
+        if (memberCard != null && memberCard.getMemberid() != null) {
+            Integer memberid = memberCard.getMemberid();
+            Membermanagement membermanagement = membermanagementService.selectById(memberid);
+            if (membermanagement != null) {
+                cadID=membermanagement.getCadID();
+                String townshipid = membermanagement.getTownshipid();
+                if (townshipid.equals("1")) {
+                    return "202";
+                }
+            }
+        }
+        memberCard.setCreatetime(cadID);
+        return memberCard;
+    }
     public String getXieKaValInfo(String code) throws Exception {
         String chars = "ABCDEF1234567890";
         StringBuilder sb = new StringBuilder();

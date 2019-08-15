@@ -104,6 +104,7 @@ MembermanagementInfoDlg.collectData = function() {
     .set('avatar')
     .set("otherMemberId")
     .set("anotherName")
+    .set("introducerName")
     .set('token');
 }
 
