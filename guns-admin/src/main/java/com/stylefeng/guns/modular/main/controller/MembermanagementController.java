@@ -573,9 +573,10 @@ public class MembermanagementController extends BaseController {
     @RequestMapping(value = "/openintroducerdata/{id}")
     @ResponseBody
     public Object openintroducerdata(String name, @PathVariable Integer id) {
+        Membermanagement membermanagement1 = membermanagementService.selectById(id);
         Page<Membermanagement> page = new PageFactory<Membermanagement>().defaultPage();
         EntityWrapper<Membermanagement> baseEntityWrapper = new EntityWrapper<>();
-        baseEntityWrapper.eq("introducerId", id);
+        baseEntityWrapper.eq("introducerId", membermanagement1.getCadID());
         Page<Map<String, Object>> mapPage = membermanagementService.selectMapsPage(page, baseEntityWrapper);
         List<Map<String, Object>> records = mapPage.getRecords();
         for (Map<String, Object> map : records) {
