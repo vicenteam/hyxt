@@ -93,7 +93,7 @@ spring:
       filters: wall,mergeStat
 
      # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  mina.jar > catalina.out  2>&1 &
-     # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  guns-admin-45.0.0.jar > catalina.out  2>&1 &
+     # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  guns-admin-50.0.0.jar > catalina.out  2>&1 &
 
      # nohup java  -Xms400m -Xmx400m -Xmn200m  -jar  xx.jar   2>&1 &     netstat -tunlp|grep 8086
 
