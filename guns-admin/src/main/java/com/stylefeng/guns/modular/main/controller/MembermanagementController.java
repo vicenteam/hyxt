@@ -792,6 +792,7 @@ public class MembermanagementController extends BaseController {
         membermanagements.add(membermanagement);
         //积分添加操作
         integralrecordController.insertIntegral(jifenNum,10,membermanagements);
+        updateMemberLeave(id);
         return SUCCESS_TIP;
     }
 }
